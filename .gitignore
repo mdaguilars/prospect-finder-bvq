@@ -1,0 +1,64 @@
+# ============================================
+# Prospect Finder BVQ
+# Archivos excluidos del repositorio Git
+# ============================================
+
+# Entorno virtual
+.venv/
+venv/
+
+# Variables de entorno y credenciales
+.env
+.env.*
+
+# Datos originales y procesados
+data/raw/*
+data/interim/*
+data/processed/*
+
+# Mantener las carpetas aunque estén vacías
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+
+# Modelos entrenados
+models/*
+!models/.gitkeep
+
+# Resultados generados
+reports/results/*
+!reports/results/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
+# Archivos temporales
+*.tmp
+*.log
+
+# Sistema operativo
+Thumbs.db
+.DS_Store
+
+# Excel temporales
+~$*.xlsx
+~$*.xls
+
+# Bases y archivos que no deben subirse
+*.db
+*.sqlite
+*.sqlite3
+
+# Credenciales / llaves
+*.key
+*.pem
+*.pfx
+*.p12
