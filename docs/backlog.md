@@ -66,7 +66,7 @@ Los estados utilizados son:
 | B13 | Media | Evaluar calibración | Convertir scores en probabilidades interpretables | Pendiente |
 | B14 | Media | Construir Índice de Afinidad Bursátil | Generar indicador final de priorización | Pendiente |
 | B15 | Media | Incorporar interpretabilidad | Explicar razones de priorización | Pendiente |
-| B16 | Media | Formalizar diccionario de datos | Mejorar documentación y reproducibilidad | Pendiente |
+| B16 | Media | Formalizar diccionario de datos | Mejorar documentación y reproducibilidad | Completado |
 | B17 | Baja | Evaluar MLP | Comparar una arquitectura de red neuronal | Pendiente |
 | B18 | Baja | Diseñar prototipo de visualización | Mostrar ranking y explicación al usuario final | Pendiente |
 | B19 | Baja | Evaluar monitoreo de drift | Preparar futura operación del modelo | Pendiente |
@@ -561,34 +561,63 @@ Para cada empresa priorizada deberá ser posible identificar las variables que m
 
 **Prioridad:** Media
 
-**Estado:** Pendiente
+**Estado:** Completado
 
 ### Objetivo
 
-Crear un documento específico que describa las variables utilizadas por el proyecto.
+Crear un documento específico que describa de manera estructurada las variables utilizadas por el proyecto y facilite la comprensión, revisión y reproducibilidad del dataset.
 
-### Información mínima por variable
+### Información documentada
+
+Para cada variable se incorporó, según corresponda:
 
 - nombre;
 - descripción;
 - fuente;
 - tipo;
-- unidad;
-- transformación;
+- unidad o interpretación;
+- fórmula o transformación;
 - disponibilidad;
-- tratamiento de faltantes;
-- utilización o exclusión del modelo.
+- tratamiento de valores faltantes;
+- utilización o exclusión del modelo;
+- consideraciones relacionadas con trazabilidad y riesgo de fuga de información.
 
-### Archivo propuesto
+### Archivo generado
 
 `docs/diccionario_datos.md`
 
+### Resultado
+
+Se construyó y versionó un diccionario de datos que documenta:
+
+- variables de identificación y trazabilidad;
+- nueve variables financieras homologadas;
+- transformaciones logarítmicas;
+- razones financieras;
+- variable sectorial;
+- variable objetivo `TARGET_24M`;
+- disponibilidad de información;
+- tratamiento de faltantes;
+- variables excluidas del modelo;
+- variables previstas para futuras iteraciones.
+
 ### Criterio de aceptación
 
-El documento debe permitir comprender el dataset sin necesidad de revisar directamente el código.
+**Cumplido.**
+
+El documento permite comprender la estructura y significado de las principales variables del dataset sin necesidad de revisar directamente el código fuente.
+
+### Evidencia
+
+Documento:
+
+`docs/diccionario_datos.md`
+
+Versionado en el repositorio Git como parte del commit:
+
+`ed1034d — Complete project documentation and reproducibility records`
 
 ---
-
 # 7. Actividades de prioridad baja
 
 ## B17 — Evaluar MLP

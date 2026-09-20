@@ -668,3 +668,64 @@ Esta bitácora debe actualizarse cuando se produzca:
 - un resultado que modifique el rumbo del proyecto.
 
 La bitácora complementa el historial de Git: Git registra qué archivos cambiaron, mientras este documento registra por qué se realizaron los cambios y qué se aprendió de ellos.
+
+---
+
+## 9. Actualización documental y cierre de la entrega preliminar — 20 de septiembre de 2026
+
+### Objetivo
+
+Consolidar la documentación del proyecto antes de cerrar la entrega de resultados preliminares, asegurando consistencia entre el informe académico, el README, el backlog, el inventario de fuentes, el entorno técnico y el diccionario de datos.
+
+### Cambios realizados
+
+Durante esta revisión se realizaron los siguientes ajustes:
+
+- se actualizó `docs/informe_resultados_preliminares.md` para alinearlo con el estado real del proyecto;
+- se incorporó una descripción más precisa de las fuentes de datos y del rol de SCVS y BVQ;
+- se documentó la disponibilidad de las principales variables utilizadas por el modelo;
+- se aclaró metodológicamente el uso de TRAIN, VALIDATION y TEST;
+- se dejó explícito que TEST 2022-2023 fue utilizado para la evaluación final del Baseline v1;
+- se documentó que los experimentos v2 y v3 utilizaron únicamente TRAIN y VALIDATION para seleccionar alternativas;
+- se fortaleció la explicación del riesgo de fuga de información relacionado con la fecha efectiva de disponibilidad de los estados financieros;
+- se actualizó la sección de herramientas y entorno tecnológico;
+- se incorporó al informe la trazabilidad hacia README, bitácora, backlog, diccionario de datos y demás documentación;
+- se agregó una sección de uso responsable del sistema;
+- se ajustaron las conclusiones para diferenciar entre viabilidad técnica del pipeline y desempeño suficiente para uso operativo;
+- se actualizó `docs/backlog.md`, marcando B16 — Formalizar diccionario de datos como completado;
+- se actualizó `docs/entorno_tecnico.md` para incluir los nuevos documentos de trazabilidad;
+- se reconstruyó `docs/inventario_fuentes.md` para identificar correctamente a los estados financieros SCVS como fuente principal de variables predictoras y al Registro del Mercado de Valores SCVS como fuente de la variable objetivo.
+
+### Decisiones documentales
+
+1. No se inventarán fechas de extracción, licencias ni condiciones de reutilización de las fuentes que no hayan sido verificadas explícitamente.
+2. El diccionario de datos se considera completado y se mantiene en `docs/diccionario_datos.md`.
+3. El backlog detallado se mantiene exclusivamente en `docs/backlog.md`; el informe presenta únicamente un resumen.
+4. El informe debe distinguir claramente entre fuentes utilizadas en el Baseline v1 y fuentes disponibles para validación o enriquecimiento futuro.
+5. Los scores generados por el modelo actual no deben presentarse como probabilidades reales ni como un Índice de Afinidad Bursátil definitivo.
+6. La revisión de disponibilidad temporal de los estados financieros se mantiene como una actividad prioritaria antes de considerar una aplicación operativa.
+
+### Resultado
+
+La documentación del proyecto queda alineada con los resultados obtenidos hasta el Baseline v3 y con las evidencias de reproducibilidad disponibles en el repositorio.
+
+El proyecto dispone actualmente de:
+
+- README actualizado;
+- pipeline documentado;
+- inventario de fuentes;
+- diccionario de datos;
+- documentación del entorno;
+- documentación de Baseline v1, v2 y v3;
+- análisis de errores;
+- backlog priorizado;
+- bitácora de decisiones;
+- informe de resultados preliminares actualizado.
+
+### Evidencia previa
+
+La primera consolidación de documentación y reproducibilidad fue versionada en:
+
+`ed1034d — Complete project documentation and reproducibility records`
+
+La presente actualización quedó registrada en Git con el mensaje `Finalize preliminary results documentation`.

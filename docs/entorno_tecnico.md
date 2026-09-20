@@ -254,20 +254,22 @@ Contiene las visualizaciones utilizadas para analizar y comunicar los resultados
 
 ### 7.10 `docs`
 
-Contiene la documentación metodológica y técnica del proyecto.
+Contiene la documentación metodológica, técnica y de trazabilidad del proyecto.
 
-Actualmente incluye documentación de:
+Actualmente incluye:
 
-- pipeline;
-- fuentes;
-- entorno;
-- Baseline v1;
-- Baseline v2;
-- experimento v3;
-- resultados preliminares.
+- `pipeline_datos_mvp.md`: describe el flujo completo de preparación de datos, etiquetado, ingeniería de variables y modelado;
+- `inventario_fuentes.md`: documenta las fuentes utilizadas y su función dentro del proyecto;
+- `diccionario_datos.md`: describe variables, tipos, fórmulas, disponibilidad y tratamiento de faltantes;
+- `entorno_tecnico.md`: documenta el entorno de desarrollo, dependencias y estructura técnica;
+- `baseline_v1.md`: documenta el modelo de referencia;
+- `baseline_v2.md`: documenta el experimento de eliminación de `SECTOR_CIIU`;
+- `baseline_v3.md`: documenta el experimento de regularización;
+- `bitacora.md`: registra cronológicamente decisiones, cambios, resultados y aprendizajes;
+- `backlog.md`: mantiene las actividades futuras priorizadas;
+- `informe_resultados_preliminares.md`: consolida los resultados, análisis, limitaciones y próximos pasos de la entrega académica.
 
 ---
-
 ## 8. Reproducibilidad
 
 La reproducibilidad del proyecto se apoya en los siguientes mecanismos:

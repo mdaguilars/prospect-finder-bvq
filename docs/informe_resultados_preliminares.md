@@ -1,35 +1,35 @@
-# Informe de resultados preliminares
+# Informe de resultados preliminares — Prospect Finder BVQ
 
-## Sistema inteligente basado en aprendizaje automático y redes neuronales para identificar y priorizar empresas con potencial de convertirse en emisores del mercado de valores ecuatoriano para la Bolsa de Valores Quito
+## UNIVERSIDAD DE LAS AMÉRICAS
 
-### Integrantes
+### Maestría en Inteligencia Artificial
+
+**Proyecto:** Sistema inteligente basado en aprendizaje automático y redes neuronales para identificar y priorizar empresas con potencial de convertirse en emisores del mercado de valores ecuatoriano para la Bolsa de Valores Quito
+
+**Integrantes:**
 
 - Marcelo David Aguilar Salguero
 - Francisco Xavier Meneses Játiva
 - Luis Miguel Gallardo Dávila
 
+**Fecha:** Septiembre de 2026
+
 ---
 
 # 1. Descripción del prototipo desarrollado
 
-El proyecto busca desarrollar un sistema inteligente que permita identificar y priorizar empresas ecuatorianas con potencial de convertirse en futuros emisores del mercado de valores.
+El proyecto Prospect Finder BVQ busca desarrollar un sistema inteligente que permita identificar y priorizar empresas ecuatorianas con potencial de convertirse en futuros emisores del mercado de valores.
 
-La necesidad parte de un problema organizacional de la Bolsa de Valores Quito (BVQ): existe un universo amplio de empresas que potencialmente podrían acceder al mercado de valores, pero analizarlo manualmente de forma sistemática resulta complejo. Esto dificulta establecer criterios homogéneos de prospección y priorizar de manera objetiva las empresas que podrían representar mejores oportunidades de acercamiento comercial.
+La necesidad parte de un problema organizacional de la Bolsa de Valores Quito (BVQ): existe un universo amplio de empresas que potencialmente podrían acceder al mercado de valores, pero analizarlo manualmente de forma sistemática resulta complejo. Esto dificulta aplicar criterios homogéneos de prospección, identificar señales relevantes y priorizar de manera consistente las empresas que podrían justificar un acercamiento comercial y un análisis especializado.
 
-Como primera aproximación se desarrolló un modelo de referencia o *baseline* basado en regresión logística. Su propósito no es reemplazar el criterio comercial o financiero de la BVQ, sino comprobar si existe señal predictiva en la información financiera histórica de las empresas y establecer un punto de comparación para modelos posteriores de mayor complejidad.
+Como primera aproximación desarrollamos un modelo de referencia o baseline basado en regresión logística. Su propósito no es reemplazar el criterio comercial, financiero o legal de la BVQ, sino comprobar si existe señal predictiva en la información financiera histórica de las empresas y establecer un punto de comparación reproducible para modelos posteriores de mayor complejidad.
 
-La unidad de análisis utilizada es:
+La unidad de análisis es `empresa-año`.
 
-**empresa-año**.
+La variable objetivo es `TARGET_24M`, donde:
 
-La variable objetivo definida es:
-
-`TARGET_24M`
-
-Esta variable toma el valor de:
-
-- `1`: cuando una empresa se registra por primera vez como emisor dentro de los 24 meses posteriores al período analizado.
-- `0`: cuando no se produce este evento dentro del horizonte definido.
+- `1`: la empresa se registra por primera vez como emisor dentro de los siguientes 24 meses;
+- `0`: la empresa no se registra como nuevo emisor dentro de ese horizonte.
 
 Las empresas que ya habían sido emisoras antes de la fecha de corte correspondiente fueron excluidas del universo elegible.
 
@@ -37,65 +37,150 @@ Las empresas que ya habían sido emisoras antes de la fecha de corte correspondi
 
 # 2. Fuentes de datos
 
-La fuente principal utilizada para construir las variables predictoras corresponde a información financiera pública de la Superintendencia de Compañías, Valores y Seguros (SCVS).
+## 2.1 Fuentes utilizadas
 
-Para construir la variable objetivo se utilizó la información histórica del Registro del Mercado de Valores de la misma institución.
+| Fuente | Formato principal | Información utilizada | Uso dentro del proyecto |
+|---|---|---|---|
+| Superintendencia de Compañías, Valores y Seguros — Estados financieros | ZIP / TXT | Estados financieros históricos, cuentas contables, identificación empresarial y CIIU | Construcción de variables predictoras |
+| Superintendencia de Compañías, Valores y Seguros — Registro del Mercado de Valores | XLSX | Primera fecha de inscripción como emisor | Construcción de `TARGET_24M` |
+| Bolsa de Valores Quito — Data Warehouse | CSV / base de datos | Información financiera complementaria | Validación y potencial enriquecimiento futuro |
 
-Se trabajó con estados financieros comprendidos entre 2015 y 2023.
+La fuente principal utilizada para construir las variables predictoras corresponde a información financiera de la Superintendencia de Compañías, Valores y Seguros (SCVS).
 
-Durante la etapa de preparación se identificaron diferentes estructuras de planes contables, por lo que fue necesario realizar un proceso de homologación de cuentas financieras.
+Para construir la variable objetivo se utilizó información histórica del Registro del Mercado de Valores de la misma institución.
 
-Se utilizaron siete estructuras contables principales:
+La información interna de la BVQ se considera una fuente complementaria de validación y enriquecimiento, pero no constituye la fuente principal de las variables utilizadas por el Baseline v1.
 
-- PLAN_622
-- PLAN_639
-- PLAN_807
-- PLAN_819
-- PLAN_830
-- PLAN_868
-- PLAN_925
+## 2.2 Archivos principales del Registro del Mercado de Valores
 
-Como resultado de este proceso se obtuvo inicialmente un dataset financiero armonizado con:
+Los principales archivos utilizados para construir y validar la fecha de primera inscripción fueron:
 
-**887.469 observaciones empresa-año.**
+- `listado_entes_65001_1789908466941.xlsx`
+- `codigos_fichas_registrales_1789908530079.xlsx`
 
----
+Se identificaron 619 RUC de emisores con información disponible en ambas fuentes.
 
-# 3. Variables financieras homologadas
+La primera fecha de inscripción coincidió en los 619 casos contrastados.
 
-Se homologaron nueve variables financieras principales:
+Por esta razón, para el MVP se utiliza como evento la primera fecha de inscripción registrada en el listado de entes, validada contra las fichas registrales.
 
-- Activo total
-- Activo corriente
-- Efectivo
-- Pasivo total
-- Pasivo corriente
-- Pasivo no corriente
-- Patrimonio
-- Capital
-- Utilidad neta
+## 2.3 Período utilizado
 
-La homologación fue validada mediante ecuaciones contables.
+El dataset etiquetado del MVP utiliza información financiera correspondiente al período:
 
-La principal validación utilizada fue:
+**2015–2023**
 
-**Activo = Pasivo + Patrimonio**
+Aunque existen archivos financieros de años posteriores, el horizonte de predicción de 24 meses limita actualmente la incorporación de años recientes en un dataset completamente etiquetado.
 
-El 99,24 % de las observaciones presentó una diferencia relativa menor o igual al 0,01 %.
+## 2.4 Condiciones de uso y fecha de extracción
 
-También se verificó:
+Las fechas exactas de descarga o extracción y las condiciones de uso aplicables a cada fuente deben mantenerse documentadas de forma verificable.
 
-**Pasivo total = Pasivo corriente + Pasivo no corriente**
+En esta entrega no se asumen fechas ni licencias que no hayan sido confirmadas explícitamente.
 
-En este caso, el 99,31 % de las observaciones cumplió una diferencia relativa menor o igual al 0,01 %.
-
-Estos resultados permitieron confirmar que la homologación de las principales cuentas financieras era suficientemente consistente para continuar con la construcción del prototipo.
+La revisión y registro formal de estas condiciones forma parte de la documentación pendiente de fortalecimiento del proyecto.
 
 ---
 
-# 4. Dataset utilizado para modelado
+# 3. Preparación y homologación de la información financiera
 
-Después de excluir observaciones correspondientes a empresas que ya eran emisoras al momento del corte, el dataset utilizado para modelado quedó compuesto por:
+Durante la etapa de preparación se identificaron diferentes estructuras de planes contables, por lo que fue necesario construir un proceso de homologación.
+
+Se analizaron ocho estructuras:
+
+- `PLAN_413`
+- `PLAN_622`
+- `PLAN_639`
+- `PLAN_807`
+- `PLAN_819`
+- `PLAN_830`
+- `PLAN_868`
+- `PLAN_925`
+
+Para el MVP se utilizaron:
+
+- `PLAN_622`
+- `PLAN_639`
+- `PLAN_807`
+- `PLAN_819`
+- `PLAN_830`
+- `PLAN_868`
+- `PLAN_925`
+
+`PLAN_413` fue excluido del MVP debido a su baja cobertura, aproximadamente 730 observaciones, ausencia de eventos positivos en las cohortes evaluadas y dificultad para establecer una homologación comparable con las estructuras principales.
+
+La homologación se controla mediante:
+
+`config/scvs_account_mapping.csv`
+
+Este archivo separa las reglas de equivalencia contable de la lógica del código, lo que facilita su revisión y mantenimiento.
+
+---
+
+# 4. Variables financieras homologadas
+
+Se seleccionaron nueve variables financieras base:
+
+| Variable | Tipo | Descripción |
+|---|---|---|
+| `ACTIVO_TOTAL` | Numérica | Total de activos |
+| `ACTIVO_CORRIENTE` | Numérica | Total de activos corrientes |
+| `EFECTIVO` | Numérica | Efectivo y equivalentes |
+| `PASIVO_TOTAL` | Numérica | Total de pasivos |
+| `PASIVO_CORRIENTE` | Numérica | Total de pasivos corrientes |
+| `PASIVO_NO_CORRIENTE` | Numérica | Total de pasivos no corrientes |
+| `PATRIMONIO` | Numérica | Patrimonio |
+| `CAPITAL` | Numérica | Capital registrado |
+| `UTILIDAD_NETA` | Numérica | Resultado neto del período |
+
+Como resultado del proceso de homologación se obtuvo inicialmente:
+
+- **887.469 observaciones empresa-año**
+- **166.389 empresas únicas**
+- período **2015–2023**
+
+Archivo intermedio:
+
+`data/interim/scvs_financials_harmonized_2015_2023.csv.gz`
+
+---
+
+# 5. Validación contable
+
+La homologación fue evaluada mediante ecuaciones contables básicas.
+
+## 5.1 Activo = Pasivo + Patrimonio
+
+El **99,24 %** de las observaciones presentó una diferencia relativa menor o igual al **0,01 %**.
+
+## 5.2 Pasivo total = Pasivo corriente + Pasivo no corriente
+
+El **99,31 %** de las observaciones cumplió una diferencia relativa menor o igual al **0,01 %**.
+
+Estas validaciones no garantizan por sí solas que cada cuenta se encuentre perfectamente homologada, pero constituyen una evidencia importante de consistencia estructural del dataset generado.
+
+---
+
+# 6. Construcción del dataset etiquetado
+
+Para cada observación empresa-año se determina si la empresa todavía era elegible como prospecto en la fecha de corte.
+
+La convención temporal actual utiliza como fecha de corte:
+
+**31 de diciembre del año `t`**
+
+Una observación recibe:
+
+`TARGET_24M = 1`
+
+cuando:
+
+- la empresa todavía no era emisora al cierre del año `t`; y
+- su primera inscripción como emisor ocurre posteriormente y hasta el 31 de diciembre del año `t + 2`.
+
+Las empresas que ya eran emisoras quedan excluidas de observaciones posteriores.
+
+El dataset resultante contiene:
 
 | Indicador | Resultado |
 |---|---:|
@@ -105,119 +190,244 @@ Después de excluir observaciones correspondientes a empresas que ya eran emisor
 | Casos negativos | 883.632 |
 | Prevalencia aproximada | 0,0498 % |
 
-El resultado muestra un problema de clasificación extremadamente desbalanceado.
+Archivo:
 
-Por esta razón, la exactitud general o *accuracy* no se considera una métrica adecuada como criterio principal de evaluación.
+`data/processed/mvp_labeled_2015_2023.csv.gz`
+
+El resultado evidencia un problema de clasificación extremadamente desbalanceado.
 
 ---
 
-# 5. Ingeniería de variables
+# 7. Distribución temporal de positivos
 
-Además de las variables financieras originales, se generaron transformaciones y razones financieras.
+| Año | Positivos |
+|---|---:|
+| 2015 | 39 |
+| 2016 | 58 |
+| 2017 | 93 |
+| 2018 | 78 |
+| 2019 | 39 |
+| 2020 | 33 |
+| 2021 | 42 |
+| 2022 | 36 |
+| 2023 | 22 |
+| **Total** | **440** |
 
-Para reducir el efecto de las diferencias de escala se utilizó una transformación logarítmica con signo:
+La cantidad de nuevos emisores cambia de forma importante entre períodos.
+
+Esta variación debe considerarse al interpretar la estabilidad temporal del modelo.
+
+---
+
+# 8. Ingeniería de variables
+
+## 8.1 Transformaciones logarítmicas
+
+Para reducir diferencias de escala se utiliza la transformación:
 
 `sign(x) × log(1 + |x|)`
 
-Se construyeron las siguientes variables:
+Se generan:
 
-- LOG_ACTIVO_TOTAL
-- LOG_ACTIVO_CORRIENTE
-- LOG_EFECTIVO
-- LOG_PASIVO_TOTAL
-- LOG_PASIVO_CORRIENTE
-- LOG_PASIVO_NO_CORRIENTE
-- LOG_PATRIMONIO
-- LOG_CAPITAL
-- LOG_UTILIDAD_NETA
+- `LOG_ACTIVO_TOTAL`
+- `LOG_ACTIVO_CORRIENTE`
+- `LOG_EFECTIVO`
+- `LOG_PASIVO_TOTAL`
+- `LOG_PASIVO_CORRIENTE`
+- `LOG_PASIVO_NO_CORRIENTE`
+- `LOG_PATRIMONIO`
+- `LOG_CAPITAL`
+- `LOG_UTILIDAD_NETA`
 
-También se calcularon:
+La transformación conserva el signo de valores negativos y permite reducir la influencia de diferencias extremas de magnitud.
 
-- Liquidez corriente
-- Endeudamiento
-- Autonomía financiera
-- ROA
-- Efectivo sobre activos
-- Capital sobre activos
-- Pasivo corriente sobre pasivo total
+## 8.2 Razones financieras
 
-Adicionalmente se incorporó:
+Se construyeron:
+
+| Variable | Fórmula conceptual |
+|---|---|
+| `LIQUIDEZ_CORRIENTE` | Activo corriente / pasivo corriente |
+| `ENDEUDAMIENTO` | Pasivo total / activo total |
+| `AUTONOMIA_FINANCIERA` | Patrimonio / activo total |
+| `ROA` | Utilidad neta / activo total |
+| `EFECTIVO_ACTIVOS` | Efectivo / activo total |
+| `CAPITAL_ACTIVOS` | Capital / activo total |
+| `PASIVO_CORRIENTE_PASIVO` | Pasivo corriente / pasivo total |
+
+Cuando un denominador no permite calcular una razón válida, el resultado se mantiene como faltante y se trata posteriormente dentro del pipeline de modelado.
+
+## 8.3 Variable sectorial
+
+Se incorpora:
 
 `SECTOR_CIIU`
 
 correspondiente a la primera sección de la clasificación CIIU de la empresa.
 
-La variable `PLAN_CONTABLE` se mantuvo únicamente como elemento de trazabilidad y control de calidad y no se incorporó como predictor.
+## 8.4 Variable de trazabilidad excluida del modelo
+
+`PLAN_CONTABLE` se conserva únicamente para trazabilidad y control de calidad.
+
+No se incorpora como predictor para reducir el riesgo de que el modelo aprenda cambios administrativos o históricos en las estructuras contables.
 
 ---
 
-# 6. División temporal de los datos
+# 9. Disponibilidad de variables
 
-Para evitar una evaluación basada en una partición aleatoria, se utilizó una separación temporal.
+Las variables financieras base homologadas presentan cobertura completa en el dataset armonizado utilizado para el MVP.
 
-| Conjunto | Período | Observaciones | Positivos |
-|---|---|---:|---:|
-| TRAIN | 2015–2020 | 514.527 | 340 |
-| VALIDATION | 2021 | 109.101 | 42 |
-| TEST | 2022–2023 | 260.444 | 58 |
+Las razones financieras presentan las siguientes disponibilidades aproximadas:
 
-Este enfoque permite evaluar de manera más realista la capacidad del modelo de aprender con información histórica y aplicarse posteriormente sobre períodos futuros.
+| Variable | Disponibilidad |
+|---|---:|
+| `LIQUIDEZ_CORRIENTE` | 68,04 % |
+| `ENDEUDAMIENTO` | 95,81 % |
+| `AUTONOMIA_FINANCIERA` | 95,81 % |
+| `ROA` | 95,81 % |
+| `EFECTIVO_ACTIVOS` | 95,81 % |
+| `CAPITAL_ACTIVOS` | 95,81 % |
+| `PASIVO_CORRIENTE_PASIVO` | 71,03 % |
+| `SECTOR_CIIU` | 99,98 % |
 
-El preprocesamiento, imputación y escalamiento fueron ajustados exclusivamente utilizando TRAIN.
+Los faltantes numéricos se imputan dentro del pipeline utilizando únicamente estadísticas de TRAIN.
 
----
+El detalle de cada variable, tipo, fórmula, disponibilidad y tratamiento de faltantes se mantiene en:
 
-# 7. Modelo de referencia
-
-Como modelo inicial se utilizó una regresión logística regularizada.
-
-La configuración del Baseline v1 fue:
-
-- Regresión logística
-- Regularización L2
-- `C = 1.0`
-- `class_weight = "balanced"`
-- `solver = "lbfgs"`
-- `max_iter = 2000`
-- `random_state = 42`
-
-Las variables numéricas fueron imputadas mediante la mediana y posteriormente estandarizadas.
-
-La variable categórica `SECTOR_CIIU` fue procesada mediante codificación One-Hot.
-
-Este modelo constituye el punto de referencia frente al cual se compararán las siguientes iteraciones.
+`docs/diccionario_datos.md`
 
 ---
 
-# 8. Métricas seleccionadas
+# 10. División temporal de los datos
 
-Debido al fuerte desbalance de clases, se utilizaron principalmente:
+No se utiliza una división aleatoria.
 
-- PR-AUC
-- ROC-AUC
-- Precision
-- Recall
-- F1
+La partición se realiza cronológicamente:
 
-Para evaluar específicamente la utilidad del modelo como herramienta de prospección se utilizaron además:
+| Conjunto | Período | Observaciones | Positivos | Prevalencia |
+|---|---|---:|---:|---:|
+| TRAIN | 2015–2020 | 514.527 | 340 | 0,0661 % |
+| VALIDATION | 2021 | 109.101 | 42 | 0,0385 % |
+| TEST | 2022–2023 | 260.444 | 58 | 0,0223 % |
 
-- Precision@K
-- Recall@K
-- Lift@K
+El objetivo es aproximar un escenario en el que el modelo aprende con información histórica y posteriormente se aplica a períodos futuros.
 
-con:
-
-- K = 50
-- K = 100
-- K = 200
-
-Estas métricas permiten analizar cuántos futuros emisores aparecen dentro de las primeras empresas priorizadas por el modelo.
+El preprocesamiento, imputación, escalamiento y codificación se ajustan exclusivamente utilizando TRAIN.
 
 ---
 
-# 9. Resultados preliminares del Baseline v1
+# 11. Consideración crítica sobre disponibilidad temporal
 
-## 9.1 Métricas generales
+Aunque la división es temporal, existe una limitación que debe mantenerse explícita.
+
+La observación se organiza por año fiscal, pero un estado financiero correspondiente al año `t` puede haber sido presentado o publicado durante el año `t + 1`.
+
+Por tanto, la fecha contable no necesariamente coincide con la fecha exacta en que la información estuvo disponible para una predicción real.
+
+Antes de una implementación operativa deberá verificarse:
+
+- fecha de presentación;
+- fecha de publicación;
+- fecha efectiva de disponibilidad;
+- relación de estas fechas con el evento de primera inscripción.
+
+Esta revisión es prioritaria porque una característica utilizada antes de haber estado realmente disponible produciría leakage temporal.
+
+---
+
+# 12. Modelo de referencia
+
+Como modelo inicial se utiliza una regresión logística regularizada.
+
+Configuración del Baseline v1:
+
+| Parámetro | Valor |
+|---|---|
+| Modelo | Logistic Regression |
+| Regularización | L2 |
+| `C` | 1,0 |
+| `class_weight` | balanced |
+| `solver` | lbfgs |
+| `max_iter` | 2000 |
+| `random_state` | 42 |
+
+El modelo convergió en 92 iteraciones.
+
+Script:
+
+`src/models/train_logistic_baseline.py`
+
+Este modelo constituye el punto de referencia frente al cual se comparan las siguientes iteraciones.
+
+---
+
+# 13. Preprocesamiento
+
+## 13.1 Variables numéricas
+
+Se utiliza:
+
+- `SimpleImputer(strategy="median")`
+- `StandardScaler()`
+
+## 13.2 Variable categórica
+
+Para `SECTOR_CIIU` se utiliza:
+
+- `SimpleImputer(strategy="most_frequent")`
+- `OneHotEncoder(handle_unknown="ignore")`
+
+Todos los parámetros del preprocesamiento se calculan con TRAIN y posteriormente se aplican a VALIDATION y TEST.
+
+---
+
+# 14. Tratamiento del desbalance
+
+La prevalencia positiva global es aproximadamente:
+
+**0,0498 %**
+
+El Baseline v1 utiliza:
+
+`class_weight="balanced"`
+
+para evitar que la regresión logística favorezca casi exclusivamente a la clase negativa.
+
+Esta decisión mejora la capacidad del modelo para detectar positivos, pero también implica que los valores generados por `predict_proba()` no deben interpretarse todavía como probabilidades reales calibradas.
+
+Por esta razón, un score de 0,90 no debe interpretarse como una probabilidad real del 90 % de convertirse en emisor.
+
+---
+
+# 15. Métricas seleccionadas
+
+Debido al desbalance extremo, `Accuracy` no se utiliza como criterio principal.
+
+Las métricas generales son:
+
+- PR-AUC;
+- ROC-AUC;
+- Precision;
+- Recall;
+- F1.
+
+Para relacionar el modelo con la necesidad de priorización comercial se utilizan adicionalmente:
+
+- Precision@K;
+- Recall@K;
+- Lift@K.
+
+Inicialmente se evalúan:
+
+- K = 50;
+- K = 100;
+- K = 200.
+
+---
+
+# 16. Resultados preliminares del Baseline v1
+
+## 16.1 Métricas generales
 
 | Conjunto | PR-AUC | ROC-AUC | Precision | Recall | F1 |
 |---|---:|---:|---:|---:|---:|
@@ -225,41 +435,43 @@ Estas métricas permiten analizar cuántos futuros emisores aparecen dentro de l
 | VALIDATION | 0,031095 | 0,940593 | 0,002566 | 0,880952 | 0,005118 |
 | TEST | 0,007291 | 0,927740 | 0,000627 | 0,931034 | 0,001254 |
 
-El ROC-AUC permanece por encima de 0,92 en los tres conjuntos, lo que evidencia capacidad general de discriminación.
+El ROC-AUC permanece por encima de 0,92 en los tres conjuntos.
 
-Sin embargo, debido al desbalance extremo, el PR-AUC y las métricas de ranking son más representativas para evaluar la utilidad del modelo.
+Sin embargo, debido al desbalance extremo, PR-AUC y las métricas de ranking son más representativas para evaluar la utilidad del modelo.
 
-Se observa una reducción del PR-AUC a medida que el modelo se aplica sobre períodos temporalmente más alejados:
+Se observa una reducción del PR-AUC:
 
 - TRAIN: 0,099413
 - VALIDATION: 0,031095
 - TEST: 0,007291
 
-Este resultado evidencia una degradación temporal que deberá ser estudiada en las siguientes fases del proyecto.
+Este comportamiento evidencia una degradación temporal que debe continuar investigándose.
 
-![Curvas Precision-Recall](../reports/figures/baseline_02_precision_recall.png)
+![Figura 1. PR-AUC por conjunto temporal](../reports/figures/baseline_02_precision_recall.png)
+
+**Figura 1.** Curva Precision-Recall del Baseline v1. Fuente: elaboración propia.
 
 ---
 
-# 10. Desbalance de clases
-
-La siguiente figura muestra la diferencia existente entre la cantidad de observaciones negativas y positivas en los diferentes conjuntos.
-
-![Distribución de clases](../reports/figures/baseline_01_distribucion_clases.png)
+# 17. Desbalance de clases
 
 La cantidad limitada de nuevos emisores constituye uno de los principales retos del problema.
 
-El modelo debe encontrar patrones útiles a partir de aproximadamente 0,05 % de observaciones positivas dentro del universo disponible.
+El modelo debe identificar patrones útiles a partir de aproximadamente 0,05 % de observaciones positivas.
+
+![Figura 2. Distribución de clases](../reports/figures/baseline_01_distribucion_clases.png)
+
+**Figura 2.** Distribución de clases por conjunto temporal. Fuente: elaboración propia.
 
 ---
 
-# 11. Análisis del umbral de clasificación
+# 18. Análisis del umbral de clasificación
 
-Inicialmente se utilizó un umbral de clasificación de:
+Inicialmente se utiliza un umbral diagnóstico de:
 
 `0,50`
 
-En VALIDATION se obtuvo:
+## 18.1 VALIDATION
 
 | Resultado | Cantidad |
 |---|---:|
@@ -268,11 +480,13 @@ En VALIDATION se obtuvo:
 | Falsos positivos | 14.381 |
 | Verdaderos negativos | 94.678 |
 
-![Matriz de confusión Validation](../reports/figures/baseline_03_confusion_matrix_validation.png)
+![Figura 3. Matriz de confusión VALIDATION](../reports/figures/baseline_03_confusion_matrix_validation.png)
+
+**Figura 3.** Matriz de confusión en VALIDATION. Fuente: elaboración propia.
 
 El modelo identifica 37 de los 42 futuros emisores, pero genera 14.381 falsos positivos.
 
-En TEST se obtuvo:
+## 18.2 TEST
 
 | Resultado | Cantidad |
 |---|---:|
@@ -281,133 +495,131 @@ En TEST se obtuvo:
 | Falsos positivos | 86.032 |
 | Verdaderos negativos | 174.354 |
 
-![Matriz de confusión Test](../reports/figures/baseline_04_confusion_matrix_test.png)
+![Figura 4. Matriz de confusión TEST](../reports/figures/baseline_04_confusion_matrix_test.png)
 
-Estos resultados muestran que el umbral de 0,50 no es adecuado como regla operativa de prospección comercial.
+**Figura 4.** Matriz de confusión en TEST. Fuente: elaboración propia.
 
-Por esta razón, consideramos que el problema debe ser tratado principalmente como un problema de **priorización de empresas**, más que como una clasificación binaria convencional.
+Los resultados muestran que el umbral de 0,50 no es adecuado como regla operativa de prospección.
+
+Por esta razón, el problema se interpreta principalmente como un problema de **ranking y priorización**, más que como una clasificación binaria convencional.
 
 ---
 
-# 12. Resultados de ranking
+# 19. Resultados de ranking
 
-## 12.1 TRAIN
+## 19.1 TRAIN
 
-| K | Futuros emisores encontrados | Precision@K | Recall@K | Lift@K |
+| K | Futuros emisores | Precision@K | Recall@K | Lift@K |
 |---:|---:|---:|---:|---:|
 | 50 | 24 | 0,4800 | 0,0706 | 726,39 |
 | 100 | 42 | 0,4200 | 0,1235 | 635,59 |
 | 200 | 59 | 0,2950 | 0,1735 | 446,43 |
 
-## 12.2 VALIDATION
+## 19.2 VALIDATION
 
-| K | Futuros emisores encontrados | Precision@K | Recall@K | Lift@K |
+| K | Futuros emisores | Precision@K | Recall@K | Lift@K |
 |---:|---:|---:|---:|---:|
 | 50 | 5 | 0,1000 | 0,1190 | 259,76 |
 | 100 | 5 | 0,0500 | 0,1190 | 129,88 |
 | 200 | 5 | 0,0250 | 0,1190 | 64,94 |
 
-## 12.3 TEST
+## 19.3 TEST
 
-| K | Futuros emisores encontrados | Precision@K | Recall@K | Lift@K |
+| K | Futuros emisores | Precision@K | Recall@K | Lift@K |
 |---:|---:|---:|---:|---:|
 | 50 | 1 | 0,0200 | 0,0172 | 89,81 |
 | 100 | 2 | 0,0200 | 0,0345 | 89,81 |
 | 200 | 3 | 0,0150 | 0,0517 | 67,36 |
 
-![Positivos Top K](../reports/figures/baseline_05_positivos_top_k.png)
+![Figura 5. Positivos Top-K](../reports/figures/baseline_05_positivos_top_k.png)
 
-![Lift Top K](../reports/figures/baseline_06_lift_top_k.png)
+**Figura 5.** Futuros emisores identificados en el Top-K. Fuente: elaboración propia.
 
-![Precision Top K](../reports/figures/baseline_07_precision_top_k.png)
+![Figura 6. Lift Top-K](../reports/figures/baseline_06_lift_top_k.png)
+
+**Figura 6.** Lift del ranking por conjunto temporal. Fuente: elaboración propia.
+
+![Figura 7. Precision Top-K](../reports/figures/baseline_07_precision_top_k.png)
+
+**Figura 7.** Precision@K por conjunto temporal. Fuente: elaboración propia.
 
 ---
 
-# 13. Interpretación del ranking
+# 20. Interpretación del ranking
 
-Los resultados de ranking muestran que el modelo sí logra concentrar futuros emisores en las primeras posiciones con una frecuencia considerablemente superior a una selección aleatoria.
+Los resultados muestran que el modelo concentra futuros emisores en las primeras posiciones con una frecuencia considerablemente superior a una selección aleatoria.
 
-Por ejemplo, en VALIDATION, dentro de las primeras 50 empresas priorizadas aparecen 5 futuros emisores.
-
-Esto corresponde a:
+En VALIDATION, dentro de las primeras 50 empresas priorizadas aparecen 5 futuros emisores:
 
 - Precision@50 = 10 %
 - Recall@50 = 11,90 %
 - Lift@50 = 259,76
 
-El Lift@50 indica que la concentración de futuros emisores en las primeras posiciones es aproximadamente 260 veces superior a la prevalencia promedio de ese conjunto.
+El Lift@50 indica que la concentración de futuros emisores dentro de las primeras posiciones es aproximadamente 260 veces superior a la prevalencia promedio del conjunto de VALIDATION.
 
-Sin embargo, la capacidad de concentración disminuye en el conjunto TEST.
+Sin embargo, la capacidad de concentración disminuye en TEST:
 
-En TEST:
-
-- Top 50 identifica 1 futuro emisor.
-- Top 100 identifica 2.
+- Top 50 identifica 1 futuro emisor;
+- Top 100 identifica 2;
 - Top 200 identifica 3.
 
-Aunque el Lift continúa siendo elevado respecto a una selección aleatoria, la cobertura de futuros emisores todavía resulta insuficiente para considerar el modelo como una herramienta operativa definitiva.
+Aunque el Lift continúa siendo superior al de una selección aleatoria, la cobertura todavía es insuficiente para considerar el modelo como una herramienta operativa definitiva.
 
 ---
 
-# 14. Análisis de la posición de los futuros emisores
+# 21. Posición de los futuros emisores
 
-Se amplió el análisis hasta las primeras 1.000 empresas del ranking.
-
-## VALIDATION
+## 21.1 VALIDATION
 
 | Ranking | Positivos encontrados | Recall |
-|---:|---:|---:|
+|---|---:|---:|
 | Top 50 | 5 | 11,90 % |
 | Top 100 | 5 | 11,90 % |
 | Top 200 | 5 | 11,90 % |
 | Top 500 | 5 | 11,90 % |
 | Top 1.000 | 10 | 23,81 % |
 
-La mejor posición de un futuro emisor fue:
+Resultados adicionales:
 
-**7**
+- mejor posición positiva: 7;
+- mediana de posición positiva: 2.362,5;
+- peor posición positiva: 64.033.
 
-La mediana de posición fue:
-
-**2.362**
-
-La peor posición fue:
-
-**64.033**
-
-## TEST
+## 21.2 TEST
 
 | Ranking | Positivos encontrados | Recall |
-|---:|---:|---:|
+|---|---:|---:|
 | Top 50 | 1 | 1,72 % |
 | Top 100 | 2 | 3,45 % |
 | Top 200 | 3 | 5,17 % |
 | Top 500 | 4 | 6,90 % |
 | Top 1.000 | 10 | 17,24 % |
 
-La mejor posición fue:
+Resultados adicionales:
 
-**50**
+- mejor posición positiva: 50;
+- mediana de posición positiva: 4.317;
+- peor posición positiva: 160.698.
 
-La mediana fue:
-
-**4.317**
-
-La peor posición fue:
-
-**160.698**
-
-Estos resultados refuerzan la evidencia de una reducción temporal en la capacidad del modelo para concentrar futuros emisores en los primeros lugares.
+Estos resultados refuerzan la evidencia de una disminución temporal en la capacidad del modelo para concentrar futuros emisores en las primeras posiciones.
 
 ---
 
-# 15. Análisis de errores
+# 22. Análisis de errores
 
-Se analizaron de forma agregada los verdaderos positivos, falsos positivos, falsos negativos y verdaderos negativos.
+Se analizaron de forma agregada:
+
+- verdaderos positivos;
+- falsos positivos;
+- falsos negativos;
+- verdaderos negativos;
+- posición de positivos en el ranking;
+- sectores asociados a errores;
+- perfiles financieros de los errores.
 
 En VALIDATION se identificaron cinco falsos negativos.
 
-Estos casos pertenecieron a los sectores:
+Los sectores observados fueron:
 
 - F
 - M
@@ -415,29 +627,27 @@ Estos casos pertenecieron a los sectores:
 - N
 - R
 
-En TEST se identificaron cuatro falsos negativos y los cuatro pertenecieron al sector:
+En TEST se identificaron cuatro falsos negativos y los cuatro correspondieron al sector A.
 
-**A**
+Estos resultados se interpretan únicamente como comportamientos observados.
 
-Este resultado fue analizado únicamente como comportamiento observado y no permite concluir que exista un problema general con dicho sector debido al reducido número de casos.
+El número de falsos negativos es demasiado reducido para concluir que exista un problema general con un sector específico.
 
 ---
 
-# 16. Perfil financiero de falsos negativos
+# 23. Perfil financiero de falsos negativos
 
-En VALIDATION se observaron diferencias entre los futuros emisores correctamente identificados y aquellos que el modelo no detectó con el umbral inicial.
-
-Por ejemplo:
+## 23.1 VALIDATION
 
 | Variable | Mediana TP | Mediana FN |
 |---|---:|---:|
-| LOG_ACTIVO_TOTAL | 16,1125 | 14,7207 |
-| LIQUIDEZ_CORRIENTE | 1,1588 | 2,0661 |
-| ENDEUDAMIENTO | 0,7749 | 0,6579 |
-| AUTONOMIA_FINANCIERA | 0,2251 | 0,3421 |
-| PASIVO_CORRIENTE_PASIVO | 0,7657 | 0,5787 |
+| `LOG_ACTIVO_TOTAL` | 16,1125 | 14,7207 |
+| `LIQUIDEZ_CORRIENTE` | 1,1588 | 2,0661 |
+| `ENDEUDAMIENTO` | 0,7749 | 0,6579 |
+| `AUTONOMIA_FINANCIERA` | 0,2251 | 0,3421 |
+| `PASIVO_CORRIENTE_PASIVO` | 0,7657 | 0,5787 |
 
-Los falsos negativos presentan, en términos medianos:
+En VALIDATION, los falsos negativos presentan, en términos medianos:
 
 - menor tamaño;
 - mayor liquidez;
@@ -446,78 +656,105 @@ Los falsos negativos presentan, en términos medianos:
 
 Estos resultados son descriptivos y no implican causalidad.
 
-En TEST los cuatro falsos negativos presentan además un perfil especialmente diferente al patrón dominante:
+## 23.2 TEST
 
-- activos reducidos;
-- ausencia de pasivos;
+Los cuatro falsos negativos de TEST presentan un perfil especialmente diferente al patrón predominante:
+
+- `LOG_ACTIVO_TOTAL` mediano aproximado: 6,6859;
+- pasivo total igual a cero;
+- patrimonio y capital cercanos al nivel del activo;
+- endeudamiento igual a cero;
 - autonomía financiera cercana a 1;
-- elevada proporción de efectivo y capital respecto a activos.
+- elevada proporción de efectivo respecto a activos;
+- razones asociadas al pasivo con valores faltantes cuando el denominador es cero.
 
-Esto sugiere que una regresión logística puede tener dificultades para identificar determinados perfiles financieros atípicos.
-
----
-
-# 17. Análisis de la variable sectorial
-
-En el Baseline v1 varios coeficientes de mayor magnitud correspondieron a `SECTOR_CIIU`.
-
-Por esta razón se analizó la distribución de eventos positivos por sector.
-
-En TRAIN, los sectores con mayor cantidad de positivos fueron:
-
-- G: 128
-- C: 102
-- A: 24
-- F: 14
-- N: 12
-- E: 12
-- K: 11
-
-Los sectores G y C concentran aproximadamente el 67,6 % de los positivos de TRAIN.
-
-También se identificaron sectores con muy pocos o ningún evento positivo.
-
-Esto podía producir coeficientes sectoriales poco estables.
+Debido a que se trata de solo cuatro observaciones, este comportamiento debe tratarse como una señal exploratoria y no como una conclusión general.
 
 ---
 
-# 18. Experimento v2: eliminación de SECTOR_CIIU
+# 24. Análisis de la variable sectorial
 
-Para comprobar la importancia de esta variable se construyó una segunda regresión logística eliminando completamente `SECTOR_CIIU`.
+En el Baseline v1 varios coeficientes de mayor magnitud corresponden a `SECTOR_CIIU`.
 
-La comparación en VALIDATION fue:
+La distribución de positivos en TRAIN muestra una concentración importante:
+
+| Sector | Positivos en TRAIN |
+|---|---:|
+| G | 128 |
+| C | 102 |
+| A | 24 |
+| F | 14 |
+| N | 12 |
+| E | 12 |
+| K | 11 |
+
+Los sectores G y C concentran:
+
+**230 de 340 positivos de TRAIN, aproximadamente 67,6 %.**
+
+También existen sectores con muy pocos o ningún evento positivo.
+
+Esto puede producir coeficientes sectoriales inestables.
+
+---
+
+# 25. Experimento v2 — Eliminación de SECTOR_CIIU
+
+Para evaluar si la variable sectorial estaba introduciendo inestabilidad se construyó una segunda regresión logística eliminando completamente `SECTOR_CIIU`.
+
+Se mantuvieron:
+
+- el mismo dataset;
+- el mismo split temporal;
+- el mismo algoritmo;
+- `C = 1`;
+- `class_weight = balanced`;
+- regularización L2.
+
+El conjunto TEST no fue utilizado durante la selección de esta alternativa.
+
+## 25.1 Resultados en VALIDATION
 
 | Métrica | Baseline v1 | Baseline v2 |
 |---|---:|---:|
 | PR-AUC | 0,031095 | 0,024402 |
 | ROC-AUC | 0,940593 | 0,961619 |
+| Precision | 0,002566 | 0,002485 |
+| Recall | 0,880952 | 0,952381 |
+| F1 | 0,005118 | 0,004956 |
 | Precision@50 | 0,1000 | 0,0800 |
 | Recall@50 | 0,1190 | 0,0952 |
 | Lift@50 | 259,76 | 207,81 |
 
-Aunque ROC-AUC aumentó, las métricas consideradas más importantes para la priorización disminuyeron.
+Aunque ROC-AUC y Recall al threshold de 0,50 aumentan, las métricas consideradas prioritarias para el problema de ranking disminuyen.
 
-El PR-AUC se redujo aproximadamente un 21,5 %.
+El PR-AUC se reduce aproximadamente un 21,5 %.
 
-Por tanto, decidimos mantener la información sectorial.
+Top 100 y Top 200 no presentan una mejora respecto del Baseline v1.
 
-El conjunto TEST no fue utilizado para seleccionar entre Baseline v1 y v2.
+## 25.2 Decisión
+
+Se mantiene `SECTOR_CIIU` dentro del modelo de referencia.
+
+La mejora de ROC-AUC no se considera suficiente para sustituir el Baseline v1 porque no mejora las métricas relacionadas directamente con la priorización.
 
 ---
 
-# 19. Experimento v3: regularización
+# 26. Experimento v3 — Regularización
 
-También se evaluó si una mayor regularización podía controlar la inestabilidad observada en algunos coeficientes.
+Se evaluó el efecto de modificar el parámetro `C` manteniendo `SECTOR_CIIU`.
 
-Se probaron:
+Valores evaluados:
 
-- C = 0,001
-- C = 0,01
-- C = 0,1
-- C = 1
-- C = 10
+- 0,001
+- 0,01
+- 0,1
+- 1
+- 10
 
-Los resultados principales en VALIDATION fueron:
+El conjunto TEST no fue utilizado durante este experimento.
+
+## 26.1 Resultados en VALIDATION
 
 | C | PR-AUC | ROC-AUC | Positivos Top 50 |
 |---:|---:|---:|---:|
@@ -527,361 +764,471 @@ Los resultados principales en VALIDATION fueron:
 | 1 | 0,031095 | 0,940593 | 5 |
 | 10 | 0,031135 | 0,934021 | 5 |
 
-El valor C = 10 obtuvo el PR-AUC numéricamente más alto, pero la diferencia frente a C = 1 fue únicamente:
+`C = 10` obtiene el PR-AUC numéricamente más alto.
+
+La diferencia frente a `C = 1` es:
 
 **0,000040**
 
-Esto representa aproximadamente un 0,13 % de diferencia relativa.
+equivalente aproximadamente a un **0,13 % relativo**.
 
-Además, ambos modelos obtuvieron exactamente los mismos resultados en Top 50, Top 100 y Top 200.
+Los resultados Top 50, Top 100 y Top 200 son iguales para `C = 1` y `C = 10`.
 
-Por esta razón, no consideramos que exista evidencia suficiente para sustituir el Baseline v1.
+Además, ROC-AUC disminuye con `C = 10`.
 
----
+## 26.2 Decisión
 
-# 20. Modelo de referencia actual
+No se considera que exista una mejora material suficiente para modificar el modelo de referencia.
 
-Después de los experimentos realizados, se mantiene como referencia:
+Se mantiene:
 
-**Baseline v1**
-
-con:
-
-- Regresión logística
-- C = 1
-- class_weight = balanced
-- SECTOR_CIIU incluido
-
-Los experimentos v2 y v3 permitieron comprobar que ni eliminar completamente la información sectorial ni modificar únicamente la regularización producen una mejora material.
+`C = 1.0`
 
 ---
 
-# 21. Fortalezas encontradas
+# 27. Uso del conjunto TEST
 
-Los resultados preliminares permiten identificar varias fortalezas del prototipo.
+El conjunto:
 
-### Existe señal predictiva
+**TEST 2022–2023**
 
-Las características financieras contienen información que permite diferenciar parcialmente empresas con mayor afinidad histórica hacia la emisión de valores.
+fue utilizado para la evaluación final del Baseline v1 después de establecer su configuración.
 
-### El ranking supera ampliamente una selección aleatoria
+Los análisis gráficos y de errores posteriores reproducen los resultados del mismo modelo ya fijado y no fueron utilizados para modificar retrospectivamente sus parámetros.
 
-Los valores de Lift obtenidos muestran que los futuros emisores aparecen concentrados en las primeras posiciones con una frecuencia significativamente superior a la prevalencia general.
+Los experimentos:
 
-### El proceso es temporal
+- Baseline v2;
+- experimento v3 de regularización;
 
-El modelo no fue evaluado mediante una división aleatoria, sino respetando la secuencia cronológica.
+fueron comparados utilizando únicamente:
 
-### Existe trazabilidad
+- TRAIN;
+- VALIDATION.
 
-Los procesos de:
+TEST no fue utilizado para seleccionar esas alternativas.
 
-- construcción de datos;
-- homologación;
-- validación;
-- construcción del target;
-- ingeniería de variables;
-- entrenamiento;
-- evaluación;
-- análisis de errores;
-
-se encuentran implementados mediante scripts reproducibles y versionados.
+Esta distinción es importante para mantener trazabilidad sobre qué información participó en la selección de cada versión.
 
 ---
 
-# 22. Limitaciones encontradas
+# 28. Modelo de referencia actual
 
-## 22.1 Desbalance extremo
+Se mantiene como referencia:
 
-El número de casos positivos es reducido:
+- modelo: Regresión logística;
+- `C = 1.0`;
+- `class_weight = balanced`;
+- regularización L2;
+- `SECTOR_CIIU` incluido.
 
-**440 positivos frente a 883.632 negativos.**
+Los experimentos v2 y v3 muestran que:
 
-Esto limita la capacidad del modelo de aprender diferentes perfiles de futuros emisores.
+- eliminar completamente la información sectorial no mejora las métricas prioritarias;
+- modificar únicamente la intensidad de regularización tampoco produce una mejora material.
 
-## 22.2 Degradación temporal
+Por tanto, el Baseline v1 continúa siendo la referencia para evaluar las siguientes iteraciones.
+
+---
+
+# 29. Fortalezas encontradas
+
+## 29.1 Existe señal predictiva
+
+Las variables financieras permiten diferenciar parcialmente empresas que posteriormente se convierten en emisores.
+
+## 29.2 El ranking supera una selección aleatoria
+
+Los valores de Lift muestran una concentración de futuros emisores muy superior a la prevalencia general, especialmente en TRAIN y VALIDATION.
+
+## 29.3 La evaluación respeta el orden temporal
+
+No se utiliza una división aleatoria.
+
+La separación cronológica aproxima mejor el escenario de aplicación futura del modelo.
+
+## 29.4 El preprocesamiento se ajusta únicamente con TRAIN
+
+La imputación, escalamiento y codificación se calculan con TRAIN y posteriormente se aplican a los demás conjuntos.
+
+## 29.5 Existe trazabilidad técnica
+
+El proyecto dispone de:
+
+- scripts separados por etapa;
+- resultados versionados;
+- documentación por experimento;
+- README;
+- bitácora;
+- backlog;
+- diccionario de datos;
+- inventario de fuentes;
+- entorno técnico documentado.
+
+---
+
+# 30. Limitaciones encontradas
+
+## 30.1 Desbalance extremo
+
+Existen solamente 440 positivos frente a 883.632 negativos.
+
+TRAIN contiene 340 casos positivos.
+
+VALIDATION contiene 42.
+
+TEST contiene 58.
+
+Esto limita la capacidad del modelo para aprender una variedad amplia de perfiles de futuros emisores.
+
+## 30.2 Degradación temporal
 
 El desempeño disminuye al avanzar hacia períodos posteriores.
 
-Esto puede estar asociado a:
+Entre las hipótesis de trabajo se encuentran:
 
-- cambios en las características de los nuevos emisores;
+- cambios en la composición de las empresas;
+- cambios en prevalencia;
 - cambios sectoriales;
-- nuevas condiciones económicas;
-- variables actualmente no incorporadas;
+- condiciones económicas distintas;
+- variables todavía no incorporadas;
 - relaciones no lineales;
 - reducido número de eventos positivos.
 
-Estas posibilidades constituyen hipótesis de trabajo y todavía no conclusiones.
+Estas posibilidades son hipótesis de trabajo y no conclusiones demostradas.
 
-## 22.3 Variables principalmente estáticas
+## 30.3 Variables principalmente estáticas
 
-El modelo utiliza una fotografía financiera anual.
+El modelo utiliza principalmente una fotografía financiera anual.
 
-Todavía no incorpora variables como:
+Todavía no incorpora:
 
 - crecimiento interanual;
-- tendencia del activo;
-- tendencia del patrimonio;
+- tendencia de activos;
+- tendencia de patrimonio;
 - evolución del endeudamiento;
+- evolución de liquidez;
 - estabilidad de utilidades;
 - crecimiento acumulado;
 - volatilidad financiera.
 
-Estas variables podrían resultar especialmente relevantes porque el interés del proyecto consiste en identificar empresas que estén evolucionando hacia un perfil compatible con el mercado de valores.
+## 30.4 Modelo lineal
 
-## 22.4 Modelo lineal
+La regresión logística modela relaciones lineales en el espacio transformado.
 
-La regresión logística representa relaciones fundamentalmente lineales entre las características transformadas y la variable objetivo.
-
-Podrían existir combinaciones no lineales entre:
+Pueden existir interacciones no lineales entre:
 
 - tamaño;
 - liquidez;
 - endeudamiento;
 - rentabilidad;
 - sector;
-- crecimiento;
+- crecimiento.
 
-que este modelo no puede representar adecuadamente.
+## 30.5 Scores no calibrados
 
-## 22.5 Scores no calibrados
+Debido a `class_weight="balanced"`, los scores actuales no deben interpretarse como probabilidades reales.
 
-Debido al uso de:
+Por esta razón todavía no se utilizan directamente como Índice de Afinidad Bursátil.
 
-`class_weight="balanced"`
+## 30.6 Disponibilidad temporal de información
 
-los resultados de `predict_proba()` no deben interpretarse todavía como probabilidades reales.
+La fecha de cierre del estado financiero no garantiza que la información hubiera estado disponible públicamente en esa misma fecha.
 
-Por ejemplo, obtener un score de 0,90 no significa que exista un 90 % de probabilidad real de convertirse en emisor.
-
-Por esta razón todavía no utilizamos estos valores directamente como Índice de Afinidad Bursátil.
+Este aspecto requiere una revisión específica antes de considerar una implementación operativa.
 
 ---
 
-# 23. Consideración sobre disponibilidad temporal de información
+# 31. Relación con la necesidad organizacional de la BVQ
 
-En las siguientes etapas también será necesario profundizar el control sobre la disponibilidad real de cada estado financiero.
+Los resultados preliminares muestran que la inteligencia artificial puede aportar una metodología para reducir y ordenar un universo amplio de empresas.
 
-Aunque la unidad temporal se encuentra definida por año, determinados estados financieros pueden haber sido reportados posteriormente al cierre anual.
+El uso esperado del sistema sería apoyar a la BVQ para:
 
-Antes de una implementación operativa deberá garantizarse que cada variable utilizada por el modelo habría estado efectivamente disponible en la fecha en que se pretende realizar la predicción.
+- analizar un universo amplio de compañías;
+- aplicar criterios homogéneos;
+- generar un ranking;
+- enfocar recursos comerciales;
+- complementar el ranking con criterios financieros y comerciales;
+- facilitar el análisis posterior por especialistas.
 
-Esto permitirá reducir el riesgo de incorporar información que no habría estado disponible en un escenario real.
+El sistema no pretende determinar automáticamente qué empresa debe convertirse en emisor.
 
----
-
-# 24. Relación con la necesidad organizacional de la BVQ
-
-El resultado preliminar muestra que la inteligencia artificial puede contribuir al problema de prospección de la BVQ, pero todavía no debe utilizarse como mecanismo automático de decisión.
-
-El uso más adecuado sería como herramienta de apoyo para:
-
-1. analizar un universo amplio de empresas;
-2. asignar un nivel de afinidad;
-3. generar una lista priorizada;
-4. complementar la lista con criterios comerciales y financieros;
-5. facilitar el análisis por parte de especialistas de la BVQ.
-
-Por tanto, el objetivo no es que el modelo determine qué empresa debe convertirse en emisor.
-
-Su función sería reducir el universo de análisis y orientar los esfuerzos comerciales hacia empresas con características que justifican un análisis más profundo.
+Su función sería apoyar la priorización y reducir el universo inicial de análisis.
 
 ---
 
-# 25. Próximos pasos
+# 32. Backlog priorizado
 
-A partir de los resultados obtenidos proponemos el siguiente backlog técnico.
+El backlog detallado se mantiene en:
 
-## Prioridad 1 — Variables temporales
+`docs/backlog.md`
 
-Construir variables como:
+La siguiente tabla resume las actividades actuales.
+
+| ID | Prioridad | Actividad | Estado |
+|---|---|---|---|
+| B07 | Alta | Fortalecer control temporal de disponibilidad de datos | Pendiente |
+| B01 | Alta | Construir variables temporales | Pendiente |
+| B02 | Alta | Construir tasas de crecimiento | Pendiente |
+| B03 | Alta | Construir tendencias multianuales | Pendiente |
+| B04 | Alta | Evaluar Gradient Boosting | Pendiente |
+| B05 | Alta | Evaluar CatBoost | Pendiente |
+| B06 | Alta | Comparar nuevos modelos contra Baseline v1 | Pendiente |
+| B09 | Media | Evaluar estrategias de desbalance | Pendiente |
+| B10 | Media | Ampliar análisis de Top-K | Pendiente |
+| B11 | Media | Analizar estabilidad temporal por cohortes | Pendiente |
+| B08 | Media | Evaluar Random Forest | Pendiente |
+| B12 | Media | Evaluar nuevas fuentes | Pendiente |
+| B13 | Media | Evaluar calibración | Pendiente |
+| B15 | Media | Incorporar interpretabilidad | Pendiente |
+| B14 | Media | Construir Índice de Afinidad Bursátil | Pendiente |
+| B17 | Baja | Evaluar MLP | Pendiente |
+| B18 | Baja | Diseñar prototipo de visualización | Pendiente |
+| B19 | Baja | Evaluar monitoreo de drift | Pendiente |
+
+El diccionario de datos, que anteriormente se consideraba una necesidad de documentación, ya se encuentra formalizado en:
+
+`docs/diccionario_datos.md`
+
+---
+
+# 33. Próximas mejoras técnicas
+
+## 33.1 Variables temporales
+
+Se priorizará la construcción de:
 
 - crecimiento anual de activos;
 - crecimiento de patrimonio;
-- crecimiento de utilidad;
+- variación de capital;
 - variación de endeudamiento;
 - variación de liquidez;
-- tendencia de dos y tres años;
+- crecimiento de utilidad;
 - estabilidad de resultados;
+- tendencia de dos y tres años;
 - crecimiento acumulado.
 
-**Objetivo:** pasar de una fotografía financiera a una representación de la trayectoria empresarial.
+El objetivo es pasar de una fotografía financiera a una representación de la trayectoria empresarial.
 
----
+## 33.2 Modelos no lineales
 
-## Prioridad 2 — Modelos no lineales
+Se evaluarán:
 
-Evaluar:
-
-- Random Forest;
 - Gradient Boosting;
 - CatBoost;
-- eventualmente XGBoost.
+- Random Forest.
 
-Estos algoritmos podrían identificar relaciones e interacciones entre variables que la regresión logística no captura.
+Estos modelos permitirán analizar si existen relaciones no lineales e interacciones que la regresión logística no representa adecuadamente.
 
----
+## 33.3 Redes neuronales
 
-## Prioridad 3 — Redes neuronales
+Posteriormente se evaluará una red neuronal multicapa o MLP.
 
-Evaluar una red neuronal multicapa o MLP.
-
-Debido a la limitada cantidad de positivos, será necesario controlar especialmente:
+Debido al reducido número de positivos será necesario controlar:
 
 - sobreajuste;
 - regularización;
-- pesos de clase;
 - arquitectura;
-- validación temporal.
-
-La red neuronal será comparada con los modelos tabulares y no se asumirá anticipadamente que debe producir el mejor resultado.
-
----
-
-## Prioridad 4 — Tratamiento del desbalance
-
-Evaluar alternativas como:
-
 - ponderación de clases;
-- submuestreo controlado;
-- técnicas específicas para eventos poco frecuentes.
+- estabilidad temporal.
 
-Cualquier técnica deberá aplicarse únicamente sobre TRAIN para evitar contaminación entre conjuntos.
+## 33.4 Tratamiento del desbalance
 
----
+Se evaluarán alternativas como:
 
-## Prioridad 5 — Optimización del ranking
+- diferentes pesos de clase;
+- undersampling controlado;
+- estrategias compatibles con validación temporal.
 
-El modelo deberá optimizarse considerando principalmente la utilidad comercial.
+Cualquier técnica de remuestreo deberá aplicarse exclusivamente sobre TRAIN.
 
-Las métricas prioritarias serán:
+## 33.5 Optimización del ranking
 
-- Precision@50
-- Precision@100
-- Recall@50
-- Recall@100
-- Lift@K
+Se ampliará la evaluación hacia:
 
-Posteriormente podrán analizarse otros valores de K de acuerdo con la capacidad real de gestión comercial de la BVQ.
+- Top 25;
+- Top 50;
+- Top 100;
+- Top 200;
+- Top 500;
+- Top 1.000.
 
----
+El objetivo es relacionar K con la capacidad real de gestión comercial de la BVQ.
 
-## Prioridad 6 — Nuevas fuentes de información
+## 33.6 Nuevas fuentes
 
-Después de explotar la información histórica disponible se podrá analizar la incorporación incremental de:
+Después de explotar las variables históricas disponibles se podrá evaluar información adicional proveniente de:
 
-- información corporativa adicional de SCVS;
-- información histórica interna de BVQ;
+- SCVS;
+- información interna de BVQ;
+- fuentes públicas empresariales;
 - variables sectoriales;
-- indicadores macroeconómicos;
-- otras fuentes públicas empresariales.
+- variables macroeconómicas.
 
-Cada nueva fuente deberá cumplir una condición fundamental:
+Toda fuente adicional deberá cumplir una regla obligatoria:
 
-**la información debe haber estado disponible antes de la fecha en que se realiza la predicción.**
+**la información utilizada como predictor debe haber estado disponible antes de la fecha de predicción.**
 
----
+## 33.7 Calibración
 
-## Prioridad 7 — Calibración
+Después de seleccionar una familia de modelo con desempeño adecuado se evaluará calibración.
 
-Una vez seleccionado el modelo con mejor capacidad predictiva y de ranking, se deberá evaluar:
+El objetivo será obtener scores con una interpretación probabilística más consistente.
 
-- calibración de probabilidades;
-- curvas de calibración;
-- Brier Score;
-- Platt Scaling;
-- calibración isotónica.
+## 33.8 Interpretabilidad
 
-Solo posteriormente se deberá definir formalmente el:
+Se evaluarán mecanismos como:
 
-**Índice de Afinidad Bursátil (IAB).**
+- coeficientes en modelos lineales;
+- importancia de variables;
+- SHAP en modelos compatibles;
+- explicaciones locales y globales.
 
 ---
 
-## Prioridad 8 — Interpretabilidad
+# 34. Índice de Afinidad Bursátil
 
-Sobre el modelo seleccionado se deberán implementar mecanismos de explicación.
+El proyecto contempla posteriormente la construcción de un:
 
-Entre las técnicas a evaluar se encuentra:
+**Índice de Afinidad Bursátil (IAB)**
 
-**SHAP**
+El IAB no debe definirse todavía como una simple transformación de los scores actuales porque estos no se encuentran calibrados.
 
-El objetivo será explicar por qué una empresa aparece en determinada posición del ranking y cuáles variables contribuyeron a su resultado.
+Su construcción deberá realizarse después de:
+
+1. seleccionar un modelo con desempeño suficiente;
+2. evaluar estabilidad temporal;
+3. calibrar los scores cuando corresponda;
+4. definir una escala interpretable;
+5. validar su utilidad con usuarios de negocio.
 
 ---
 
-# 26. Evidencias de reproducibilidad
+# 35. Herramientas y entorno tecnológico
+
+| Herramienta | Versión / uso |
+|---|---|
+| Python | 3.13.7 |
+| pandas | 3.0.5 |
+| NumPy | 2.5.3 |
+| scikit-learn | 1.9.1 |
+| SciPy | 1.18.1 |
+| Matplotlib | 3.11.1 |
+| joblib | 1.6.0 |
+| openpyxl | 3.1.5 |
+| Jupyter | 1.1.1 |
+| Git | Control de versiones |
+| GitHub | Repositorio remoto privado |
+| Visual Studio Code | Entorno de desarrollo |
+| PowerShell | Ejecución y administración del entorno |
+
+Las versiones completas del entorno se conservan en:
+
+- `requirements.txt`
+- `requirements-lock.txt`
+
+La descripción detallada se encuentra en:
+
+`docs/entorno_tecnico.md`
+
+---
+
+# 36. Evidencias de reproducibilidad
 
 El proyecto se encuentra versionado mediante Git y GitHub.
 
-Entre los principales componentes desarrollados se encuentran:
+## 36.1 Código principal
 
-### Construcción de datos
+| Componente | Archivo |
+|---|---|
+| Construcción del dataset armonizado | `src/data/build_scvs_harmonized_dataset.py` |
+| Validación del dataset armonizado | `src/data/validate_scvs_harmonized_dataset.py` |
+| Construcción del dataset etiquetado | `src/data/build_mvp_labeled_dataset.py` |
+| Ingeniería de variables | `src/features/build_mvp_features.py` |
+| Baseline v1 | `src/models/train_logistic_baseline.py` |
+| Análisis sectorial | `src/evaluation/analyze_sector_stability.py` |
+| Baseline v2 | `src/models/train_logistic_no_sector_v2.py` |
+| Experimento v3 | `src/models/tune_logistic_regularization_v3.py` |
+| Figuras | `src/evaluation/generate_baseline_figures.py` |
+| Análisis de errores | `src/evaluation/analyze_baseline_errors.py` |
 
-`src/data/build_scvs_harmonized_dataset.py`
+## 36.2 Documentación
 
-`src/data/build_mvp_labeled_dataset.py`
+| Documento | Propósito |
+|---|---|
+| `README.md` | Punto de entrada y visión general |
+| `docs/pipeline_datos_mvp.md` | Pipeline completo del MVP |
+| `docs/inventario_fuentes.md` | Inventario de fuentes |
+| `docs/diccionario_datos.md` | Variables, tipos, fórmulas y faltantes |
+| `docs/entorno_tecnico.md` | Entorno y versiones |
+| `docs/baseline_v1.md` | Documentación del modelo de referencia |
+| `docs/baseline_v2.md` | Experimento sin sector |
+| `docs/baseline_v3.md` | Experimento de regularización |
+| `docs/bitacora.md` | Registro cronológico de decisiones y aprendizajes |
+| `docs/backlog.md` | Actividades priorizadas |
+| `docs/informe_resultados_preliminares.md` | Consolidación de resultados |
 
-### Ingeniería de variables
+## 36.3 Resultados
 
-`src/features/build_mvp_features.py`
+Los resultados agregados se encuentran en:
 
-### Baseline
+`reports/results/`
 
-`src/models/train_logistic_baseline.py`
+Las figuras se encuentran en:
 
-### Análisis sectorial
+`reports/figures/`
 
-`src/evaluation/analyze_sector_stability.py`
+Los datasets originales, intermedios y procesados no se almacenan en Git.
 
-### Baseline sin sector
+Los modelos binarios reconstruibles tampoco se versionan.
 
-`src/models/train_logistic_no_sector_v2.py`
+## 36.4 Control de versiones
 
-### Experimento de regularización
+Los principales hitos del proyecto se encuentran registrados mediante commits de Git.
 
-`src/models/tune_logistic_regularization_v3.py`
+La actualización de documentación y reproducibilidad fue consolidada en el commit:
 
-### Figuras
-
-`src/evaluation/generate_baseline_figures.py`
-
-### Análisis de errores
-
-`src/evaluation/analyze_baseline_errors.py`
-
-También se encuentran versionados:
-
-- parámetros de los experimentos;
-- métricas agregadas;
-- resultados de ranking;
-- coeficientes;
-- figuras;
-- documentación metodológica.
-
-Los datasets originales y los modelos binarios no se almacenan directamente en Git.
+`ed1034d — Complete project documentation and reproducibility records`
 
 ---
 
-# 27. Conclusiones preliminares
+# 37. Uso responsable
 
-Los resultados obtenidos permiten concluir preliminarmente que existe señal predictiva en la información financiera histórica para priorizar empresas con potencial de convertirse posteriormente en emisores del mercado de valores.
+El proyecto se desarrolla actualmente con fines académicos, experimentales y de investigación aplicada.
 
-La regresión logística desarrollada como Baseline v1 alcanza valores elevados de ROC-AUC y genera rankings con niveles de Lift significativamente superiores a una selección aleatoria.
+Los resultados del modelo:
 
-Sin embargo, el problema presenta un desbalance extremo y una reducción del desempeño en períodos posteriores.
+- no constituyen recomendaciones de inversión;
+- no determinan automáticamente la aceptación de una empresa como emisor;
+- no sustituyen el análisis financiero, legal o comercial realizado por especialistas;
+- no deben utilizarse como único criterio para tomar decisiones comerciales;
+- no deben interpretarse como probabilidades reales mientras los scores no se encuentren calibrados.
 
-El análisis muestra además que utilizar un umbral de clasificación convencional genera una cantidad demasiado elevada de falsos positivos, por lo que la formulación más adecuada para el proyecto es la de un sistema de **priorización de prospectos**.
+El sistema se concibe como una herramienta de apoyo para priorizar empresas que posteriormente deben ser revisadas por personas con conocimiento del mercado.
 
-Los experimentos realizados permitieron comprobar que eliminar la información sectorial reduce el desempeño del ranking y que modificar únicamente la intensidad de regularización tampoco produce una mejora material.
+Los resultados agregados versionados no incluyen nombres de empresas, RUC ni predicciones individuales.
 
-El análisis de errores muestra además que algunos futuros emisores presentan perfiles financieros alejados del patrón predominante aprendido por el modelo, especialmente empresas de menor tamaño o con estructuras financieras atípicas.
+Los datos originales y derivados no se publican en el repositorio.
 
-Por estas razones, consideramos que el siguiente avance relevante deberá provenir principalmente de la incorporación de variables temporales y de la evaluación de modelos capaces de capturar relaciones no lineales.
+---
 
-En esta etapa, el prototipo demuestra la viabilidad técnica del enfoque y proporciona una primera metodología reproducible para transformar un universo amplio de empresas en una lista priorizada.
+# 38. Conclusiones preliminares
 
-No obstante, los resultados todavía deben considerarse preliminares y el sistema no debe utilizarse como mecanismo autónomo de decisión.
+Los resultados obtenidos permiten establecer que existe una señal predictiva preliminar en la información financiera histórica para priorizar empresas que posteriormente se convierten en emisores del mercado de valores.
 
-Su evolución se orientará a convertirse en una herramienta de apoyo para el análisis y la prospección comercial de la Bolsa de Valores Quito.
+La regresión logística desarrollada como Baseline v1 alcanza valores de ROC-AUC superiores a 0,92 y genera rankings con niveles de Lift considerablemente superiores a una selección aleatoria.
+
+Sin embargo, el problema presenta un desbalance extremo y una degradación importante del desempeño al avanzar hacia períodos posteriores.
+
+El análisis del threshold de 0,50 muestra que una clasificación binaria convencional genera una cantidad demasiado elevada de falsos positivos. Por esta razón, la formulación más útil para el proyecto es la de un sistema de ranking y priorización.
+
+Los experimentos realizados muestran que eliminar `SECTOR_CIIU` reduce el desempeño de las métricas prioritarias y que modificar únicamente la intensidad de regularización no produce una mejora material.
+
+El análisis de errores también muestra que algunos futuros emisores presentan perfiles financieros diferentes del patrón predominante aprendido por el modelo, aunque el reducido número de estos casos impide obtener conclusiones generales.
+
+El siguiente avance relevante deberá concentrarse en fortalecer el control temporal de disponibilidad de la información, incorporar variables de crecimiento y tendencia, y evaluar modelos capaces de capturar relaciones no lineales.
+
+En esta etapa, el proyecto demuestra la viabilidad técnica del pipeline y evidencia la existencia de señal predictiva preliminar. No obstante, todavía no demuestra un desempeño suficiente para uso operativo autónomo.
+
+La evolución del sistema se orientará a convertirse en una herramienta de apoyo para el análisis y la prospección comercial de la Bolsa de Valores Quito, manteniendo la decisión final bajo revisión humana.
