@@ -1,0 +1,32 @@
+{
+    "experimento": "v3_regularizacion_logistica",
+    "modelo": "LogisticRegression",
+    "objetivo": "Evaluar mayor o menor regularización manteniendo SECTOR_CIIU.",
+    "C_values": [
+        0.001,
+        0.01,
+        0.1,
+        1.0,
+        10.0
+    ],
+    "criterio_primario": "VALIDATION_PR_AUC",
+    "criterios_secundarios": [
+        "Precision@50",
+        "Recall@50",
+        "Precision@100",
+        "Recall@100",
+        "Precision@200",
+        "Recall@200"
+    ],
+    "random_state": 42,
+    "class_weight": "balanced",
+    "regularizacion": "L2",
+    "sector_ciiu": true,
+    "train": "2015-2020",
+    "validation": "2021",
+    "test_utilizado": false,
+    "python_version": "3.13.7",
+    "pandas_version": "3.0.5",
+    "numpy_version": "2.5.3",
+    "scikit_learn_version": "1.9.1"
+}
