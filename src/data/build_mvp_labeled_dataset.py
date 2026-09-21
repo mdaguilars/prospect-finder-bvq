@@ -88,6 +88,7 @@ def porcentaje(
 
 print("=" * 110)
 print("CONSTRUCCIÓN DEL TARGET A 24 MESES")
+print("CONTROL TEMPORAL BASADO EN DISPONIBILIDAD NORMATIVA")
 print("=" * 110)
 
 
@@ -330,14 +331,51 @@ df = df.merge(
 
 
 # ============================================================
-# 5. DEFINIR FECHA DE CORTE
+# 5. DEFINIR DISPONIBILIDAD TEMPORAL
 # ============================================================
 
+#
+# Supuesto metodológico:
+#
+# Los estados financieros correspondientes al ejercicio t
+# tienen como plazo ordinario de presentación hasta el
+# 30 de abril del año t+1.
+#
+# Debido a que los archivos públicos utilizados no contienen
+# la fecha efectiva de presentación de cada compañía, el MVP
+# utiliza el plazo normativo como aproximación conservadora
+# de disponibilidad.
+#
+# Ejemplo:
+#
+# Estados financieros:        2020
+# Fecha límite presentación:  30/04/2021
+# Fecha de decisión:           01/05/2021
+# Fin horizonte 24 meses:      30/04/2023
+#
+# El modelo nunca intenta predecir un evento ocurrido antes
+# de la fecha en que se presume disponible la información.
+#
+
 df[
-    "FECHA_CORTE"
+    "FECHA_LIMITE_PRESENTACION"
 ] = pd.to_datetime(
-    df["ANIO"].astype(str)
-    + "-12-31"
+    (
+        df["ANIO"]
+        + 1
+    )
+    .astype(str)
+    + "-04-30"
+)
+
+
+df[
+    "FECHA_DECISION"
+] = (
+    df[
+        "FECHA_LIMITE_PRESENTACION"
+    ]
+    + pd.Timedelta(days=1)
 )
 
 
@@ -346,10 +384,21 @@ df[
 ] = pd.to_datetime(
     (
         df["ANIO"]
-        + 2
+        + 3
     )
     .astype(str)
-    + "-12-31"
+    + "-04-30"
+)
+
+
+print(
+    "\nRegla temporal utilizada:"
+)
+
+print(
+    "Ejercicio t -> límite 30/04/t+1 "
+    "-> decisión 01/05/t+1 "
+    "-> horizonte hasta 30/04/t+3"
 )
 
 
@@ -357,8 +406,16 @@ df[
 # 6. IDENTIFICAR EMPRESAS YA EMISORAS
 # ============================================================
 
+#
+# Una empresa no es elegible si ya se había inscrito
+# como emisor antes de la fecha de decisión.
+#
+# Esto incluye cualquier inscripción ocurrida hasta
+# el 30 de abril del año t+1.
+#
+
 df[
-    "ERA_EMISOR_EN_CORTE"
+    "ERA_EMISOR_ANTES_DECISION"
 ] = (
     df[
         "FECHA_PRIMERA_INSCRIPCION"
@@ -369,8 +426,8 @@ df[
         df[
             "FECHA_PRIMERA_INSCRIPCION"
         ]
-        <= df[
-            "FECHA_CORTE"
+        < df[
+            "FECHA_DECISION"
         ]
     )
 )
@@ -378,7 +435,7 @@ df[
 
 cantidad_ya_emisor = int(
     df[
-        "ERA_EMISOR_EN_CORTE"
+        "ERA_EMISOR_ANTES_DECISION"
     ].sum()
 )
 
@@ -386,7 +443,7 @@ cantidad_ya_emisor = int(
 print(
     "\nObservaciones correspondientes "
     "a empresas que ya eran emisoras "
-    "en el corte:"
+    "antes de la fecha de decisión:"
 )
 
 print(
@@ -400,7 +457,7 @@ print(
 
 mvp = df[
     ~df[
-        "ERA_EMISOR_EN_CORTE"
+        "ERA_EMISOR_ANTES_DECISION"
     ]
 ].copy()
 
@@ -418,6 +475,18 @@ print(
 # 8. CREAR TARGET A 24 MESES
 # ============================================================
 
+#
+# TARGET_24M = 1 cuando la primera inscripción ocurre:
+#
+# - desde la FECHA_DECISION, inclusive;
+# - hasta FECHA_FIN_HORIZONTE, inclusive.
+#
+# Ejemplo para estados financieros 2020:
+#
+# Inicio: 01/05/2021
+# Fin:    30/04/2023
+#
+
 mvp[
     "TARGET_24M"
 ] = (
@@ -430,8 +499,8 @@ mvp[
         mvp[
             "FECHA_PRIMERA_INSCRIPCION"
         ]
-        > mvp[
-            "FECHA_CORTE"
+        >= mvp[
+            "FECHA_DECISION"
         ]
     )
     &
@@ -645,18 +714,19 @@ print(
 # ============================================================
 
 #
-# Las fechas de inscripción NO deben formar parte
-# de las variables predictoras.
+# Las fechas relacionadas con el evento futuro
+# NO deben utilizarse como variables predictoras.
 #
-# Tampoco conservamos ERA_EMISOR_EN_CORTE,
-# porque todas las observaciones finales son elegibles.
+# También eliminamos las fechas auxiliares empleadas
+# exclusivamente para garantizar coherencia temporal.
 #
 
 columnas_eliminar_modelo = [
     "FECHA_PRIMERA_INSCRIPCION",
-    "FECHA_CORTE",
+    "FECHA_LIMITE_PRESENTACION",
+    "FECHA_DECISION",
     "FECHA_FIN_HORIZONTE",
-    "ERA_EMISOR_EN_CORTE",
+    "ERA_EMISOR_ANTES_DECISION",
 ]
 
 
@@ -725,7 +795,10 @@ positivos_auditoria = positivos[
         "NOMBRE",
         "CIIU",
         "PLAN_CONTABLE",
+        "FECHA_LIMITE_PRESENTACION",
+        "FECHA_DECISION",
         "FECHA_PRIMERA_INSCRIPCION",
+        "FECHA_FIN_HORIZONTE",
         "TARGET_24M",
         "BALANCE_OK_REL_001",
         "PASIVO_OK_REL_001",
@@ -736,6 +809,44 @@ positivos_auditoria = positivos[
 positivos_auditoria.to_csv(
     POSITIVES_PATH,
     index=False
+)
+
+
+# ============================================================
+# 18. VALIDACIÓN TEMPORAL FINAL
+# ============================================================
+
+errores_temporales = positivos[
+    (
+        positivos[
+            "FECHA_PRIMERA_INSCRIPCION"
+        ]
+        < positivos[
+            "FECHA_DECISION"
+        ]
+    )
+    |
+    (
+        positivos[
+            "FECHA_PRIMERA_INSCRIPCION"
+        ]
+        > positivos[
+            "FECHA_FIN_HORIZONTE"
+        ]
+    )
+]
+
+
+if len(errores_temporales) > 0:
+
+    raise ValueError(
+        "Se detectaron positivos fuera "
+        "del horizonte temporal definido."
+    )
+
+
+print(
+    "\nValidación temporal de positivos: OK"
 )
 
 

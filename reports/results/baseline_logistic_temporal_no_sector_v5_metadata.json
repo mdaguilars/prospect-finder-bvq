@@ -1,0 +1,62 @@
+{
+    "experimento": "baseline_logistic_temporal_no_sector_v5",
+    "modelo": "LogisticRegression",
+    "descripcion": "Regresión logística temporal equivalente al Baseline v4, eliminando únicamente SECTOR_CIIU.",
+    "objetivo": "Evaluar si eliminar SECTOR_CIIU mejora la estabilidad y la capacidad de ranking fuera del periodo de entrenamiento.",
+    "random_state": 42,
+    "threshold_evaluacion": 0.5,
+    "class_weight": "balanced",
+    "regularizacion": "L2",
+    "C": 1.0,
+    "solver": "lbfgs",
+    "max_iter": 2000,
+    "features": [
+        "LOG_ACTIVO_TOTAL",
+        "LOG_ACTIVO_CORRIENTE",
+        "LOG_EFECTIVO",
+        "LOG_PASIVO_TOTAL",
+        "LOG_PASIVO_CORRIENTE",
+        "LOG_PASIVO_NO_CORRIENTE",
+        "LOG_PATRIMONIO",
+        "LOG_CAPITAL",
+        "LOG_UTILIDAD_NETA",
+        "LIQUIDEZ_CORRIENTE",
+        "ENDEUDAMIENTO",
+        "AUTONOMIA_FINANCIERA",
+        "ROA",
+        "EFECTIVO_ACTIVOS",
+        "CAPITAL_ACTIVOS",
+        "PASIVO_CORRIENTE_PASIVO"
+    ],
+    "sector_ciiu_utilizado": false,
+    "definicion_temporal_target": {
+        "ejercicio_financiero": "t",
+        "fecha_limite_presentacion_asumida": "30/04/t+1",
+        "fecha_decision": "01/05/t+1",
+        "horizonte_inicio": "01/05/t+1",
+        "horizonte_fin": "30/04/t+3",
+        "duracion": "24 meses"
+    },
+    "split_temporal": {
+        "train": "2015-2018",
+        "embargo_validation": "2019",
+        "validation": "2020",
+        "embargo_test": "2021",
+        "test": "2022-2023"
+    },
+    "test_evaluado": false,
+    "nota_test": "El split TEST 2022-2023 existe en el dataset, pero este experimento no genera predicciones, métricas ni ranking sobre TEST.",
+    "k_ranking": [
+        50,
+        100,
+        200
+    ],
+    "python_version": "3.13.7",
+    "pandas_version": "3.0.5",
+    "numpy_version": "2.5.3",
+    "scikit_learn_version": "1.9.1",
+    "scores_calibrados": false,
+    "nota_calibracion": "El uso de class_weight='balanced' implica que los valores producidos por predict_proba no deben interpretarse como probabilidades calibradas para el Índice de Afinidad Bursátil.",
+    "nota_disponibilidad": "Los archivos financieros utilizados no contienen la fecha individual de presentación por empresa. El 30 de abril del año t+1 se utiliza como supuesto metodológico de disponibilidad normativa.",
+    "comparacion_principal": "Baseline temporal v4 con SECTOR_CIIU"
+}
