@@ -272,15 +272,83 @@ Este control es particularmente importante para evitar fuga de información temp
 
 ---
 
-## 13. Fecha de extracción y condiciones de uso
+## 13. Condiciones de acceso, uso y licencia
 
-Las fechas exactas de descarga o extracción de cada fuente y las condiciones específicas de uso deben mantenerse documentadas de manera verificable.
+Las fuentes utilizadas en el proyecto fueron revisadas desde la perspectiva de procedencia, acceso y condiciones de reutilización.
 
-En esta versión del inventario no se asignan fechas de extracción, licencias o condiciones de reutilización que no hayan sido comprobadas explícitamente.
+### 13.1 Estados financieros SCVS
 
-Estos elementos permanecen como parte del fortalecimiento documental del proyecto antes de una eventual implementación operativa o publicación externa.
+**Fuente:** Superintendencia de Compañías, Valores y Seguros (SCVS)
+
+**Condición de acceso:** Información obtenida a través de los portales institucionales de la SCVS.
+
+**Uso en el proyecto:** Construcción de las variables financieras predictoras del MVP.
+
+**Licencia identificada:** No se identificó, en las páginas oficiales revisadas para esta entrega, una licencia abierta específica aplicable a los archivos utilizados, como Creative Commons, Open Data Commons u otra licencia equivalente.
+
+Por esta razón, el proyecto no atribuye a estos datos una licencia de reutilización que no haya sido publicada explícitamente por la institución.
+
+La SCVS se mantiene identificada como fuente original de la información.
+
+**Fecha de verificación documental:** 20 de septiembre de 2026.
 
 ---
+
+### 13.2 Registro del Mercado de Valores SCVS
+
+**Fuente:** Superintendencia de Compañías, Valores y Seguros (SCVS)
+
+**Archivos principales utilizados:**
+
+- `listado_entes_65001_1789908466941.xlsx`
+- `codigos_fichas_registrales_1789908530079.xlsx`
+- `hechos_relevantes_1789908501354.xlsx`
+
+**Condición de acceso:** Información obtenida de los servicios y portales institucionales de la SCVS.
+
+**Uso en el proyecto:** Identificación y validación de la primera inscripción de una empresa como emisor y construcción de `TARGET_24M`.
+
+**Licencia identificada:** No se identificó, en las páginas oficiales revisadas para esta entrega, una licencia específica de reutilización aplicable a estos archivos.
+
+En consecuencia, el proyecto conserva la atribución a la SCVS y no presume derechos adicionales de redistribución o reutilización que no hayan sido expresamente establecidos.
+
+**Fecha de verificación documental:** 20 de septiembre de 2026.
+
+---
+
+### 13.3 Información interna de la Bolsa de Valores Quito
+
+**Fuente:** Bolsa de Valores Quito (BVQ)
+
+Incluye actualmente:
+
+- `V_BALANCE_LINEAS_RESUMEN`
+- `V_RESULTADOS_LINEAS_RESUMEN`
+- otras fuentes institucionales internas disponibles para validación o enriquecimiento.
+
+**Condición de acceso:** Información institucional de acceso interno.
+
+**Uso en el proyecto:** Validación, contraste y potencial enriquecimiento del modelo.
+
+**Licencia:** No se considera información abierta ni se le asigna una licencia pública de reutilización.
+
+Su utilización se limita al entorno autorizado del proyecto y de la Bolsa de Valores Quito.
+
+Los datos internos de BVQ no se publican ni redistribuyen mediante el repositorio GitHub del proyecto.
+
+---
+
+### 13.4 Criterio adoptado para el proyecto
+
+Para mantener trazabilidad y evitar atribuir condiciones de uso que no hayan sido verificadas, se adopta el siguiente criterio:
+
+| Fuente | Acceso | Licencia abierta identificada | Tratamiento |
+|---|---|---|---|
+| SCVS - Estados financieros | Portal institucional | No identificada explícitamente | Uso académico con atribución a la fuente |
+| SCVS - Registro del Mercado de Valores | Portal institucional | No identificada explícitamente | Uso académico con atribución a la fuente |
+| DWH y fuentes internas BVQ | Acceso institucional | No aplica como fuente abierta | Uso interno autorizado; no redistribuir |
+
+La ausencia de una licencia abierta identificada no se interpreta como una autorización irrestricta de reutilización. Antes de una eventual publicación externa de datasets derivados o de una explotación comercial del sistema deberá verificarse nuevamente la normativa, términos de uso y condiciones institucionales aplicables.
 
 ## 14. Reglas de almacenamiento
 

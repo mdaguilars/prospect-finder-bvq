@@ -96,7 +96,21 @@ Los datos internos de la BVQ no se publican en el repositorio.
 | SCVS — Registro del Mercado de Valores | XLSX | Primera inscripción como emisor | Construcción de `TARGET_24M` |
 | BVQ — Data Warehouse | CSV / base de datos | Información financiera complementaria | Validación y enriquecimiento futuro |
 
-**Pendiente de documentación:** registrar y verificar la fecha de extracción o descarga de cada fuente y las condiciones de uso aplicables. Estos datos no deben asumirse si no han sido confirmados.
+### Condiciones de acceso y reutilización
+
+Las fuentes públicas utilizadas para el MVP fueron obtenidas de los portales institucionales de la Superintendencia de Compañías, Valores y Seguros (SCVS).
+
+En la revisión documental realizada para esta entrega no se identificó una licencia abierta específica aplicable a los archivos de estados financieros y del Registro del Mercado de Valores utilizados, como Creative Commons u Open Data Commons. Por esta razón, el proyecto no atribuye a estas fuentes una licencia de reutilización que no haya sido publicada explícitamente y mantiene a la SCVS como fuente original de la información.
+
+La información proveniente del Data Warehouse y de otras fuentes internas de la Bolsa de Valores Quito se considera información institucional de acceso interno. No se publica ni redistribuye mediante el repositorio del proyecto.
+
+La ausencia de una licencia abierta identificada no se interpreta como autorización irrestricta de reutilización. Antes de publicar externamente datasets derivados o utilizar la información con otros fines deberán verificarse nuevamente las condiciones institucionales y normativas aplicables.
+
+**Fecha de verificación documental:** 20 de septiembre de 2026.
+
+El detalle de fuentes, condiciones de acceso y tratamiento se encuentra en:
+
+`docs/inventario_fuentes.md`
 
 ---
 

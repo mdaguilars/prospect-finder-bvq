@@ -729,3 +729,40 @@ La primera consolidación de documentación y reproducibilidad fue versionada en
 `ed1034d — Complete project documentation and reproducibility records`
 
 La presente actualización quedó registrada en Git con el mensaje `Finalize preliminary results documentation`.
+
+---
+
+## 10. Revisión de condiciones de acceso y reutilización de fuentes — 20 de septiembre de 2026
+
+### Objetivo
+
+Fortalecer la trazabilidad documental de las fuentes utilizadas por el proyecto, incorporando una revisión específica sobre sus condiciones de acceso, utilización y licencia.
+
+### Cambios realizados
+
+Se actualizaron:
+
+- `docs/inventario_fuentes.md`;
+- `README.md`;
+- `docs/informe_resultados_preliminares.md`.
+
+### Criterio adoptado
+
+Para las fuentes públicas de la Superintendencia de Compañías, Valores y Seguros (SCVS) se documentó que, durante la revisión realizada para esta entrega, no se identificó una licencia abierta específica aplicable a los archivos utilizados.
+
+Por esta razón:
+
+- se mantiene a la SCVS como fuente original de la información;
+- no se atribuye a los datos una licencia de reutilización que no haya sido publicada explícitamente;
+- el acceso público no se interpreta como autorización irrestricta de redistribución;
+- los archivos originales permanecen fuera del repositorio GitHub.
+
+Para las fuentes internas de la Bolsa de Valores Quito se documentó que corresponden a información institucional de acceso interno y que no se publican ni redistribuyen mediante el repositorio del proyecto.
+
+### Decisión
+
+Antes de una eventual publicación externa de datasets derivados o de una utilización distinta al alcance académico y experimental actual, deberán verificarse nuevamente las condiciones institucionales, legales y normativas aplicables.
+
+### Resultado
+
+El proyecto cuenta ahora con una política documental explícita sobre procedencia, acceso y reutilización de sus principales fuentes de datos.

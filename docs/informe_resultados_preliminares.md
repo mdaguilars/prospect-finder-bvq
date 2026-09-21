@@ -72,15 +72,30 @@ El dataset etiquetado del MVP utiliza información financiera correspondiente al
 
 Aunque existen archivos financieros de años posteriores, el horizonte de predicción de 24 meses limita actualmente la incorporación de años recientes en un dataset completamente etiquetado.
 
-## 2.4 Condiciones de uso y fecha de extracción
+## 2.4 Condiciones de acceso, uso y licencia
 
-Las fechas exactas de descarga o extracción y las condiciones de uso aplicables a cada fuente deben mantenerse documentadas de forma verificable.
+Las fuentes públicas utilizadas para construir el MVP fueron obtenidas de los portales institucionales de la Superintendencia de Compañías, Valores y Seguros (SCVS).
 
-En esta entrega no se asumen fechas ni licencias que no hayan sido confirmadas explícitamente.
+La SCVS mantiene mecanismos institucionales de publicación de información y, en determinados recursos, incluye instrucciones de referencia y citación de los datos publicados.
 
-La revisión y registro formal de estas condiciones forma parte de la documentación pendiente de fortalecimiento del proyecto.
+Durante la revisión documental realizada para esta entrega no se identificó una licencia abierta específica aplicable a los archivos de estados financieros y del Registro del Mercado de Valores utilizados, como Creative Commons, Open Data Commons u otra licencia equivalente.
 
----
+Por esta razón, el proyecto:
+
+- mantiene a la SCVS identificada como fuente original de la información;
+- no atribuye a los datasets una licencia de reutilización que no haya sido publicada explícitamente;
+- no interpreta el acceso público como una autorización irrestricta para redistribuir los datos;
+- conserva los archivos originales fuera del repositorio GitHub.
+
+La información proveniente del Data Warehouse y de otras fuentes internas de la Bolsa de Valores Quito se considera información institucional de acceso interno. Su utilización se limita al entorno autorizado del proyecto y no se publica ni redistribuye mediante el repositorio.
+
+Antes de una eventual publicación externa de datasets derivados o de una utilización comercial distinta al alcance actual del proyecto, deberán verificarse nuevamente las condiciones institucionales, legales y normativas aplicables.
+
+**Fecha de verificación documental:** 20 de septiembre de 2026.
+
+El detalle se mantiene en:
+
+`docs/inventario_fuentes.md`
 
 # 3. Preparación y homologación de la información financiera
 
