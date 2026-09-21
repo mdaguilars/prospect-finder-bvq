@@ -1,0 +1,93 @@
+{
+    "experimento": "backtest_hist_gradient_boosting_v8",
+    "objetivo": "Evaluar la estabilidad temporal de la configuración v8 mediante múltiples cortes históricos sin utilizar información cuyo target aún no habría madurado.",
+    "modelo": "HistGradientBoostingClassifier",
+    "configuracion_modelo": {
+        "loss": "log_loss",
+        "learning_rate": 0.05,
+        "max_iter": 150,
+        "max_leaf_nodes": 7,
+        "max_depth": 3,
+        "min_samples_leaf": 100,
+        "l2_regularization": 1.0,
+        "class_weight": "balanced",
+        "early_stopping": false,
+        "random_state": 42
+    },
+    "numero_features": 33,
+    "features_actuales": [
+        "LOG_ACTIVO_TOTAL",
+        "LOG_ACTIVO_CORRIENTE",
+        "LOG_EFECTIVO",
+        "LOG_PASIVO_TOTAL",
+        "LOG_PASIVO_CORRIENTE",
+        "LOG_PASIVO_NO_CORRIENTE",
+        "LOG_PATRIMONIO",
+        "LOG_CAPITAL",
+        "LOG_UTILIDAD_NETA",
+        "LIQUIDEZ_CORRIENTE",
+        "ENDEUDAMIENTO",
+        "AUTONOMIA_FINANCIERA",
+        "ROA",
+        "EFECTIVO_ACTIVOS",
+        "CAPITAL_ACTIVOS",
+        "PASIVO_CORRIENTE_PASIVO"
+    ],
+    "features_temporales": [
+        "DELTA_LOG_ACTIVO_TOTAL",
+        "DELTA_LOG_ACTIVO_CORRIENTE",
+        "DELTA_LOG_EFECTIVO",
+        "DELTA_LOG_PASIVO_TOTAL",
+        "DELTA_LOG_PASIVO_CORRIENTE",
+        "DELTA_LOG_PASIVO_NO_CORRIENTE",
+        "DELTA_LOG_PATRIMONIO",
+        "DELTA_LOG_CAPITAL",
+        "DELTA_LOG_UTILIDAD_NETA",
+        "DELTA_LIQUIDEZ_CORRIENTE",
+        "DELTA_ENDEUDAMIENTO",
+        "DELTA_AUTONOMIA_FINANCIERA",
+        "DELTA_ROA",
+        "DELTA_EFECTIVO_ACTIVOS",
+        "DELTA_CAPITAL_ACTIVOS",
+        "DELTA_PASIVO_CORRIENTE_PASIVO",
+        "TIENE_T_1"
+    ],
+    "folds": [
+        {
+            "FOLD": 1,
+            "TRAIN_INICIO": 2015,
+            "TRAIN_FIN": 2016,
+            "ANIO_EVALUACION": 2018,
+            "ANIO_EMBARGO": 2017
+        },
+        {
+            "FOLD": 2,
+            "TRAIN_INICIO": 2015,
+            "TRAIN_FIN": 2017,
+            "ANIO_EVALUACION": 2019,
+            "ANIO_EMBARGO": 2018
+        },
+        {
+            "FOLD": 3,
+            "TRAIN_INICIO": 2015,
+            "TRAIN_FIN": 2018,
+            "ANIO_EVALUACION": 2020,
+            "ANIO_EMBARGO": 2019
+        }
+    ],
+    "regla_disponibilidad_target": "Para el ejercicio financiero t se asume disponibilidad ordinaria desde 01/05/t+1. TARGET_24M cubre hasta 30/04/t+3. Cada fold entrena únicamente con años cuyo horizonte objetivo completo habría sido observable al momento de la evaluación.",
+    "anio_maximo_utilizado": 2020,
+    "anios_no_utilizados": [
+        2021,
+        2022,
+        2023
+    ],
+    "test_2022_2023_evaluado": false,
+    "nota_test": "TEST 2022-2023 permanece reservado. No se generan scores, predicciones ni métricas sobre esos años durante este backtest.",
+    "scores_calibrados": false,
+    "nota_calibracion": "predict_proba se utiliza únicamente como score de ordenamiento. No representa una probabilidad calibrada del Índice de Afinidad Bursátil.",
+    "python_version": "3.13.7",
+    "pandas_version": "3.0.5",
+    "numpy_version": "2.5.3",
+    "scikit_learn_version": "1.9.1"
+}
