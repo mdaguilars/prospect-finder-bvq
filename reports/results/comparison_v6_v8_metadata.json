@@ -1,0 +1,41 @@
+{
+    "experimento": "comparison_v6_v8_backtests",
+    "objetivo": "Comparar Logistic Regression v6 contra HistGradientBoosting v8 bajo exactamente el mismo protocolo temporal rolling-origin.",
+    "baseline": "Logistic Regression v6",
+    "modelo_ajustado": "HistGradientBoosting v8",
+    "anios_evaluacion": [
+        2018,
+        2019,
+        2020
+    ],
+    "numero_folds": 3,
+    "metricas_generales": [
+        "PR_AUC",
+        "ROC_AUC"
+    ],
+    "metricas_ranking": [
+        "POSITIVOS_TOP_K",
+        "PRECISION_AT_K",
+        "RECALL_AT_K",
+        "LIFT_AT_K"
+    ],
+    "k_values": [
+        50,
+        100,
+        200
+    ],
+    "medidas_estabilidad": [
+        "PROMEDIO",
+        "MEDIANA",
+        "DESV_EST_MUESTRAL",
+        "MINIMO",
+        "MAXIMO",
+        "RANGO"
+    ],
+    "nota_variabilidad": "La desviación estándar y el rango se utilizan como medidas descriptivas de estabilidad entre tres folds temporales. Debido al reducido número de folds, no se interpretan como intervalos de confianza formales.",
+    "test_2022_2023_evaluado": false,
+    "nota_test": "La comparación utiliza únicamente resultados de los backtests históricos 2018, 2019 y 2020. TEST 2022-2023 permanece reservado.",
+    "python_version": "3.13.7",
+    "pandas_version": "3.0.5",
+    "numpy_version": "2.5.3"
+}
