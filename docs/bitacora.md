@@ -1088,6 +1088,7 @@ No utilizar todavía TEST 2022–2023.
 
 ---
 
+
 # 6. Estado metodológico actual
 
 ## 6.1 Unidad de análisis
@@ -1108,37 +1109,204 @@ Para un ejercicio fiscal `t`, la fecha de decisión utilizada es:
 
 `01/05/t+1`
 
+Esta regla se mantiene como supuesto normativo conservador de disponibilidad de información.
+
 ## 6.4 Elegibilidad
 
 Las empresas que ya habían sido emisoras antes de la fecha de decisión quedan excluidas del universo prospectable.
 
-## 6.5 Modelo benchmark actual
+## 6.5 Dataset base v10 congelado
 
-El benchmark actual es:
+A partir de octubre de 2026 se congeló una nueva generación de datos:
+
+**Dataset base v10 — 2012–2023**
+
+Archivo local generado:
+
+`data/processed/v10_base_integrated_2012_2023.csv.gz`
+
+Script reproducible:
+
+`scripts/build_v10_base.py`
+
+SHA-256 validado:
+
+`b44f9ccf309c20a59be436953a0c6e7f9a3dc1f11cc6f2c87e41c1676a3a2a8d`
+
+El dataset v10 integra `bi_ranking` con el dataset financiero histórico armonizado y aplica reglas explícitas de identidad, elegibilidad, target y fallback financiero.
+
+## 6.6 Universo congelado v10
+
+El universo final contiene:
+
+- **1.030.671 observaciones elegibles**;
+- **568 observaciones positivas**;
+- **310 RUC positivos únicos**;
+- **0 duplicados empresa-año**;
+- prevalencia positiva de **0,055110 %**.
+
+El período utilizado es:
+
+**2012–2023**
+
+## 6.7 Procedencia del universo v10
+
+Dentro del universo elegible final:
+
+- `AMBAS`: **815.331** observaciones;
+- `SOLO_BI`: **146.683** observaciones;
+- `SOLO_HISTORICO`: **68.657** observaciones.
+
+## 6.8 Reglas de identidad
+
+La prioridad de identificación empresarial es:
+
+1. `bi_compania`;
+2. RUC histórico único asociado al mismo `EXPEDIENTE`;
+3. RUC histórico de la propia fila cuando las opciones anteriores no están disponibles.
+
+Se excluyeron **535 filas** correspondientes a **276 expedientes únicos** porque no fue posible obtener un RUC utilizable de forma determinística.
+
+No se utilizaron coincidencias por nombre ni fuzzy matching.
+
+## 6.9 Target v10
+
+La definición del target se mantiene como:
+
+`TARGET_24M = 1`
+
+cuando la empresa registra su primera inscripción efectiva como emisor dentro de los 24 meses posteriores a la fecha de decisión.
+
+La fuente principal es:
+
+`listado_entes_65001_1789908466941.xlsx`
+
+La validación cruzada contra fichas registrales efectivas produjo:
+
+- **619 RUC** efectivos en ambas fuentes;
+- **619 fechas coincidentes**;
+- **0 diferencias de fecha**.
+
+Se consideran efectivos los estados:
+
+- `VIGENTE`;
+- `CANCELADA`.
+
+No se consideran positivos estados como:
+
+- inscripción negada;
+- ente creado;
+- en proceso de inscripción.
+
+## 6.10 Variables financieras consolidadas
+
+Para v10 se definieron reglas específicas de integración.
+
+### Activos
+
+Variable final:
+
+`activos_final`
+
+Prioridad:
+
+1. `bi_activos`;
+2. fallback histórico cuando el bloque financiero BI está completamente en cero;
+3. fallback histórico para observaciones solo históricas.
+
+Resultado:
+
+- **92.640** fallbacks históricos;
+- **1.022.910** valores disponibles;
+- cobertura de **99,25 %**.
+
+### Patrimonio
+
+Variable final:
+
+`patrimonio_final`
+
+Se aplica la misma lógica de precedencia.
+
+Resultado:
+
+- **92.640** fallbacks históricos;
+- **1.022.910** valores disponibles;
+- cobertura de **99,25 %**.
+
+### Utilidad neta
+
+Variable final:
+
+`utilidad_neta_final`
+
+La utilidad histórica no se utiliza como fallback debido a diferencias de definición entre fuentes.
+
+Resultado:
+
+- **930.270** valores disponibles;
+- cobertura de **90,26 %**.
+
+## 6.11 Bloque financiero BI vacío
+
+Se definió como bloque financiero básico:
+
+- activos;
+- patrimonio;
+- ingresos por ventas;
+- ingresos totales;
+- utilidad antes de impuestos;
+- impuesto a la renta;
+- utilidad del ejercicio;
+- utilidad neta.
+
+Cuando las ocho variables son simultáneamente cero en `bi_ranking`, la observación se marca mediante:
+
+`bi_8_finanzas_cero`
+
+En el universo elegible v10 existen:
+
+**31.744 observaciones**
+
+con esta condición.
+
+## 6.12 Variables excluidas preventivamente
+
+No se incorporan como predictores de v10:
+
+- `cia_imvalores`;
+- `id_estado_financiero`;
+- `posicion_general`.
+
+La exclusión responde a riesgo de fuga de información, naturaleza técnica del identificador o ausencia de justificación como predictor.
+
+## 6.13 Benchmark histórico
+
+El benchmark del ciclo v1–v9 continúa siendo:
 
 **v8 — HistGradientBoosting regularizado con variables financieras actuales y temporales.**
 
-Esto no significa que sea el modelo definitivo del proyecto.
+Esto no implica que v8 sea el benchmark definitivo de v10.
 
-## 6.6 Baseline comparable
+Los futuros modelos v10 deberán compararse entre sí utilizando el nuevo dataset congelado y un protocolo temporal común.
 
-Para las comparaciones actuales se utiliza:
+## 6.14 Baseline histórico comparable
 
-**v6 — Logistic Regression con el mismo conjunto de variables temporales y el mismo protocolo temporal.**
+Dentro del ciclo v1–v9, el baseline comparable continúa siendo:
 
-Esto permite que la comparación entre modelo lineal y modelo no lineal sea más justa que una comparación directa contra v1, que pertenece a una metodología temporal anterior.
+**v6 — Logistic Regression con variables temporales.**
 
-## 6.7 TEST
+## 6.15 TEST
 
-El nuevo:
+El TEST utilizado en v4–v9 permanece reservado como evidencia histórica de ese ciclo.
 
-`TEST 2022–2023`
+Para v10 deberá definirse explícitamente una nueva estrategia temporal de TRAIN / embargo / VALIDATION / TEST antes de entrenar modelos.
 
-permanece reservado.
+El nuevo protocolo no debe inferirse automáticamente de v1–v9 porque el universo cambió.
 
-## 6.8 Métricas prioritarias
+## 6.16 Métricas prioritarias
 
-Debido al desbalance extremo, las métricas principales son:
+Debido al desbalance extremo, las métricas principales continúan siendo:
 
 - PR-AUC;
 - Precision@K;
@@ -1149,15 +1317,15 @@ ROC-AUC se mantiene como métrica complementaria.
 
 Accuracy no se utiliza como criterio principal.
 
-## 6.9 Scores
+## 6.17 Scores
 
-Los scores actuales se utilizan para:
+Los scores se utilizarán para:
 
 - ordenar;
 - priorizar;
 - comparar afinidad relativa.
 
-No deben interpretarse todavía como probabilidades reales calibradas.
+No deben interpretarse como probabilidades reales calibradas mientras no exista una etapa específica de calibración.
 
 ---
 
@@ -1438,38 +1606,66 @@ Permanece reservado.
 
 ---
 
+
 # 17. Próxima fase
 
 La siguiente fase deberá concentrarse en:
 
-1. cerrar la actualización documental del ciclo v1–v9;
-2. mantener TEST 2022–2023 cerrado;
-3. revisar e incorporar nuevas fuentes mediante una nueva generación de dataset;
-4. ampliar variables temporales y de trayectoria;
-5. evaluar CatBoost;
-6. evaluar Random Forest;
-7. desarrollar la alternativa neuronal TensorFlow/Keras comprometida;
-8. mantener comparaciones bajo protocolos idénticos;
-9. incorporar interpretabilidad;
-10. evaluar sesgos y desempeño segmentado;
-11. estudiar calibración únicamente cuando exista un modelo suficientemente estable;
-12. construir posteriormente el Índice de Afinidad Bursátil;
-13. diseñar el prototipo web de apoyo a prospección;
-14. preparar mecanismos de monitoreo y MLOps.
+1. mantener congeladas las reglas de universo, identidad y target de v10;
+2. construir el feature set v10 a partir de la base integrada congelada;
+3. clasificar explícitamente las columnas en predictoras, administrativas y de auditoría;
+4. definir reglas de missingness;
+5. construir variables temporales `t-1` y trayectorias multianuales;
+6. definir transformaciones y tratamiento de valores extremos aprendidos exclusivamente sobre TRAIN;
+7. establecer un nuevo protocolo temporal v10 con TRAIN, embargos, VALIDATION y TEST;
+8. entrenar `v10-LR` como baseline de la nueva generación;
+9. evaluar `v10-HGB`;
+10. evaluar Random Forest;
+11. evaluar CatBoost;
+12. implementar la red TensorFlow/Keras comprometida;
+13. comparar modelos bajo un protocolo temporal común;
+14. incorporar interpretabilidad mediante SHAP;
+15. evaluar sesgo y desempeño segmentado;
+16. estudiar calibración cuando exista un modelo suficientemente estable;
+17. construir posteriormente el Índice de Afinidad Bursátil;
+18. desarrollar el prototipo web de apoyo a prospección;
+19. preparar mecanismos de monitoreo y MLOps.
 
 ---
 
-# 18. Nueva generación de datos prevista
+# 18. Nueva generación de datos v10
 
-Las nuevas fuentes identificadas no se incorporan retroactivamente a v1–v9.
+La nueva generación de datos ya fue construida y congelada.
 
-La siguiente generación deberá construirse como una nueva versión del dataset y del feature set.
+Se utiliza la nomenclatura:
 
-Se utilizará la nomenclatura:
+**Dataset base v10**
 
-**Dataset / Feature Set v10**
+Archivo:
 
-Los nuevos modelos asociados deberán distinguirse explícitamente, por ejemplo:
+`data/processed/v10_base_integrated_2012_2023.csv.gz`
+
+Script reproducible:
+
+`scripts/build_v10_base.py`
+
+Documento de congelamiento:
+
+`docs/v10_dataset_freeze.md`
+
+El dataset contiene:
+
+- **1.030.671 observaciones elegibles**;
+- **568 positivos**;
+- **310 RUC positivos únicos**;
+- período **2012–2023**;
+- prevalencia de **0,055110 %**.
+
+La reconstrucción desde las fuentes produjo exactamente el mismo SHA-256:
+
+`b44f9ccf309c20a59be436953a0c6e7f9a3dc1f11cc6f2c87e41c1676a3a2a8d`
+
+Los modelos asociados a esta nueva generación utilizarán nomenclaturas como:
 
 - `v10-LR`;
 - `v10-HGB`;
@@ -1477,7 +1673,9 @@ Los nuevos modelos asociados deberán distinguirse explícitamente, por ejemplo:
 - `v10-CatBoost`;
 - `v10-NN`.
 
-v8 permanecerá como benchmark del ciclo anterior para permitir una comparación clara entre generaciones.
+v8 permanece como benchmark histórico del ciclo anterior.
+
+Las métricas de v1–v9 no deberán compararse directamente con las futuras métricas v10 como si provinieran del mismo universo.
 
 ---
 
@@ -1533,6 +1731,7 @@ La revisión humana se mantiene como parte del diseño del sistema.
 
 ---
 
+
 # 21. Estado actual de la bitácora
 
 La bitácora se encuentra actualizada hasta:
@@ -1547,21 +1746,36 @@ La bitácora se encuentra actualizada hasta:
 - v9;
 - backtest v6;
 - comparación temporal v6 vs v8;
-- commit `99a8ca0`.
+- auditoría de nuevas fuentes;
+- validación cruzada del target;
+- integración `bi_ranking` + histórico;
+- auditoría de activos y patrimonio;
+- auditoría de utilidad neta;
+- reglas de identidad empresarial;
+- exclusión de filas sin RUC verificable;
+- congelamiento del dataset base v10 2012–2023;
+- reconstrucción binariamente reproducible del dataset v10.
 
-El benchmark actual es:
+El benchmark histórico del ciclo v1–v9 es:
 
 **v8 — HistGradientBoosting regularizado**
 
-El baseline comparable de la metodología actual es:
+El baseline comparable histórico es:
 
 **v6 — Logistic Regression con variables temporales**
 
-El conjunto:
+El dataset base v10 se encuentra:
 
-**TEST 2022–2023**
+**CONGELADO**
 
-permanece reservado.
+con:
+
+- **1.030.671** observaciones elegibles;
+- **568** positivos;
+- **310** RUC positivos únicos;
+- SHA-256 `b44f9ccf309c20a59be436953a0c6e7f9a3dc1f11cc6f2c87e41c1676a3a2a8d`.
+
+La siguiente etapa es construir el feature set v10 y definir el nuevo protocolo temporal de modelado antes de entrenar cualquier modelo v10.
 
 ---
 

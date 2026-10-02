@@ -86,7 +86,9 @@ Actividades correspondientes principalmente a etapas posteriores de operación, 
 
 # 4. Estado actual del proyecto
 
-El ciclo experimental actual comprende:
+El proyecto mantiene dos generaciones claramente separadas.
+
+La generación histórica comprende:
 
 - v1 a v3 bajo la metodología temporal inicial;
 - v4 a v9 bajo la metodología temporal corregida;
@@ -94,19 +96,40 @@ El ciclo experimental actual comprende:
 - backtest rolling-origin de v8;
 - comparación automatizada v6 vs v8.
 
-El benchmark actual es:
+El benchmark histórico del ciclo v1–v9 es:
 
 **v8 — HistGradientBoosting regularizado**
 
-El baseline comparable de la metodología actual es:
+El baseline comparable histórico es:
 
 **v6 — Logistic Regression con variables temporales**
 
-El conjunto:
+La nueva generación v10 ya cuenta con una **base integrada congelada y reproducible** para el período 2012–2023.
 
-**TEST 2022–2023**
+Estado de la base v10:
 
-de la metodología temporal corregida permanece reservado.
+- observaciones elegibles: **1.030.671**;
+- positivos: **568**;
+- RUC positivos únicos: **310**;
+- prevalencia: **0,055110 %**;
+- duplicados empresa-año: **0**;
+- SHA-256: `b44f9ccf309c20a59be436953a0c6e7f9a3dc1f11cc6f2c87e41c1676a3a2a8d`.
+
+Archivo local:
+
+`data/processed/v10_base_integrated_2012_2023.csv.gz`
+
+Script reproducible:
+
+`scripts/build_v10_base.py`
+
+Documento de congelamiento:
+
+`docs/v10_dataset_freeze.md`
+
+El feature set v10 todavía no está cerrado y no se ha entrenado ningún modelo v10.
+
+El TEST 2022–2023 del ciclo temporal corregido v4–v9 permanece reservado como evidencia histórica. Para v10 deberá definirse explícitamente un nuevo protocolo temporal de TRAIN / embargo / VALIDATION / TEST antes de comenzar la selección de modelos.
 
 ---
 
@@ -125,7 +148,7 @@ de la metodología temporal corregida permanece reservado.
 | B09 | Media | Evaluar estrategias adicionales de desbalance | Pendiente |
 | B10 | Media | Ampliar análisis de Top-K | Pendiente |
 | B11 | Alta | Analizar estabilidad temporal por cohortes | Completado inicialmente |
-| B12 | Alta | Evaluar e integrar nuevas fuentes | En análisis |
+| B12 | Alta | Evaluar e integrar nuevas fuentes | En desarrollo |
 | B13 | Media | Evaluar calibración | Pendiente |
 | B14 | Media | Construir Índice de Afinidad Bursátil | Pendiente |
 | B15 | Alta | Incorporar interpretabilidad | Pendiente |
@@ -135,9 +158,9 @@ de la metodología temporal corregida permanece reservado.
 | B19 | Baja | Evaluar monitoreo de drift | Pendiente |
 | B20 | Alta | Implementar red neuronal TensorFlow/Keras | Pendiente |
 | B21 | Alta | Evaluar sesgo y desempeño segmentado | Pendiente |
-| B22 | Alta | Construir Dataset / Feature Set v10 | Pendiente |
+| B22 | Alta | Construir Dataset / Feature Set v10 | En desarrollo |
 | B23 | Alta | Ejecutar selección final antes de TEST | Pendiente |
-| B24 | Alta | Evaluar TEST temporal corregido | Pendiente |
+| B24 | Alta | Evaluar TEST final de la generación seleccionada | Pendiente |
 
 ---
 
@@ -529,9 +552,13 @@ Debe utilizar exactamente el mismo protocolo que los demás modelos de su genera
 
 La metodología ya utiliza ponderación de clases en modelos compatibles.
 
-La prevalencia corregida es aproximadamente:
+En el ciclo temporal corregido v4–v9 la prevalencia era aproximadamente:
 
 **0,0479 %**
+
+En la base congelada v10 la prevalencia es:
+
+**0,055110 %**
 
 ## Estrategias adicionales candidatas
 
@@ -655,7 +682,7 @@ Por tanto, la variabilidad actual se interpreta descriptivamente.
 
 ## Próxima ampliación
 
-Repetir el análisis cuando el Dataset / Feature Set v10 se encuentre disponible.
+Repetir el análisis una vez que el feature set v10 y su nuevo protocolo temporal hayan sido definidos.
 
 ---
 
@@ -663,33 +690,63 @@ Repetir el análisis cuando el Dataset / Feature Set v10 se encuentre disponible
 
 **Prioridad:** Alta
 
-**Estado:** En análisis
+**Estado:** En desarrollo
 
 ## Objetivo
 
-Incorporar señales adicionales que complementen la información financiera actualmente utilizada.
+Incorporar señales adicionales que complementen la información financiera utilizada en v1–v9 sin alterar retrospectivamente los experimentos históricos.
 
 ## Regla metodológica
 
-Las nuevas fuentes no se incorporarán retrospectivamente a v1–v9.
+Las nuevas fuentes no se incorporan retroactivamente a v1–v9.
 
-Su incorporación dará origen a una nueva generación del dataset.
+Su integración forma parte de la nueva generación v10.
 
-## Fuentes actualmente identificadas para análisis
+## Avance realizado
 
-Se encuentran en revisión nuevas fuentes de SCVS relacionadas con:
+Durante la construcción de la base v10 se analizaron e integraron de forma controlada fuentes de SCVS relacionadas con:
 
-- información empresarial;
-- rankings e indicadores financieros;
+- `bi_ranking`;
+- catálogo de compañías `bi_compania`;
 - clasificación CIIU;
 - segmento empresarial;
-- información societaria;
-- actos de inversión y capital;
-- información financiera histórica adicional.
+- Registro del Mercado de Valores;
+- listado de entes;
+- fichas registrales;
+- dataset financiero histórico armonizado.
+
+También se auditaron:
+
+- cobertura temporal;
+- correspondencia por `EXPEDIENTE`;
+- calidad de RUC;
+- discrepancias entre fuentes;
+- activos y patrimonio;
+- utilidad neta;
+- registros financieramente vacíos;
+- target histórico.
+
+## Resultado parcial
+
+La integración permitió congelar una base v10 con:
+
+- **1.030.671 observaciones elegibles**;
+- **568 positivos**;
+- **310 RUC positivos únicos**;
+- período **2012–2023**.
+
+## Fuentes todavía pendientes de incorporación al feature set
+
+Continúan en análisis fuentes adicionales, entre ellas:
+
+- inversión societaria;
+- actos de capital;
+- señales empresariales complementarias;
+- otras fuentes que puedan aportar información disponible antes de la fecha de decisión.
 
 ## Condición obligatoria
 
-Toda variable debe haber estado disponible antes de la fecha de decisión.
+Toda variable utilizada como predictor debe haber estado disponible antes de la fecha de decisión.
 
 ## Criterio de aceptación
 
@@ -705,6 +762,8 @@ Cada fuente incorporada deberá documentar:
 - riesgo de leakage;
 - condiciones de uso;
 - fecha o regla de disponibilidad.
+
+La actividad permanecerá **En desarrollo** mientras existan fuentes relevantes pendientes de evaluación o integración.
 
 ---
 
@@ -832,7 +891,7 @@ Cumplido.
 
 ## Próxima actualización
 
-El diccionario deberá ampliarse al construir v10.
+El diccionario deberá ampliarse al cerrar el feature set v10, incorporando las variables finalmente elegibles para modelado y distinguiéndolas de campos administrativos y de auditoría.
 
 ---
 
@@ -1045,7 +1104,7 @@ Documentar:
 
 **Prioridad:** Alta
 
-**Estado:** Pendiente
+**Estado:** En desarrollo
 
 ## Objetivo
 
@@ -1053,42 +1112,101 @@ Crear una nueva generación de datos incorporando fuentes y variables adicionale
 
 ## Nomenclatura
 
-La nueva generación se denominará:
+La nueva generación se denomina:
 
 **Dataset / Feature Set v10**
 
+## Avance completado — base integrada v10
+
+La base integrada fue construida, auditada, congelada y reconstruida de forma reproducible.
+
+Archivo:
+
+`data/processed/v10_base_integrated_2012_2023.csv.gz`
+
+Script:
+
+`scripts/build_v10_base.py`
+
+Documento de congelamiento:
+
+`docs/v10_dataset_freeze.md`
+
+Resultados congelados:
+
+- período: **2012–2023**;
+- observaciones elegibles: **1.030.671**;
+- positivos: **568**;
+- RUC positivos únicos: **310**;
+- prevalencia: **0,055110 %**;
+- duplicados empresa-año: **0**;
+- SHA-256: `b44f9ccf309c20a59be436953a0c6e7f9a3dc1f11cc6f2c87e41c1676a3a2a8d`.
+
+La reconstrucción desde las fuentes produjo exactamente el mismo SHA-256.
+
+## Reglas congeladas
+
+Quedaron congeladas:
+
+- unidad `empresa-año`;
+- período 2012–2023;
+- fecha de decisión `01/05/t+1`;
+- horizonte objetivo de 24 meses;
+- definición del target;
+- exclusión de emisores previos;
+- reglas de identidad y RUC;
+- exclusión de filas sin RUC verificable;
+- integración de `bi_ranking` con el histórico;
+- fallback controlado de activos y patrimonio;
+- regla de utilidad neta;
+- exclusión preventiva de variables con riesgo de leakage.
+
+## Trabajo todavía pendiente — feature set v10
+
+Antes de entrenar modelos se deberá definir:
+
+- variables elegibles como predictores;
+- variables exclusivamente administrativas o de auditoría;
+- missingness;
+- variables temporales `t-1`;
+- tasas de crecimiento;
+- tendencias multianuales;
+- transformaciones;
+- tratamiento de valores extremos;
+- variables categóricas;
+- nuevo protocolo temporal TRAIN / embargo / VALIDATION / TEST.
+
 ## Modelos previstos
 
-Sobre este dataset podrán desarrollarse:
+Una vez cerrado el feature set podrán desarrollarse:
 
-- `v10-LR`
-- `v10-HGB`
-- `v10-RF`
-- `v10-CatBoost`
-- `v10-NN`
+- `v10-LR`;
+- `v10-HGB`;
+- `v10-RF`;
+- `v10-CatBoost`;
+- `v10-NN`.
 
 ## Regla principal
 
-El primer modelo deberá ser una alternativa simple:
+El primer modelo de la nueva generación deberá ser:
 
 **v10-LR**
 
-Esto permitirá separar el aporte de las nuevas variables del aporte de algoritmos más complejos.
+Esto permitirá separar el aporte del nuevo dataset y de las nuevas variables del aporte de algoritmos más complejos.
 
 ## Criterio de aceptación
 
-El dataset deberá documentar:
+La actividad B22 se considerará completamente cerrada cuando:
 
-- fuentes;
-- período;
-- variables;
-- transformaciones;
-- reglas temporales;
-- target;
-- elegibilidad;
-- cobertura;
-- divisiones;
-- reproducibilidad.
+1. la base integrada permanezca congelada y reproducible;
+2. se cierre el feature set;
+3. se documenten variables y transformaciones;
+4. se defina el protocolo temporal v10;
+5. se documente cobertura y missingness;
+6. se verifique ausencia de leakage;
+7. pueda iniciarse el baseline `v10-LR` sin decisiones de datos pendientes.
+
+La primera condición ya se encuentra cumplida. El resto permanece en desarrollo.
 
 ---
 
@@ -1136,7 +1254,7 @@ No utilizar TEST para resolver decisiones pendientes.
 
 ---
 
-# 29. B24 — Evaluar TEST temporal corregido
+# 29. B24 — Evaluar TEST final de la generación seleccionada
 
 **Prioridad:** Alta
 
@@ -1144,22 +1262,47 @@ No utilizar TEST para resolver decisiones pendientes.
 
 ## Objetivo
 
-Realizar una única evaluación final del modelo seleccionado sobre:
+Realizar una única evaluación final del modelo seleccionado sobre el conjunto TEST definido para la generación de datos correspondiente.
 
-**TEST 2022–2023**
+## Situación histórica
 
-## Universo
+El ciclo v4–v9 mantiene reservado su TEST temporalmente corregido 2022–2023:
 
-- observaciones: **260.436**
-- positivos: **54**
+- observaciones: **260.436**;
+- positivos: **54**.
+
+Este conjunto no fue utilizado para seleccionar v4–v9.
+
+## Regla para v10
+
+El nuevo universo v10 cubre 2012–2023 y difiere del universo utilizado en v4–v9.
+
+Por esta razón, el TEST v10 **no se asume automáticamente igual al TEST histórico 2022–2023**.
+
+Antes de entrenar modelos v10 deberá definirse y documentarse un nuevo protocolo temporal que especifique:
+
+- TRAIN;
+- embargo de validación;
+- VALIDATION;
+- embargo de TEST;
+- TEST final.
 
 ## Condición previa
 
-La evaluación deberá ejecutarse únicamente cuando el proceso de selección haya sido cerrado.
+La evaluación final deberá ejecutarse únicamente cuando B23 haya cerrado:
+
+- dataset;
+- feature set;
+- familia de modelo;
+- hiperparámetros;
+- protocolo;
+- métricas;
+- interpretabilidad;
+- análisis de sesgo.
 
 ## Regla
 
-Una vez observado TEST:
+Una vez observado el TEST final de la generación:
 
 - no reajustar retrospectivamente el modelo utilizando esos resultados;
 - documentar cualquier limitación encontrada;
@@ -1167,7 +1310,7 @@ Una vez observado TEST:
 
 ## Criterio de aceptación
 
-Registrar:
+Registrar, según corresponda:
 
 - PR-AUC;
 - ROC-AUC;
@@ -1232,28 +1375,31 @@ Las actividades siguientes deberán continuar registrándose mediante commits in
 
 La secuencia actual recomendada es:
 
-1. cerrar documentación del ciclo v1–v9;
-2. B12 — terminar análisis de nuevas fuentes;
-3. B22 — construir Dataset / Feature Set v10;
-4. entrenar baseline `v10-LR`;
+1. mantener congelada la base integrada v10;
+2. cerrar B12 para las fuentes que vayan a entrar en esta generación;
+3. continuar B22 con la construcción del feature set v10;
+4. definir variables predictoras frente a variables administrativas y de auditoría;
 5. B02 — ampliar tasas de crecimiento;
-6. B03 — incorporar tendencias multianuales;
-7. entrenar `v10-HGB`;
-8. B08 — evaluar Random Forest;
-9. B05 — evaluar CatBoost;
-10. B20 — evaluar TensorFlow/Keras;
-11. B11 — repetir backtesting con v10;
-12. B06 — comparar alternativas bajo protocolo equivalente;
-13. B21 — evaluar sesgo y desempeño segmentado;
-14. B15 — incorporar interpretabilidad;
-15. B09 — evaluar estrategias adicionales de desbalance si la evidencia lo justifica;
-16. B10 — relacionar Top-K con capacidad comercial;
-17. B23 — cerrar selección final;
-18. B13 — evaluar calibración cuando corresponda;
-19. B14 — construir IAB;
-20. B18 — integrar el prototipo web con resultados seleccionados;
-21. B24 — evaluar TEST 2022–2023;
-22. B19 — preparar monitoreo y MLOps.
+6. B03 — construir tendencias multianuales;
+7. definir missingness, transformaciones y tratamiento de extremos sin fuga de información;
+8. definir el nuevo protocolo temporal v10 con TRAIN / embargo / VALIDATION / TEST;
+9. entrenar el baseline `v10-LR`;
+10. entrenar `v10-HGB`;
+11. B08 — evaluar Random Forest;
+12. B05 — evaluar CatBoost;
+13. B20 — evaluar TensorFlow/Keras;
+14. B11 — repetir backtesting temporal con v10;
+15. B06 — comparar alternativas v10 bajo protocolo equivalente;
+16. B21 — evaluar sesgo y desempeño segmentado;
+17. B15 — incorporar interpretabilidad;
+18. B09 — evaluar estrategias adicionales de desbalance si la evidencia lo justifica;
+19. B10 — relacionar Top-K con capacidad comercial;
+20. B23 — cerrar selección final;
+21. B13 — evaluar calibración cuando corresponda;
+22. B14 — construir IAB;
+23. B18 — integrar el prototipo web con los resultados seleccionados;
+24. B24 — evaluar una única vez el TEST final definido para v10;
+25. B19 — preparar monitoreo y MLOps.
 
 ---
 
@@ -1291,15 +1437,15 @@ Cuando el objetivo sea medir el efecto del algoritmo, las comparaciones deberán
 
 # 34. Benchmark y criterio actual
 
-El benchmark actual es:
+El benchmark histórico del ciclo v1–v9 es:
 
 **v8 — HistGradientBoosting regularizado**
 
-El baseline comparable es:
+El baseline comparable histórico es:
 
 **v6 — Logistic Regression con variables temporales**
 
-Resultados rolling-origin:
+Resultados rolling-origin históricos:
 
 | Métrica | v6 | v8 |
 |---|---:|---:|
@@ -1308,15 +1454,19 @@ Resultados rolling-origin:
 | Desviación estándar PR-AUC | **0,005386** | 0,011960 |
 | Lift@50 promedio | 65,15 | **123,64** |
 
-v8 obtiene mayor PR-AUC en:
+v8 obtuvo mayor PR-AUC en:
 
 - 2018;
 - 2019;
 - 2020.
 
-No obstante, presenta mayor variabilidad.
+No obstante, presentó mayor variabilidad.
 
-Por tanto, la selección no se sustenta en una única métrica.
+Estas métricas pertenecen exclusivamente al universo y feature set del ciclo v1–v9.
+
+**Todavía no existe un benchmark v10.**
+
+El primer punto de referencia de la nueva generación será `v10-LR` una vez que B22 cierre el feature set y el nuevo protocolo temporal.
 
 ---
 
@@ -1380,7 +1530,9 @@ Mitigación:
 
 Mitigación:
 
-- mantener TEST cerrado hasta B24.
+- mantener cerrado cualquier TEST final durante la selección;
+- no asumir que el TEST histórico 2022–2023 es automáticamente el TEST de v10;
+- definir el TEST v10 antes del entrenamiento y abrirlo únicamente en B24.
 
 ## Scores no calibrados
 
@@ -1442,7 +1594,7 @@ No se sobrescribirán los experimentos v1–v9.
 
 Cada nueva generación deberá mantener su propia identidad.
 
-La próxima generación utilizará:
+La generación actualmente en construcción utiliza:
 
 **v10**
 
@@ -1459,13 +1611,28 @@ v8 permanecerá como benchmark del ciclo anterior.
 
 # 39. Regla para TEST
 
-El conjunto:
+El conjunto TEST debe permanecer separado del proceso iterativo de desarrollo.
 
-**TEST 2022–2023**
+## Ciclo histórico v4–v9
 
-de la metodología temporal corregida permanece reservado.
+El TEST temporalmente corregido 2022–2023 permanece reservado como evidencia histórica de ese ciclo.
 
-No deberá utilizarse para:
+No fue utilizado para seleccionar:
+
+- v4;
+- v5;
+- v6;
+- v7;
+- v8;
+- v9.
+
+## Generación v10
+
+La base v10 cubre 2012–2023 y utiliza un universo diferente.
+
+Por tanto, antes del entrenamiento deberá definirse explícitamente el nuevo TEST v10 junto con TRAIN, embargos y VALIDATION.
+
+El TEST v10 no deberá utilizarse para:
 
 - elegir variables;
 - seleccionar algoritmo;
@@ -1479,31 +1646,52 @@ Solo deberá utilizarse después de cerrar B23.
 
 ---
 
-# 40. Estado del backlog al 27 de septiembre de 2026
+# 40. Estado del backlog al 2 de octubre de 2026
 
-El proyecto ha completado los principales ajustes metodológicos de la etapa actual:
+El proyecto ha completado:
 
 - control temporal;
-- reconstrucción del target;
-- períodos de embargo;
-- variables temporales;
+- reconstrucción y validación del target;
+- períodos de embargo del ciclo histórico;
+- variables temporales v6–v9;
 - evaluación de Gradient Boosting;
 - regularización;
 - MLP exploratorio;
 - backtesting temporal;
 - comparación v6 vs v8;
-- documentación de resultados.
+- auditoría de `bi_ranking`;
+- validación de `bi_compania`;
+- validación de CIIU y segmento;
+- validación cruzada del target mediante listado de entes y fichas registrales;
+- auditoría de activos y patrimonio;
+- auditoría de utilidad neta;
+- reglas de identidad empresarial;
+- integración controlada de fuentes;
+- congelamiento reproducible de la base integrada v10 2012–2023.
 
-Los principales objetivos de la siguiente etapa son:
+La base v10 congelada contiene:
 
-- incorporar nuevas fuentes;
-- construir v10;
-- ampliar modelos;
-- implementar TensorFlow/Keras;
-- incorporar interpretabilidad;
-- evaluar sesgos;
-- desarrollar el prototipo web;
-- cerrar la selección antes de abrir TEST.
+- **1.030.671 observaciones elegibles**;
+- **568 positivos**;
+- **310 RUC positivos únicos**;
+- prevalencia de **0,055110 %**;
+- **0 duplicados empresa-año**.
+
+El SHA-256 validado es:
+
+`b44f9ccf309c20a59be436953a0c6e7f9a3dc1f11cc6f2c87e41c1676a3a2a8d`
+
+Los principales objetivos inmediatos son:
+
+- continuar la evaluación de nuevas fuentes que realmente vayan a integrar v10;
+- cerrar el feature set v10;
+- definir variables temporales y de trayectoria;
+- definir transformaciones y tratamiento de extremos;
+- establecer el nuevo protocolo temporal v10;
+- entrenar `v10-LR` como baseline;
+- ampliar posteriormente la comparación con HGB, Random Forest, CatBoost y TensorFlow/Keras.
+
+El TEST final deberá permanecer cerrado durante la selección.
 
 ---
 

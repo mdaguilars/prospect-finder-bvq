@@ -79,27 +79,43 @@ Por esta razón, además de métricas tradicionales como PR-AUC y ROC-AUC, el pr
 
 # 4. Fuentes de información
 
-## 4.1 Superintendencia de Compañías, Valores y Seguros — Estados financieros
+## 4.1 Superintendencia de Compañías, Valores y Seguros — Información financiera y societaria
 
-Es la fuente principal utilizada actualmente para construir las variables predictoras.
+La SCVS constituye la fuente pública principal para construir las variables financieras y empresariales del proyecto.
 
-**Período utilizado en el ciclo v1–v9:**
+Durante el ciclo v1–v9 se utilizó principalmente el dataset financiero armonizado construido a partir de estados financieros 2015–2023.
 
-2015–2023.
+Para la generación v10 se incorporó como fuente financiera principal:
 
-La información incluye:
+`data/raw/scvs/ranking/bi_ranking.csv`
 
-- estados financieros;
-- cuentas contables;
-- información financiera histórica por empresa;
-- identificación empresarial;
-- clasificación CIIU.
+con cobertura utilizada:
 
-Los archivos originales se conservan localmente en:
+**2012–2023**
 
-`data/raw/scvs/estados_financieros/`
+Esta fuente aporta, entre otras variables:
 
-Los archivos originales no se almacenan en Git.
+- activos;
+- patrimonio;
+- ingresos y ventas;
+- ingresos totales;
+- utilidad antes de impuestos;
+- impuesto a la renta;
+- utilidad del ejercicio;
+- utilidad neta;
+- número de empleados;
+- segmento empresarial;
+- clasificación CIIU;
+- indicadores financieros;
+- gastos y deuda.
+
+La identificación empresarial se complementa con:
+
+`data/raw/scvs/catalogos/bi_compania.csv`
+
+El dataset histórico armonizado 2015–2023 se conserva como fuente complementaria para ampliar cobertura histórica, realizar validaciones y aplicar fallbacks controlados en activos y patrimonio cuando corresponda.
+
+Los archivos originales y derivados de datos se mantienen localmente bajo `data/` y no se almacenan en Git.
 
 ---
 
@@ -194,9 +210,9 @@ Las reglas de homologación se mantienen separadas del código mediante:
 
 ---
 
-# 6. Dataset financiero armonizado
+# 6. Dataset financiero armonizado — ciclo v1–v9
 
-El proceso de homologación produjo:
+El proceso inicial de homologación produjo:
 
 | Indicador | Resultado |
 |---|---:|
@@ -208,7 +224,9 @@ Archivo generado localmente:
 
 `data/interim/scvs_financials_harmonized_2015_2023.csv.gz`
 
-Este archivo no se almacena en Git.
+Este archivo continúa preservado como evidencia del ciclo v1–v9 y como fuente complementaria para v10.
+
+No se almacena en Git.
 
 ---
 
@@ -276,9 +294,9 @@ No debe interpretarse como la fecha real individual de presentación de cada emp
 
 ---
 
-# 10. Dataset etiquetado temporalmente corregido
+# 10. Dataset etiquetado temporalmente corregido — ciclo v4–v9
 
-Después de aplicar la nueva regla temporal y excluir observaciones de empresas que ya eran emisoras antes de la fecha de decisión se obtuvo:
+Después de aplicar la regla temporal corregida y excluir observaciones de empresas que ya eran emisoras antes de la fecha de decisión, el ciclo v4–v9 produjo:
 
 | Indicador | Resultado |
 |---|---:|
@@ -290,11 +308,13 @@ Después de aplicar la nueva regla temporal y excluir observaciones de empresas 
 | `TARGET_24M = 1` | **423** |
 | Prevalencia positiva aproximada | **0,0479 %** |
 
-El problema presenta un desbalance de clases extremo.
+Estos valores corresponden al universo 2015–2023 utilizado por v4–v9 y se mantienen como referencia histórica.
+
+La generación v10 utiliza un universo integrado distinto y se documenta posteriormente en este README y en `docs/v10_dataset_freeze.md`.
 
 ---
 
-# 11. Distribución temporal del target corregido
+# 11. Distribución temporal del target corregido — ciclo v4–v9
 
 | Año fiscal | Observaciones elegibles | Positivos |
 |---:|---:|---:|
@@ -311,15 +331,15 @@ El problema presenta un desbalance de clases extremo.
 
 La cantidad de eventos positivos varía de manera importante entre períodos.
 
-Por esta razón la evaluación debe considerar explícitamente la estabilidad temporal.
+Por esta razón la evaluación considera explícitamente la estabilidad temporal.
 
 ---
 
-# 12. División temporal actual
+# 12. División temporal del ciclo v4–v9
 
 No se utiliza una partición aleatoria como mecanismo principal de validación.
 
-La metodología corregida utiliza:
+Para los experimentos v4–v9 se utilizó:
 
 | Conjunto | Período | Observaciones | Positivos |
 |---|---|---:|---:|
@@ -328,6 +348,10 @@ La metodología corregida utiliza:
 | VALIDATION | 2020 | 98.470 | 34 |
 | EMBARGO TEST | 2021 | 109.095 | 39 |
 | TEST | 2022–2023 | 260.436 | 54 |
+
+Esta partición pertenece al ciclo v4–v9.
+
+La división temporal definitiva para los futuros experimentos v10 todavía debe definirse sobre el nuevo universo congelado y deberá mantener separación temporal y períodos de embargo compatibles con el horizonte de 24 meses.
 
 ---
 
@@ -353,7 +377,7 @@ Los períodos de embargo no son utilizados como conjuntos de evaluación princip
 
 ---
 
-# 14. Estado del conjunto TEST
+# 14. Estado del conjunto TEST del ciclo v1–v9
 
 Debe distinguirse entre dos etapas metodológicas.
 
@@ -456,7 +480,7 @@ PR-AUC y las métricas Top-K tienen especial importancia para evaluar el valor d
 
 ---
 
-# 18. Evolución experimental
+# 18. Evolución experimental v1–v9
 
 El desarrollo se divide metodológicamente en dos etapas.
 
@@ -946,7 +970,7 @@ Por esta razón:
 
 ---
 
-# 37. Benchmark actual
+# 37. Benchmark del ciclo v4–v9
 
 El benchmark actual es:
 
@@ -965,7 +989,7 @@ v8 no se considera todavía el modelo definitivo.
 
 ---
 
-# 38. Baseline comparable actual
+# 38. Baseline comparable del ciclo v4–v9
 
 Para evaluar nuevas familias de modelos dentro del ciclo temporal corregido se mantiene:
 
@@ -993,11 +1017,14 @@ Comparar directamente v8 contra v1 como criterio principal sería menos riguroso
 | Drift temporal | Rolling-origin |
 | Scores no calibrados | Uso como ranking |
 | Sesgo sectorial | Comparaciones con y sin sector |
-| Comparaciones injustas | Mismo protocolo para v6 y v8 |
+| Comparaciones injustas | Mismo protocolo dentro de cada generación de datos |
 | Complejidad excesiva | Mantener baseline lineal |
-| Contaminación de TEST | TEST 2022–2023 reservado |
+| Contaminación de TEST | TEST v4–v9 reservado; TEST v10 aún no abierto ni utilizado |
 | Interpretación causal | Resultados interpretados como asociaciones predictivas |
 | Automatización de decisiones | Human-in-the-loop |
+| Identidad empresarial incompleta | Exclusión de filas sin RUC verificable en v10 |
+| Inconsistencias entre fuentes | Reglas explícitas de precedencia, fallback y variables de auditoría |
+| Fuga por variables técnicas o de mercado | Exclusión preventiva de `cia_imvalores`, `id_estado_financiero` y `posicion_general` |
 
 ---
 
@@ -1005,50 +1032,224 @@ Comparar directamente v8 contra v1 como criterio principal sería menos riguroso
 
 Las principales limitaciones son:
 
-1. Solo existen 423 positivos en el dataset temporalmente corregido.
-2. TRAIN 2015–2018 contiene 262 positivos.
-3. VALIDATION 2020 contiene únicamente 34 positivos.
-4. TEST 2022–2023 contiene 54 positivos y permanece reservado.
-5. Existe un desbalance extremo.
-6. El rendimiento varía entre cohortes temporales.
-7. Solo se dispone actualmente de tres folds rolling-origin.
-8. La regla de disponibilidad es una aproximación normativa y no una fecha individual observada.
-9. Las variables actuales siguen concentrándose principalmente en información financiera.
-10. Las tendencias multianuales pueden ampliarse.
-11. CatBoost todavía debe evaluarse.
-12. Random Forest todavía debe evaluarse.
-13. Debe implementarse una red TensorFlow/Keras para cumplir la etapa neuronal prevista en el proyecto.
-14. Los scores no están calibrados.
-15. El Índice de Afinidad Bursátil todavía no está definido de manera definitiva.
-16. Falta incorporar interpretabilidad mediante técnicas como SHAP.
-17. Falta ampliar la evaluación explícita de sesgo y equidad.
-18. Las nuevas fuentes identificadas todavía no han ingresado al feature set v1–v9.
+1. El ciclo v4–v9 dispone de 423 positivos y v10 amplía el universo a 568 positivos, pero el evento sigue siendo extremadamente infrecuente.
+2. La prevalencia final del universo v10 es aproximadamente 0,055110 %.
+3. La disponibilidad temporal continúa basada en una regla normativa y no en la fecha real individual de presentación de cada empresa.
+4. El universo v10 integra fuentes con coberturas históricas distintas.
+5. La utilidad neta no dispone de fallback histórico debido a incompatibilidades detectadas entre definiciones de fuente.
+6. Existen observaciones con variables faltantes y bloques financieros sin información útil.
+7. El rendimiento de v6 y v8 varió entre cohortes temporales.
+8. El backtesting histórico disponible para v6 y v8 utiliza únicamente tres folds.
+9. Los scores actuales no están calibrados como probabilidades.
+10. El feature set definitivo de v10 todavía no está construido.
+11. La división temporal definitiva de TRAIN / embargo / VALIDATION / TEST para v10 todavía debe congelarse.
+12. Random Forest todavía debe evaluarse sobre v10.
+13. CatBoost todavía debe evaluarse sobre v10.
+14. Debe implementarse una red TensorFlow/Keras para cumplir la etapa neuronal prevista en el proyecto.
+15. Falta incorporar interpretabilidad mediante técnicas como SHAP.
+16. Falta ampliar la evaluación explícita de sesgo y equidad.
+17. Las variables de inversión societaria y otras fuentes complementarias todavía no forman parte del feature set congelado.
+18. El Índice de Afinidad Bursátil todavía no está definido de manera definitiva.
 19. El prototipo web funcional todavía está pendiente.
-20. El TEST debe mantenerse cerrado mientras continúe la selección de modelos.
+20. El conjunto TEST de v10 debe permanecer cerrado una vez se defina su partición, mientras continúe la selección de modelos.
 
 ---
 
-# 41. Estado de nuevas fuentes
+# 41. Dataset base v10 congelado
 
-Se han identificado nuevas fuentes potenciales de información para ampliar el modelo.
+La generación v10 dejó de ser únicamente una fuente potencial y pasó a contar con una base integrada físicamente construida y validada.
 
-Estas fuentes no se incorporarán retroactivamente a v1–v9.
+Archivo local:
 
-Su integración dará origen a una nueva generación de datos y features.
+`data/processed/v10_base_integrated_2012_2023.csv.gz`
 
-La nomenclatura prevista es:
+Script reproducible:
 
-**Dataset / Feature Set v10**
+`scripts/build_v10_base.py`
 
-Dentro de esa generación podrán evaluarse, por ejemplo:
+Documento de congelamiento:
 
-- `v10-LR`;
-- `v10-HGB`;
-- `v10-RF`;
-- `v10-CatBoost`;
-- `v10-NN`.
+`docs/v10_dataset_freeze.md`
 
-v8 permanecerá como benchmark del ciclo anterior.
+El archivo procesado no se almacena en Git debido a las reglas de exclusión definidas para `data/processed/`.
+
+## 41.1 Período
+
+La base v10 utiliza ejercicios:
+
+**2012–2023**
+
+Los años 2024 y 2025 quedan fuera del universo supervisado actual porque todavía no disponen de una ventana completa y comparable de 24 meses para construir el target.
+
+Podrán utilizarse posteriormente para scoring o análisis prospectivo.
+
+## 41.2 Universo congelado
+
+Después de integrar fuentes, resolver identidad, excluir filas sin RUC verificable y retirar observaciones de empresas que ya eran emisoras antes de la fecha de decisión, se obtuvo:
+
+| Indicador | Resultado |
+|---|---:|
+| Unión inicial empresa-año | 1.035.294 |
+| Filas excluidas sin RUC verificable | 535 |
+| Observaciones excluidas por ser emisores previos | 4.088 |
+| Observaciones elegibles finales | **1.030.671** |
+| Positivos `TARGET_24M` | **568** |
+| RUC positivos únicos | **310** |
+| Prevalencia | **0,055110 %** |
+| Duplicados empresa-año | **0** |
+
+## 41.3 Procedencia del universo elegible
+
+| Procedencia | Observaciones |
+|---|---:|
+| Ambas fuentes | 815.331 |
+| Solo `bi_ranking` | 146.683 |
+| Solo histórico | 68.657 |
+
+La unión evita depender exclusivamente de `bi_ranking`, ya que el dataset histórico contiene observaciones empresa-año válidas ausentes de esa fuente.
+
+## 41.4 Identidad empresarial
+
+La prioridad para resolver el RUC es:
+
+1. `bi_compania`;
+2. RUC histórico único asociado al mismo expediente;
+3. RUC de la propia fila histórica, únicamente si los anteriores no están disponibles.
+
+Después de aplicar estas reglas quedaron 535 filas sin RUC utilizable, correspondientes a 276 expedientes únicos.
+
+Estas filas fueron excluidas del universo supervisado porque sin RUC no puede determinarse de manera segura la condición histórica o futura de emisor.
+
+No se aplicaron coincidencias por nombre ni fuzzy matching.
+
+Se conserva además una bandera `ruc_difiere` para registrar discrepancias entre fuentes.
+
+## 41.5 Validación del target
+
+El target continúa definido como primera inscripción efectiva como emisor dentro de los 24 meses posteriores a la fecha de decisión.
+
+La validación de la fuente de mercado confirmó:
+
+- 619 RUC efectivos en `listado_entes`;
+- 619 RUC equivalentes al restringir fichas registrales a estados `VIGENTE` y `CANCELADA`;
+- 619 fechas coincidentes;
+- 0 diferencias entre las fechas efectivas contrastadas.
+
+Dentro del universo v10:
+
+- 2012–2014 aportan 143 positivos;
+- 2015–2023 contienen 425 positivos;
+- los 423 positivos históricos del ciclo anterior están preservados;
+- se incorporan 2 positivos adicionales de 2015 por ampliación de cobertura del universo.
+
+## 41.6 Integración de activos y patrimonio
+
+En las observaciones compartidas entre fuentes, activos y patrimonio presentan una coincidencia global superior al 99,6 % al centavo.
+
+No obstante, las discrepancias restantes incluyen ceros, cambios de signo y diferencias materiales, por lo que no se utilizan promedios ni conciliaciones automáticas.
+
+Se definió un bloque financiero de ocho variables BI:
+
+- activos;
+- patrimonio;
+- ingresos por ventas;
+- ingresos totales;
+- utilidad antes de impuestos;
+- impuesto a la renta;
+- utilidad del ejercicio;
+- utilidad neta.
+
+Cuando las ocho variables son simultáneamente cero se registra:
+
+`bi_8_finanzas_cero`
+
+En el universo elegible existen:
+
+**31.744 observaciones**
+
+con esta condición.
+
+Las variables finales:
+
+- `activos_final`;
+- `patrimonio_final`;
+
+utilizan `bi_ranking` cuando el bloque financiero es válido y realizan fallback histórico cuando la información BI se considera vacía o cuando la empresa-año existe únicamente en el histórico.
+
+Resultado:
+
+- 92.640 fallbacks históricos de activos;
+- 92.640 fallbacks históricos de patrimonio;
+- cobertura final de activos: 99,25 %;
+- cobertura final de patrimonio: 99,25 %.
+
+## 41.7 Utilidad neta
+
+La utilidad neta histórica no se utiliza como fallback.
+
+La auditoría mostró que el dataset histórico contiene numerosos ceros donde `bi_ranking` reporta utilidades o pérdidas.
+
+Por ello:
+
+`utilidad_neta_final`
+
+se construye únicamente desde `bi_utilidad_neta` cuando el bloque financiero BI es válido.
+
+Resultado:
+
+- 930.270 valores disponibles;
+- cobertura final de 90,26 %.
+
+La utilidad histórica permanece exclusivamente como variable de auditoría.
+
+## 41.8 Variables excluidas preventivamente
+
+No se incorporaron al dataset v10:
+
+- `cia_imvalores`;
+- `id_estado_financiero`;
+- `posicion_general`.
+
+Las razones corresponden respectivamente a:
+
+- riesgo potencial de fuga de información;
+- identificador técnico;
+- posición de ranking no apropiada como predictor directo.
+
+## 41.9 Distribución anual final
+
+| Año | Elegibles | Positivos | Prevalencia |
+|---:|---:|---:|---:|
+| 2012 | 42.158 | 55 | 0,130462 % |
+| 2013 | 47.140 | 49 | 0,103946 % |
+| 2014 | 52.528 | 39 | 0,074246 % |
+| 2015 | 76.468 | 43 | 0,056233 % |
+| 2016 | 79.503 | 73 | 0,091820 % |
+| 2017 | 83.107 | 89 | 0,107091 % |
+| 2018 | 89.818 | 59 | 0,065688 % |
+| 2019 | 91.934 | 34 | 0,036983 % |
+| 2020 | 98.471 | 34 | 0,034528 % |
+| 2021 | 109.099 | 39 | 0,035747 % |
+| 2022 | 123.289 | 32 | 0,025955 % |
+| 2023 | 137.156 | 22 | 0,016040 % |
+
+## 41.10 Reproducibilidad binaria
+
+El dataset v10 fue construido y posteriormente reconstruido desde las fuentes mediante:
+
+`scripts/build_v10_base.py`
+
+El archivo reconstruido produjo exactamente el mismo SHA-256 que el archivo validado:
+
+`b44f9ccf309c20a59be436953a0c6e7f9a3dc1f11cc6f2c87e41c1676a3a2a8d`
+
+Estado:
+
+**BASE V10 CONGELADA**
+
+El congelamiento comprende universo, target, identidad, período y reglas de integración de fuentes.
+
+Todavía no comprende el feature set definitivo ni los splits de modelado v10.
 
 ---
 
@@ -1121,17 +1322,18 @@ Las dependencias se mantienen en:
 - `config/` — reglas de configuración y homologación.
 - `data/raw/` — archivos originales.
 - `data/interim/` — datos intermedios.
-- `data/processed/` — datasets derivados para modelado.
+- `data/processed/` — datasets derivados para modelado; excluidos de Git salvo `.gitkeep`.
 - `docs/` — documentación técnica y académica.
 - `models/` — modelos generados localmente.
 - `notebooks/` — exploración y validaciones.
 - `reports/figures/` — visualizaciones.
 - `reports/results/` — resultados agregados.
-- `src/data/` — construcción y validación de datos.
+- `scripts/` — scripts reproducibles de construcción de datasets, incluido `build_v10_base.py`.
+- `src/data/` — construcción y validación de datos del ciclo inicial.
 - `src/features/` — ingeniería de variables.
 - `src/models/` — entrenamiento de modelos.
 - `src/evaluation/` — evaluación, backtesting y comparación.
-- `README.md` — visión general del proyecto.
+- `README.md` — visión general y estado actual.
 - `requirements.txt` — dependencias.
 - `requirements-lock.txt` — versiones exactas del entorno.
 
@@ -1157,7 +1359,9 @@ Las versiones exactas utilizadas se encuentran en:
 
 ---
 
-# 47. Pipeline base de datos
+# 47. Pipeline de datos
+
+## 47.1 Ciclo v1–v9
 
 Construir dataset armonizado:
 
@@ -1171,7 +1375,30 @@ Construir dataset etiquetado:
 
 `python src/data/build_mvp_labeled_dataset.py`
 
-La lógica actualmente versionada debe respetar la metodología temporal corregida documentada en este README y en la bitácora.
+La lógica versionada de este ciclo debe respetar la metodología temporal corregida documentada en el README y en la bitácora.
+
+## 47.2 Base integrada v10
+
+Reconstruir la base congelada v10:
+
+`python scripts/build_v10_base.py`
+
+Salida local:
+
+`data/processed/v10_base_integrated_2012_2023.csv.gz`
+
+El script contiene asserts de control sobre:
+
+- tamaño del universo;
+- duplicados;
+- número de positivos;
+- RUC positivos únicos;
+- cantidad de RUC del target;
+- reproducibilidad mediante SHA-256.
+
+Hash esperado:
+
+`b44f9ccf309c20a59be436953a0c6e7f9a3dc1f11cc6f2c87e41c1676a3a2a8d`
 
 ---
 
@@ -1264,6 +1491,14 @@ El proyecto utiliza:
 
 Se utiliza `random_state = 42` en procesos donde es aplicable.
 
+Para v10 se añadió una validación adicional de reproducibilidad:
+
+- script: `scripts/build_v10_base.py`;
+- dataset local: `data/processed/v10_base_integrated_2012_2023.csv.gz`;
+- SHA-256 congelado: `b44f9ccf309c20a59be436953a0c6e7f9a3dc1f11cc6f2c87e41c1676a3a2a8d`.
+
+La reconstrucción desde las mismas fuentes produjo un archivo binariamente idéntico al previamente validado.
+
 ---
 
 # 53. Principales commits del ciclo actual
@@ -1298,6 +1533,7 @@ El historial completo se mantiene en Git.
 | `docs/bitacora.md` | Evolución técnica y metodológica |
 | `docs/backlog.md` | Actividades pendientes y completadas |
 | `docs/informe_resultados_preliminares.md` | Informe académico consolidado |
+| `docs/v10_dataset_freeze.md` | Congelamiento del universo, target e integración de fuentes v10 |
 
 ---
 
@@ -1308,14 +1544,14 @@ El historial completo se mantiene en Git.
 | Estructura del repositorio | Completada |
 | Entorno técnico | Documentado |
 | Inventario inicial de fuentes | Completado |
-| Diccionario de datos | Completado para ciclo actual |
+| Diccionario de datos | Completado para ciclo v1–v9; actualización v10 pendiente |
 | Homologación contable 2015–2023 | Completada |
-| Dataset armonizado | Completado |
-| Validaciones contables | Completadas |
-| Target temporal corregido | Completado |
+| Dataset armonizado histórico | Completado |
+| Validaciones contables históricas | Completadas |
+| Target temporal corregido v4–v9 | Completado |
 | Regla de disponibilidad | Implementada como supuesto normativo |
-| División con embargos | Completada |
-| Variables temporales | Completadas para v6–v9 |
+| División con embargos v4–v9 | Completada |
+| Variables temporales v6–v9 | Completadas |
 | Logistic Regression v6 | Completada |
 | HistGradientBoosting v7 | Completado |
 | HistGradientBoosting v8 | Completado |
@@ -1323,15 +1559,22 @@ El historial completo se mantiene en Git.
 | Backtest v6 | Completado |
 | Backtest v8 | Completado |
 | Comparación v6 vs v8 | Completada |
-| Benchmark actual | v8 |
-| TEST temporal corregido | Reservado |
-| CatBoost | Pendiente |
-| Random Forest | Pendiente |
-| TensorFlow/Keras | Pendiente |
+| Benchmark del ciclo anterior | v8 |
+| TEST temporal v4–v9 | Reservado |
+| Auditoría de nuevas fuentes | Completada para congelamiento base v10 |
+| Universo y target v10 | **Congelados** |
+| Base integrada v10 2012–2023 | **Construida y reproducible** |
+| SHA-256 v10 | **Validado** |
+| Feature Set v10 | Pendiente |
+| Split temporal v10 | Pendiente de definición y congelamiento |
+| `v10-LR` | Pendiente |
+| `v10-HGB` | Pendiente |
+| Random Forest v10 | Pendiente |
+| CatBoost v10 | Pendiente |
+| TensorFlow/Keras v10 | Pendiente |
 | Interpretabilidad SHAP | Pendiente |
 | Calibración | Pendiente |
 | Evaluación ampliada de sesgo | Pendiente |
-| Dataset / Feature Set v10 | Siguiente ciclo |
 | Índice de Afinidad Bursátil | Pendiente |
 | Prototipo web | Pendiente |
 | MLOps / monitoreo | Pendiente |
@@ -1340,70 +1583,91 @@ El historial completo se mantiene en Git.
 
 # 56. Próxima fase
 
-El siguiente ciclo del proyecto se orientará a:
+Con el universo y target v10 ya congelados, la siguiente fase se orientará a:
 
-1. cerrar documentalmente el ciclo v1–v9;
-2. mantener TEST 2022–2023 reservado;
-3. incorporar nuevas fuentes mediante una nueva generación de dataset;
-4. construir Dataset / Feature Set v10;
-5. ampliar variables financieras, empresariales y temporales;
-6. entrenar un nuevo baseline `v10-LR`;
-7. evaluar `v10-HGB`;
-8. evaluar Random Forest;
-9. evaluar CatBoost;
-10. implementar una red TensorFlow/Keras;
-11. comparar modelos bajo un protocolo temporal común;
-12. incorporar interpretabilidad;
-13. evaluar sesgos y comportamiento segmentado;
-14. estudiar calibración;
-15. construir posteriormente el IAB;
-16. desarrollar el prototipo web de apoyo a prospección.
+1. actualizar documentación general y registrar el congelamiento en Git;
+2. mantener íntegramente preservado el ciclo v1–v9;
+3. construir el **Feature Set v10** sin modificar el universo congelado;
+4. clasificar columnas entre predictores, identificadores, auditoría y variables no utilizables;
+5. definir reglas de missingness;
+6. incorporar variables temporales `t-1` y otras trayectorias disponibles;
+7. definir transformaciones y tratamiento de valores extremos aprendidos únicamente sobre TRAIN cuando corresponda;
+8. definir y congelar la nueva estrategia temporal TRAIN / embargo / VALIDATION / TEST;
+9. mantener el TEST v10 cerrado durante selección y ajuste;
+10. entrenar `v10-LR` como baseline de la nueva generación;
+11. evaluar `v10-HGB`;
+12. evaluar Random Forest;
+13. evaluar CatBoost;
+14. implementar una red TensorFlow/Keras;
+15. comparar las familias de modelos bajo un protocolo temporal común;
+16. incorporar interpretabilidad mediante SHAP;
+17. evaluar sesgos y comportamiento segmentado;
+18. estudiar calibración cuando corresponda;
+19. construir posteriormente el Índice de Afinidad Bursátil;
+20. desarrollar el prototipo web de apoyo a la prospección.
+
+El primer entrenamiento v10 no se realizará hasta completar el feature set y congelar el nuevo protocolo temporal.
 
 ---
 
 # 57. Estado del benchmark
 
-A septiembre de 2026:
+A octubre de 2026, y mientras todavía no existen modelos entrenados sobre el nuevo universo v10:
 
-**Benchmark actual: v8 — HistGradientBoosting regularizado**
+**Benchmark histórico del ciclo v4–v9: v8 — HistGradientBoosting regularizado**
 
-**Baseline comparable: v6 — Logistic Regression con variables temporales**
+**Baseline comparable del ciclo v4–v9: v6 — Logistic Regression con variables temporales**
 
-La comparación rolling-origin muestra:
+La comparación rolling-origin del ciclo anterior muestra:
 
 - PR-AUC promedio v6: **0,011329**
 - PR-AUC promedio v8: **0,021041**
-- mejora relativa promedio observada: **+85,73 %**
+- diferencia relativa promedio observada: **+85,73 %**
 - Lift@50 promedio v6: **65,15**
 - Lift@50 promedio v8: **123,64**
 
-Estos resultados son preliminares y corresponden exclusivamente a las ventanas temporales de desarrollo 2018, 2019 y 2020.
+Estos resultados corresponden exclusivamente a las ventanas temporales de desarrollo 2018, 2019 y 2020 del universo v4–v9.
 
-El TEST temporalmente corregido 2022–2023 permanece reservado.
+No deben trasladarse directamente al nuevo dataset v10.
+
+v8 permanece como referencia histórica hasta que exista una comparación reproducible entre modelos entrenados y evaluados bajo el protocolo v10.
+
+El TEST temporalmente corregido 2022–2023 del ciclo v4–v9 permanece reservado.
 
 ---
 
 # 58. Conclusión del ciclo actual
 
-El desarrollo realizado hasta v9 permite establecer una base metodológica reproducible para el proyecto Prospect Finder BVQ.
+El desarrollo realizado hasta v9 estableció una base metodológica reproducible para Prospect Finder BVQ mediante una definición temporal conservadora, exclusión de emisores previos, períodos de embargo, variables temporales, modelos lineales y no lineales, backtesting rolling-origin y preservación del conjunto TEST.
 
-El principal avance no consiste únicamente en obtener un modelo con mejores métricas, sino en fortalecer progresivamente el diseño experimental mediante:
+El ciclo posterior de auditoría de datos permitió avanzar a una nueva generación v10.
 
-- una definición temporal más conservadora;
-- exclusión de empresas previamente emisoras;
-- períodos de embargo;
-- variables temporales;
-- comparación entre modelos lineales y no lineales;
-- detección y corrección de sobreajuste;
-- backtesting rolling-origin;
-- análisis de variabilidad;
-- comparación reproducible bajo protocolos equivalentes;
-- preservación de un TEST final no utilizado durante la selección.
+El principal hito actual es el congelamiento de una base integrada 2012–2023 con:
 
-Los resultados actuales indican que v8 presenta una mayor capacidad de priorización que v6 dentro de las tres ventanas temporales evaluadas.
+- 1.030.671 observaciones elegibles;
+- 568 positivos;
+- 310 RUC positivos únicos;
+- 0 duplicados empresa-año;
+- reglas explícitas de identidad;
+- validación del target;
+- reglas documentadas de precedencia y fallback entre fuentes;
+- exclusión de observaciones sin identidad verificable;
+- variables de auditoría para mantener trazabilidad;
+- un script reproducible de construcción;
+- un SHA-256 validado mediante reconstrucción independiente.
 
-No obstante, el modelo todavía se encuentra en fase experimental.
+El archivo congelado es:
 
-El proyecto continuará incorporando nuevas fuentes, nuevas familias de modelos, interpretabilidad, evaluación de sesgos y mecanismos de validación antes de considerar el sistema suficientemente maduro para una utilización operativa.
+`data/processed/v10_base_integrated_2012_2023.csv.gz`
 
-Prospect Finder BVQ se mantiene como una herramienta de apoyo al análisis humano y no como un mecanismo autónomo de decisión.
+con SHA-256:
+
+`b44f9ccf309c20a59be436953a0c6e7f9a3dc1f11cc6f2c87e41c1676a3a2a8d`
+
+Este congelamiento no significa que el modelo v10 esté construido.
+
+El siguiente trabajo se concentra en definir el feature set, las transformaciones y la nueva estrategia de validación temporal antes de entrenar cualquier modelo.
+
+Los resultados v6 y v8 permanecen como referencia histórica y no se compararán directamente con futuros modelos v10 sin reconocer el cambio de universo.
+
+Prospect Finder BVQ se mantiene como una herramienta de apoyo a la priorización y al análisis humano, no como un mecanismo autónomo de decisión.

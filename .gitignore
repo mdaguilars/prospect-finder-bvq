@@ -29,6 +29,9 @@ models/*
 reports/results/*
 !reports/results/.gitkeep
 
+# Salidas temporales de auditoría y validación
+/salida_paso*.txt
+
 # Python
 __pycache__/
 *.py[cod]
