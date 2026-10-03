@@ -1,0 +1,48 @@
+FEATURE,COEFICIENTE,ABS_COEFICIENTE
+categorical__tipo_compania_SUCURSAL  EXTRANJERA                              ,-28.37204401941299,28.37204401941299
+categorical__provincia_EL ORO                                            ,-12.209423333025965,12.209423333025965
+categorical__tipo_compania_ECONOMÍA MIXTA                                    ,9.705215235162981,9.705215235162981
+categorical__provincia_LOJA                                              ,-7.743223756856714,7.743223756856714
+categorical__provincia_CHIMBORAZO                                        ,-6.926856222396148,6.926856222396148
+categorical__provincia_SANTA ELENA                                       ,-6.804556559525847,6.804556559525847
+categorical__tipo_compania_SOCIEDAD POR ACCIONES SIMPLIFICADA                ,6.54262172753972,6.54262172753972
+categorical__provincia_GALAPAGOS                                         ,6.108016063723265,6.108016063723265
+categorical__tipo_compania_ASOCIACIÓN O CONSORCIO                            ,-6.052791272165145,6.052791272165145
+categorical__provincia_SUCUMBIOS                                         ,-5.730892177002654,5.730892177002654
+categorical__tipo_compania_ANÓNIMA                                           ,5.716427804899522,5.716427804899522
+categorical__tipo_compania_RESPONSABILIDAD LIMITADA                          ,5.639754292779814,5.639754292779814
+categorical__provincia_ZAMORA CHINCHIPE                                  ,5.274522925407612,5.274522925407612
+categorical__provincia_CAÑAR                                             ,-4.961805108193142,4.961805108193142
+categorical__provincia_GUAYAS                                            ,4.935950019744022,4.935950019744022
+categorical__provincia_ESMERALDAS                                        ,4.7934459159854415,4.7934459159854415
+categorical__provincia_MANABI                                            ,4.669177999481831,4.669177999481831
+categorical__provincia_ORELLANA                                          ,4.433516144915086,4.433516144915086
+categorical__provincia_AZUAY                                             ,4.309623235791996,4.309623235791996
+categorical__provincia_PICHINCHA                                         ,4.299200392558693,4.299200392558693
+categorical__provincia_TUNGURAHUA                                        ,4.206848262383126,4.206848262383126
+categorical__provincia_CARCHI                                            ,-3.608107521760613,3.608107521760613
+categorical__provincia_MORONA SANTIAGO                                   ,-3.586882232095734,3.586882232095734
+categorical__provincia_SANTO DOMINGO DE LOS TSACHILAS                    ,3.4598676525774272,3.4598676525774272
+numeric__activos_final,3.245383783402045,3.245383783402045
+categorical__provincia_NAPO                                              ,-3.0038233140701194,3.0038233140701194
+categorical__provincia_LOS RIOS                                          ,2.5901970256998443,2.5901970256998443
+categorical__provincia_PASTAZA                                           ,-2.446922625484616,2.446922625484616
+categorical__tipo_compania_ANÓNIMA  EN PREDIOS RÚSTICOS                      ,-2.242358155699449,2.242358155699449
+categorical__provincia_BOLIVAR                                           ,-2.195905452445471,2.195905452445471
+boolean__flag_empleados_anomalia_total,-1.6785364220562489,1.6785364220562489
+boolean__flag_empleados_salto_temporal,-1.5758174871070636,1.5758174871070636
+numeric__bi_ingresos_ventas,1.1913551765440658,1.1913551765440658
+categorical__tipo_compania_ANÓNIMA MULTINACIONAL ANDINA                      ,-1.0915182918612982,1.0915182918612982
+numeric__patrimonio_final_t1,-1.0229605632068013,1.0229605632068013
+categorical__provincia_COTOPAXI                                          ,-0.904834519997366,0.904834519997366
+categorical__provincia_IMBABURA                                          ,0.8135563902601098,0.8135563902601098
+boolean__TIENE_T_MENOS_1,0.556547521155917,0.556547521155917
+numeric__patrimonio_final,-0.4491627913444789,0.4491627913444789
+numeric__activos_final_t1,-0.3157201122995583,0.3157201122995583
+numeric__bi_n_empleados_t1,0.2766662093283507,0.2766662093283507
+numeric__bi_ingresos_ventas_t1,-0.20193225241509324,0.20193225241509324
+numeric__bi_n_empleados,0.17519599087894625,0.17519599087894625
+boolean__flag_empleados_fijo,-0.15200879209651297,0.15200879209651297
+boolean__flag_ventas_negativas,-0.11728271226941697,0.11728271226941697
+boolean__flag_activos_negativos,-0.1068394683613491,0.1068394683613491
+categorical__tipo_compania_COMANDITA POR ACCIONES                            ,-0.07461811556925513,0.07461811556925513

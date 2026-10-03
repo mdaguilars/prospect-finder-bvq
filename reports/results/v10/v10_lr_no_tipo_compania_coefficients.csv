@@ -1,0 +1,39 @@
+FEATURE,COEFICIENTE,ABS_COEFICIENTE
+categorical__provincia_EL ORO                                            ,-6.158910499381619,6.158910499381619
+categorical__provincia_GALAPAGOS                                         ,4.3285305293586855,4.3285305293586855
+categorical__provincia_COTOPAXI                                          ,-3.92890630144758,3.92890630144758
+categorical__provincia_LOJA                                              ,-3.8982709798405084,3.8982709798405084
+categorical__provincia_SANTA ELENA                                       ,-3.4677134417730473,3.4677134417730473
+categorical__provincia_ZAMORA CHINCHIPE                                  ,3.434987452775584,3.434987452775584
+categorical__provincia_CHIMBORAZO                                        ,-3.3920212987237868,3.3920212987237868
+categorical__provincia_GUAYAS                                            ,3.1373574703364784,3.1373574703364784
+categorical__provincia_SUCUMBIOS                                         ,-3.050295611685989,3.050295611685989
+categorical__provincia_ESMERALDAS                                        ,2.9576972323621256,2.9576972323621256
+numeric__activos_final,2.926606157015351,2.926606157015351
+categorical__provincia_MANABI                                            ,2.8659431778531057,2.8659431778531057
+categorical__provincia_TUNGURAHUA                                        ,2.726909034494499,2.726909034494499
+categorical__provincia_ORELLANA                                          ,2.650830606693855,2.650830606693855
+categorical__provincia_CAÑAR                                             ,-2.520412708824515,2.520412708824515
+categorical__provincia_AZUAY                                             ,2.4771787561081102,2.4771787561081102
+categorical__provincia_PICHINCHA                                         ,2.447102063562128,2.447102063562128
+categorical__provincia_CARCHI                                            ,-1.8899007923745719,1.8899007923745719
+categorical__provincia_MORONA SANTIAGO                                   ,-1.858280438013998,1.858280438013998
+categorical__provincia_SANTO DOMINGO DE LOS TSACHILAS                    ,1.5976835455242175,1.5976835455242175
+categorical__provincia_NAPO                                              ,-1.488028396219001,1.488028396219001
+categorical__provincia_PASTAZA                                           ,-1.3780242883025173,1.3780242883025173
+categorical__provincia_BOLIVAR                                           ,-1.1982788198395642,1.1982788198395642
+numeric__bi_ingresos_ventas,1.1814179047033129,1.1814179047033129
+numeric__patrimonio_final_t1,-1.1540617066695122,1.1540617066695122
+categorical__provincia_IMBABURA                                          ,0.9079205619411055,0.9079205619411055
+categorical__provincia_LOS RIOS                                          ,0.8609514758570829,0.8609514758570829
+boolean__TIENE_T_MENOS_1,0.5351401351345448,0.5351401351345448
+boolean__flag_empleados_anomalia_total,-0.48633203127458924,0.48633203127458924
+boolean__flag_empleados_salto_temporal,-0.4551411226983847,0.4551411226983847
+numeric__activos_final_t1,-0.33258077238130074,0.33258077238130074
+numeric__bi_n_empleados_t1,0.29658580152755976,0.29658580152755976
+numeric__bi_n_empleados,0.1748541658609064,0.1748541658609064
+numeric__bi_ingresos_ventas_t1,-0.17319419418022067,0.17319419418022067
+numeric__patrimonio_final,-0.05882695503448412,0.05882695503448412
+boolean__flag_empleados_fijo,-0.050042522716881054,0.050042522716881054
+boolean__flag_activos_negativos,-0.025508725727102097,0.025508725727102097
+boolean__flag_ventas_negativas,-0.02529271112478264,0.02529271112478264

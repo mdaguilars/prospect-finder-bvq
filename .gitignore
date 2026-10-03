@@ -73,3 +73,6 @@ Thumbs.db
 *.pem
 *.pfx
 *.p12
+
+# Rankings de validación con identificadores empresariales
+reports/results/v10/*_validation_top500.csv

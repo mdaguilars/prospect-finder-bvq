@@ -1,0 +1,73 @@
+{
+    "experimento": "v10-LR",
+    "modelo": "LogisticRegression",
+    "dataset": "data\\processed\\v10_features_core_2012_2023.csv.gz",
+    "descripcion": "Baseline lineal de la generación v10 utilizando el Feature Set Core v10.",
+    "target": "TARGET_24M",
+    "features_numericas": [
+        "activos_final",
+        "patrimonio_final",
+        "bi_ingresos_ventas",
+        "bi_n_empleados",
+        "activos_final_t1",
+        "patrimonio_final_t1",
+        "bi_ingresos_ventas_t1",
+        "bi_n_empleados_t1"
+    ],
+    "features_categoricas": [],
+    "features_booleanas": [
+        "TIENE_T_MENOS_1",
+        "flag_activos_negativos",
+        "flag_ventas_negativas",
+        "flag_empleados_fijo",
+        "flag_empleados_salto_temporal",
+        "flag_empleados_anomalia_total"
+    ],
+    "numero_features_fisicas": 14,
+    "numero_features_despues_encoding": 14,
+    "variables_excluidas_modelo": [
+        "ANIO",
+        "EXPEDIENTE_KEY",
+        "RUC",
+        "NOMBRE",
+        "SPLIT"
+    ],
+    "random_state": 42,
+    "class_weight": "balanced",
+    "C": 1.0,
+    "regularizacion": "L2",
+    "solver": "lbfgs",
+    "max_iter": 2000,
+    "threshold_evaluacion": 0.5,
+    "k_ranking": [
+        50,
+        100,
+        200
+    ],
+    "train_anios": [
+        2012,
+        2013,
+        2014,
+        2015,
+        2016,
+        2017,
+        2018
+    ],
+    "validation_anios": [
+        2020
+    ],
+    "train_observaciones": 470722,
+    "train_positivos": 407,
+    "validation_observaciones": 98471,
+    "validation_positivos": 34,
+    "test_evaluado": false,
+    "test_utilizado_para_fit": false,
+    "nota_test": "TEST 2022-2023 permanece reservado. v10-LR no genera predicciones, scores ni métricas sobre TEST.",
+    "scores_calibrados": false,
+    "nota_scores": "Los scores se utilizan para ranking y no deben interpretarse como probabilidades calibradas.",
+    "python_version": "3.13.7",
+    "pandas_version": "3.0.5",
+    "numpy_version": "2.5.3",
+    "scikit_learn_version": "1.9.1",
+    "fecha_ejecucion_utc": "2026-10-03T02:01:04.564605+00:00"
+}

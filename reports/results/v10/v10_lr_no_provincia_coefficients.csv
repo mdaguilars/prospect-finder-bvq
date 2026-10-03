@@ -1,0 +1,24 @@
+FEATURE,COEFICIENTE,ABS_COEFICIENTE
+categorical__tipo_compania_SUCURSAL  EXTRANJERA                              ,-31.327142121316683,31.327142121316683
+categorical__tipo_compania_ECONOMÍA MIXTA                                    ,9.592200327098881,9.592200327098881
+categorical__tipo_compania_SOCIEDAD POR ACCIONES SIMPLIFICADA                ,8.02403648472753,8.02403648472753
+categorical__tipo_compania_ANÓNIMA                                           ,7.11348315313532,7.11348315313532
+categorical__tipo_compania_RESPONSABILIDAD LIMITADA                          ,6.723337133056926,6.723337133056926
+categorical__tipo_compania_ASOCIACIÓN O CONSORCIO                            ,-5.802649137767249,5.802649137767249
+numeric__activos_final,3.089316878408148,3.089316878408148
+categorical__tipo_compania_ANÓNIMA  EN PREDIOS RÚSTICOS                      ,-1.40099666830987,1.40099666830987
+numeric__bi_ingresos_ventas,1.2796646516289363,1.2796646516289363
+numeric__patrimonio_final_t1,-1.168619368760372,1.168619368760372
+boolean__flag_empleados_anomalia_total,-1.1643391333278148,1.1643391333278148
+boolean__flag_empleados_salto_temporal,-1.0744627681819288,1.0744627681819288
+categorical__tipo_compania_ANÓNIMA MULTINACIONAL ANDINA                      ,-0.7665368295701132,0.7665368295701132
+boolean__TIENE_T_MENOS_1,0.5708739347648825,0.5708739347648825
+numeric__bi_ingresos_ventas_t1,-0.2521072764737877,0.2521072764737877
+numeric__patrimonio_final,-0.2521033458124682,0.2521033458124682
+numeric__bi_n_empleados_t1,0.22673127929581782,0.22673127929581782
+numeric__activos_final_t1,-0.2134051199151969,0.2134051199151969
+numeric__bi_n_empleados,0.17218539649900816,0.17218539649900816
+boolean__flag_empleados_fijo,-0.1515735868122281,0.1515735868122281
+boolean__flag_activos_negativos,-0.07800961803693811,0.07800961803693811
+categorical__tipo_compania_COMANDITA POR ACCIONES                            ,-0.0628333584221442,0.0628333584221442
+boolean__flag_ventas_negativas,-0.060656608262345695,0.060656608262345695
