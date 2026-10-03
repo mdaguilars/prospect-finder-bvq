@@ -1,0 +1,246 @@
+{
+  "experimento": "Evaluacion final TEST Prospect Finder BVQ v10",
+  "estado": "FINAL_TEST_EVALUATED",
+  "fecha_ejecucion_utc": "2026-10-03T16:54:08.383493+00:00",
+  "dataset": "data/processed/v10_features_financial_2012_2023.csv.gz",
+  "documentos_previos": [
+    "docs/v10_final_candidate_freeze.md",
+    "docs/v10_final_test_protocol.md"
+  ],
+  "modelo": "v10_hgb_financial_c3",
+  "familia": "HistGradientBoostingClassifier",
+  "config_id": "C3_CONSERVATIVE",
+  "modelo_parametros": {
+    "loss": "log_loss",
+    "learning_rate": 0.03,
+    "max_iter": 250,
+    "max_leaf_nodes": 5,
+    "max_depth": 2,
+    "min_samples_leaf": 200,
+    "l2_regularization": 3.0,
+    "early_stopping": false,
+    "random_state": 42,
+    "class_weight": "balanced",
+    "categorical_features": "from_dtype"
+  },
+  "random_state": 42,
+  "target": "TARGET_24M",
+  "horizonte_target": "24 meses",
+  "numero_features_fisicas": 25,
+  "features": [
+    "activos_final",
+    "patrimonio_final",
+    "bi_ingresos_ventas",
+    "bi_n_empleados",
+    "activos_final_t1",
+    "patrimonio_final_t1",
+    "bi_ingresos_ventas_t1",
+    "bi_n_empleados_t1",
+    "fin_ratio_patrimonio_activos",
+    "fin_roa",
+    "fin_margen_neto",
+    "fin_rotacion_activos",
+    "fin_roe",
+    "fin_crecimiento_activos",
+    "fin_crecimiento_patrimonio",
+    "fin_crecimiento_ventas",
+    "fin_crecimiento_empleados",
+    "TIENE_T_MENOS_1",
+    "flag_activos_negativos",
+    "flag_ventas_negativas",
+    "flag_empleados_fijo",
+    "flag_empleados_salto_temporal",
+    "flag_empleados_anomalia_total",
+    "flag_patrimonio_no_positivo",
+    "tipo_compania"
+  ],
+  "features_numericas": [
+    "activos_final",
+    "patrimonio_final",
+    "bi_ingresos_ventas",
+    "bi_n_empleados",
+    "activos_final_t1",
+    "patrimonio_final_t1",
+    "bi_ingresos_ventas_t1",
+    "bi_n_empleados_t1",
+    "fin_ratio_patrimonio_activos",
+    "fin_roa",
+    "fin_margen_neto",
+    "fin_rotacion_activos",
+    "fin_roe",
+    "fin_crecimiento_activos",
+    "fin_crecimiento_patrimonio",
+    "fin_crecimiento_ventas",
+    "fin_crecimiento_empleados"
+  ],
+  "features_booleanas": [
+    "TIENE_T_MENOS_1",
+    "flag_activos_negativos",
+    "flag_ventas_negativas",
+    "flag_empleados_fijo",
+    "flag_empleados_salto_temporal",
+    "flag_empleados_anomalia_total",
+    "flag_patrimonio_no_positivo"
+  ],
+  "features_categoricas": [
+    "tipo_compania"
+  ],
+  "provincia_utilizada": false,
+  "preprocesamiento": {
+    "capping": false,
+    "standard_scaler": false,
+    "imputacion_numerica": false,
+    "missing_values": "Conservados para manejo nativo de HGB.",
+    "tipo_compania": "Categorias aprendidas exclusivamente desde TRAIN. Categorias desconocidas en TEST se convierten en missing."
+  },
+  "train": {
+    "periodo": "2012-2018",
+    "N": 470722,
+    "POSITIVOS": 407,
+    "PREVALENCIA": 0.0008646292291416165,
+    "PR_AUC": 0.040249174167185,
+    "ROC_AUC": 0.9527189616055588
+  },
+  "test": {
+    "periodo": "2022-2023",
+    "N": 260445,
+    "POSITIVOS": 54,
+    "PREVALENCIA": 0.00020733744168634452,
+    "PR_AUC": 0.007468800571053012,
+    "ROC_AUC": 0.9346039012271716,
+    "ranking_metrics": [
+      {
+        "K": 50,
+        "POSITIVOS_TOP_K": 0,
+        "PRECISION_AT_K": 0.0,
+        "RECALL_AT_K": 0.0,
+        "LIFT_AT_K": 0.0
+      },
+      {
+        "K": 100,
+        "POSITIVOS_TOP_K": 0,
+        "PRECISION_AT_K": 0.0,
+        "RECALL_AT_K": 0.0,
+        "LIFT_AT_K": 0.0
+      },
+      {
+        "K": 200,
+        "POSITIVOS_TOP_K": 1,
+        "PRECISION_AT_K": 0.005,
+        "RECALL_AT_K": 0.018518518518518517,
+        "LIFT_AT_K": 24.11527777777778
+      }
+    ],
+    "evaluacion_final": true,
+    "utilizado_para_seleccion": false
+  },
+  "analisis_por_anio": {
+    "metricas": [
+      {
+        "MODELO": "v10_hgb_financial_c3",
+        "ANIO": 2022,
+        "N": 123289,
+        "POSITIVOS": 32,
+        "PREVALENCIA": 0.00025955275815360654,
+        "PR_AUC": 0.011584528678375505,
+        "ROC_AUC": 0.947529729548829
+      },
+      {
+        "MODELO": "v10_hgb_financial_c3",
+        "ANIO": 2023,
+        "N": 137156,
+        "POSITIVOS": 22,
+        "PREVALENCIA": 0.00016040129487590772,
+        "PR_AUC": 0.004533397641694368,
+        "ROC_AUC": 0.9158551953828836
+      }
+    ],
+    "ranking": [
+      {
+        "MODELO": "v10_hgb_financial_c3",
+        "ANIO": 2022,
+        "N": 123289,
+        "POSITIVOS": 32,
+        "K": 50,
+        "POSITIVOS_TOP_K": 0,
+        "PRECISION_AT_K": 0.0,
+        "RECALL_AT_K": 0.0,
+        "LIFT_AT_K": 0.0
+      },
+      {
+        "MODELO": "v10_hgb_financial_c3",
+        "ANIO": 2022,
+        "N": 123289,
+        "POSITIVOS": 32,
+        "K": 100,
+        "POSITIVOS_TOP_K": 1,
+        "PRECISION_AT_K": 0.01,
+        "RECALL_AT_K": 0.03125,
+        "LIFT_AT_K": 38.5278125
+      },
+      {
+        "MODELO": "v10_hgb_financial_c3",
+        "ANIO": 2022,
+        "N": 123289,
+        "POSITIVOS": 32,
+        "K": 200,
+        "POSITIVOS_TOP_K": 4,
+        "PRECISION_AT_K": 0.02,
+        "RECALL_AT_K": 0.125,
+        "LIFT_AT_K": 77.055625
+      },
+      {
+        "MODELO": "v10_hgb_financial_c3",
+        "ANIO": 2023,
+        "N": 137156,
+        "POSITIVOS": 22,
+        "K": 50,
+        "POSITIVOS_TOP_K": 0,
+        "PRECISION_AT_K": 0.0,
+        "RECALL_AT_K": 0.0,
+        "LIFT_AT_K": 0.0
+      },
+      {
+        "MODELO": "v10_hgb_financial_c3",
+        "ANIO": 2023,
+        "N": 137156,
+        "POSITIVOS": 22,
+        "K": 100,
+        "POSITIVOS_TOP_K": 0,
+        "PRECISION_AT_K": 0.0,
+        "RECALL_AT_K": 0.0,
+        "LIFT_AT_K": 0.0
+      },
+      {
+        "MODELO": "v10_hgb_financial_c3",
+        "ANIO": 2023,
+        "N": 137156,
+        "POSITIVOS": 22,
+        "K": 200,
+        "POSITIVOS_TOP_K": 1,
+        "PRECISION_AT_K": 0.005,
+        "RECALL_AT_K": 0.045454545454545456,
+        "LIFT_AT_K": 31.171818181818182
+      }
+    ]
+  },
+  "warnings_entrenamiento": [],
+  "archivos_salida": {
+    "metricas": "reports/results/v10/final_test_v10_metrics.csv",
+    "ranking_metrics": "reports/results/v10/final_test_v10_ranking_metrics.csv",
+    "ranking_completo": "reports/results/v10/final_test_v10_ranking.csv.gz",
+    "metricas_por_anio": "reports/results/v10/final_test_v10_year_metrics.csv",
+    "ranking_por_anio": "reports/results/v10/final_test_v10_year_ranking_metrics.csv",
+    "top500": "reports/results/v10/final_test_v10_top500.csv",
+    "metadata": "reports/results/v10/final_test_v10_metadata.json",
+    "modelo_local": "models/v10/v10_hgb_financial_c3_final.joblib"
+  },
+  "regla_post_test": "Los resultados de TEST no deben utilizarse para modificar retrospectivamente el modelo v10. Cualquier nuevo desarrollo debe realizarse como una nueva version.",
+  "entorno": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "pandas": "3.0.5",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1"
+  }
+}
