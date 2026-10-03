@@ -1,0 +1,219 @@
+{
+  "experimento": "Backtesting temporal Regresion Logistica v10",
+  "fecha_ejecucion_utc": "2026-10-03T02:35:08.472504+00:00",
+  "objetivo": "Evaluar estabilidad temporal de cuatro configuraciones de Regresion Logistica v10 utilizando exclusivamente folds internos al TRAIN oficial 2012-2018.",
+  "dataset": "data/processed/v10_features_core_2012_2023.csv.gz",
+  "target": "TARGET_24M",
+  "horizonte_target": "24 meses",
+  "periodo_backtest": "2012-2018",
+  "validation_2020_utilizada": false,
+  "test_2022_2023_utilizado": false,
+  "test_estado": "RESERVADO - SIN EVALUACION",
+  "numero_observaciones_backtest": 470722,
+  "numero_positivos_backtest": 407,
+  "folds": [
+    {
+      "FOLD": 1,
+      "TRAIN_INICIO": 2012,
+      "TRAIN_FIN": 2013,
+      "ANIO_EMBARGO": 2014,
+      "ANIO_EVALUACION": 2015
+    },
+    {
+      "FOLD": 2,
+      "TRAIN_INICIO": 2012,
+      "TRAIN_FIN": 2014,
+      "ANIO_EMBARGO": 2015,
+      "ANIO_EVALUACION": 2016
+    },
+    {
+      "FOLD": 3,
+      "TRAIN_INICIO": 2012,
+      "TRAIN_FIN": 2015,
+      "ANIO_EMBARGO": 2016,
+      "ANIO_EVALUACION": 2017
+    },
+    {
+      "FOLD": 4,
+      "TRAIN_INICIO": 2012,
+      "TRAIN_FIN": 2016,
+      "ANIO_EMBARGO": 2017,
+      "ANIO_EVALUACION": 2018
+    }
+  ],
+  "configuraciones": {
+    "v10_lr": {
+      "features_numericas": [
+        "activos_final",
+        "patrimonio_final",
+        "bi_ingresos_ventas",
+        "bi_n_empleados",
+        "activos_final_t1",
+        "patrimonio_final_t1",
+        "bi_ingresos_ventas_t1",
+        "bi_n_empleados_t1"
+      ],
+      "features_categoricas": [
+        "tipo_compania",
+        "provincia"
+      ],
+      "features_booleanas": [
+        "TIENE_T_MENOS_1",
+        "flag_activos_negativos",
+        "flag_ventas_negativas",
+        "flag_empleados_fijo",
+        "flag_empleados_salto_temporal",
+        "flag_empleados_anomalia_total"
+      ],
+      "numero_features_fisicas": 16
+    },
+    "v10_lr_no_provincia": {
+      "features_numericas": [
+        "activos_final",
+        "patrimonio_final",
+        "bi_ingresos_ventas",
+        "bi_n_empleados",
+        "activos_final_t1",
+        "patrimonio_final_t1",
+        "bi_ingresos_ventas_t1",
+        "bi_n_empleados_t1"
+      ],
+      "features_categoricas": [
+        "tipo_compania"
+      ],
+      "features_booleanas": [
+        "TIENE_T_MENOS_1",
+        "flag_activos_negativos",
+        "flag_ventas_negativas",
+        "flag_empleados_fijo",
+        "flag_empleados_salto_temporal",
+        "flag_empleados_anomalia_total"
+      ],
+      "numero_features_fisicas": 15
+    },
+    "v10_lr_no_categoricas": {
+      "features_numericas": [
+        "activos_final",
+        "patrimonio_final",
+        "bi_ingresos_ventas",
+        "bi_n_empleados",
+        "activos_final_t1",
+        "patrimonio_final_t1",
+        "bi_ingresos_ventas_t1",
+        "bi_n_empleados_t1"
+      ],
+      "features_categoricas": [],
+      "features_booleanas": [
+        "TIENE_T_MENOS_1",
+        "flag_activos_negativos",
+        "flag_ventas_negativas",
+        "flag_empleados_fijo",
+        "flag_empleados_salto_temporal",
+        "flag_empleados_anomalia_total"
+      ],
+      "numero_features_fisicas": 14
+    },
+    "v10_lr_no_tipo_compania": {
+      "features_numericas": [
+        "activos_final",
+        "patrimonio_final",
+        "bi_ingresos_ventas",
+        "bi_n_empleados",
+        "activos_final_t1",
+        "patrimonio_final_t1",
+        "bi_ingresos_ventas_t1",
+        "bi_n_empleados_t1"
+      ],
+      "features_categoricas": [
+        "provincia"
+      ],
+      "features_booleanas": [
+        "TIENE_T_MENOS_1",
+        "flag_activos_negativos",
+        "flag_ventas_negativas",
+        "flag_empleados_fijo",
+        "flag_empleados_salto_temporal",
+        "flag_empleados_anomalia_total"
+      ],
+      "numero_features_fisicas": 15
+    }
+  },
+  "configuracion_modelo": {
+    "modelo": "LogisticRegression",
+    "C": 1.0,
+    "penalty": "l2",
+    "class_weight": "balanced",
+    "solver": "lbfgs",
+    "max_iter": 2000,
+    "random_state": 42
+  },
+  "preprocesamiento": {
+    "numericas": "SimpleImputer(strategy='median') + StandardScaler(), ajustados solo con TRAIN.",
+    "categoricas": "SimpleImputer(strategy='most_frequent') + OneHotEncoder(handle_unknown='ignore'), ajustados solo con TRAIN.",
+    "booleanas": "Normalizacion deterministica a 0/1 y SimpleImputer(strategy='most_frequent') ajustado solo con TRAIN."
+  },
+  "metricas_principales": [
+    "PR-AUC",
+    "Precision@50",
+    "Precision@100",
+    "Precision@200",
+    "Recall@50",
+    "Recall@100",
+    "Recall@200",
+    "Lift@50",
+    "Lift@100",
+    "Lift@200"
+  ],
+  "metrica_complementaria": "ROC-AUC",
+  "numero_modelos_folds_ejecutados": 16,
+  "expected_year_counts": {
+    "2012": {
+      "filas": 42158,
+      "positivos": 55
+    },
+    "2013": {
+      "filas": 47140,
+      "positivos": 49
+    },
+    "2014": {
+      "filas": 52528,
+      "positivos": 39
+    },
+    "2015": {
+      "filas": 76468,
+      "positivos": 43
+    },
+    "2016": {
+      "filas": 79503,
+      "positivos": 73
+    },
+    "2017": {
+      "filas": 83107,
+      "positivos": 89
+    },
+    "2018": {
+      "filas": 89818,
+      "positivos": 59
+    }
+  },
+  "entorno": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "pandas": "3.0.5",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1"
+  },
+  "archivos_salida": {
+    "metricas": "reports/results/v10/backtest_logistic_v10_metrics.csv",
+    "ranking": "reports/results/v10/backtest_logistic_v10_ranking_metrics.csv",
+    "resumen": "reports/results/v10/backtest_logistic_v10_summary.csv",
+    "metadata": "reports/results/v10/backtest_logistic_v10_metadata.json"
+  },
+  "notas": [
+    "ANIO, EXPEDIENTE_KEY, RUC, NOMBRE y SPLIT no se utilizan como predictores.",
+    "Los años de embargo no se utilizan para ajuste ni para evaluación dentro de cada fold.",
+    "Las cuatro configuraciones utilizan exactamente los mismos folds.",
+    "VALIDATION 2020 se mantiene fuera del backtesting y conserva su función de conjunto oficial de comparación durante desarrollo.",
+    "TEST 2022-2023 permanece cerrado durante esta fase."
+  ]
+}
