@@ -1,0 +1,112 @@
+{
+  "experimento": "HistGradientBoosting v10",
+  "modelo": "HistGradientBoostingClassifier",
+  "nombre_modelo": "v10_hgb",
+  "fecha_ejecucion_utc": "2026-10-03T03:23:16.429673+00:00",
+  "objetivo": "Evaluar un modelo no lineal sobre el dataset y protocolo v10 utilizando la configuración regularizada previamente utilizada en v8.",
+  "dataset": "data/processed/v10_features_core_2012_2023.csv.gz",
+  "target": "TARGET_24M",
+  "horizonte_target": "24 meses",
+  "split": {
+    "train": "2012-2018",
+    "embargo_1": 2019,
+    "validation": 2020,
+    "embargo_2": 2021,
+    "test": "2022-2023"
+  },
+  "test_utilizado": false,
+  "test_estado": "RESERVADO - SIN EVALUACION",
+  "baseline_comparacion": "v10_lr_no_provincia",
+  "features_numericas": [
+    "activos_final",
+    "patrimonio_final",
+    "bi_ingresos_ventas",
+    "bi_n_empleados",
+    "activos_final_t1",
+    "patrimonio_final_t1",
+    "bi_ingresos_ventas_t1",
+    "bi_n_empleados_t1"
+  ],
+  "features_booleanas": [
+    "TIENE_T_MENOS_1",
+    "flag_activos_negativos",
+    "flag_ventas_negativas",
+    "flag_empleados_fijo",
+    "flag_empleados_salto_temporal",
+    "flag_empleados_anomalia_total"
+  ],
+  "features_categoricas": [
+    "tipo_compania"
+  ],
+  "numero_features_fisicas": 15,
+  "provincia_utilizada_como_predictor": false,
+  "tipo_compania_manejo": "Categorica nativa mediante pandas.Categorical y categorical_features='from_dtype'.",
+  "categorias_aprendidas_solo_train": true,
+  "categorias_train": {
+    "tipo_compania": [
+      "ANÓNIMA                                           ",
+      "ANÓNIMA  EN PREDIOS RÚSTICOS                      ",
+      "ANÓNIMA MULTINACIONAL ANDINA                      ",
+      "ASOCIACIÓN O CONSORCIO                            ",
+      "COMANDITA POR ACCIONES                            ",
+      "ECONOMÍA MIXTA                                    ",
+      "RESPONSABILIDAD LIMITADA                          ",
+      "SOCIEDAD POR ACCIONES SIMPLIFICADA                ",
+      "SUCURSAL  EXTRANJERA                              "
+    ]
+  },
+  "categorias_desconocidas_validation": {
+    "tipo_compania": 0
+  },
+  "manejo_missing_numerico": "Nativo de HistGradientBoostingClassifier; no se aplica imputacion previa.",
+  "escalamiento": false,
+  "configuracion_modelo": {
+    "loss": "log_loss",
+    "learning_rate": 0.05,
+    "max_iter": 150,
+    "max_leaf_nodes": 7,
+    "max_depth": 3,
+    "min_samples_leaf": 100,
+    "l2_regularization": 1.0,
+    "early_stopping": false,
+    "random_state": 42,
+    "class_weight": "balanced",
+    "categorical_features": "from_dtype"
+  },
+  "origen_configuracion": "Configuracion regularizada heredada del experimento v8. No se realiza tuning con VALIDATION 2020 en este experimento inicial v10.",
+  "metricas_principales": [
+    "PR-AUC",
+    "Precision@50",
+    "Precision@100",
+    "Precision@200",
+    "Recall@50",
+    "Recall@100",
+    "Recall@200",
+    "Lift@50",
+    "Lift@100",
+    "Lift@200"
+  ],
+  "metrica_complementaria": "ROC-AUC",
+  "threshold_reportado": 0.5,
+  "entorno": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "pandas": "3.0.5",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1"
+  },
+  "archivos_salida": {
+    "metricas": "reports/results/v10/v10_hgb_metrics.csv",
+    "ranking": "reports/results/v10/v10_hgb_ranking_metrics.csv",
+    "top500_local": "reports/results/v10/v10_hgb_validation_top500.csv",
+    "modelo_local": "models/v10/v10_hgb.joblib",
+    "metadata": "reports/results/v10/v10_hgb_metadata.json"
+  },
+  "notas": [
+    "ANIO, EXPEDIENTE_KEY, RUC, NOMBRE y SPLIT no se utilizan como predictores.",
+    "provincia no se utiliza como predictor para mantener comparabilidad con el baseline v10_lr_no_provincia.",
+    "VALIDATION 2020 se utiliza para comparación durante desarrollo.",
+    "TEST 2022-2023 permanece completamente cerrado.",
+    "El archivo validation_top500 contiene identificadores empresariales y no se versiona en Git."
+  ]
+}
