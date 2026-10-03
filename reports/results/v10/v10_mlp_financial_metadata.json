@@ -1,0 +1,173 @@
+{
+  "experimento": "MLP financiero v10 - TRAIN vs VALIDATION",
+  "fecha_ejecucion_utc": "2026-10-03T11:53:25.322461+00:00",
+  "dataset": "data/processed/v10_features_financial_2012_2023.csv.gz",
+  "modelo": "MLPClassifier",
+  "nombre_modelo": "v10_mlp_financial",
+  "baseline_referencia": "v10_mlp_core",
+  "target": "TARGET_24M",
+  "horizonte_target": "24 meses",
+  "numero_features_fisicas": 25,
+  "numero_features_transformadas": 34,
+  "features_fisicas": [
+    "activos_final",
+    "patrimonio_final",
+    "bi_ingresos_ventas",
+    "bi_n_empleados",
+    "activos_final_t1",
+    "patrimonio_final_t1",
+    "bi_ingresos_ventas_t1",
+    "bi_n_empleados_t1",
+    "fin_ratio_patrimonio_activos",
+    "fin_roa",
+    "fin_margen_neto",
+    "fin_rotacion_activos",
+    "fin_roe",
+    "fin_crecimiento_activos",
+    "fin_crecimiento_patrimonio",
+    "fin_crecimiento_ventas",
+    "fin_crecimiento_empleados",
+    "TIENE_T_MENOS_1",
+    "flag_activos_negativos",
+    "flag_ventas_negativas",
+    "flag_empleados_fijo",
+    "flag_empleados_salto_temporal",
+    "flag_empleados_anomalia_total",
+    "flag_patrimonio_no_positivo",
+    "tipo_compania"
+  ],
+  "features_numericas_core": [
+    "activos_final",
+    "patrimonio_final",
+    "bi_ingresos_ventas",
+    "bi_n_empleados",
+    "activos_final_t1",
+    "patrimonio_final_t1",
+    "bi_ingresos_ventas_t1",
+    "bi_n_empleados_t1"
+  ],
+  "features_financieras_numericas": [
+    "fin_ratio_patrimonio_activos",
+    "fin_roa",
+    "fin_margen_neto",
+    "fin_rotacion_activos",
+    "fin_roe",
+    "fin_crecimiento_activos",
+    "fin_crecimiento_patrimonio",
+    "fin_crecimiento_ventas",
+    "fin_crecimiento_empleados"
+  ],
+  "features_booleanas": [
+    "TIENE_T_MENOS_1",
+    "flag_activos_negativos",
+    "flag_ventas_negativas",
+    "flag_empleados_fijo",
+    "flag_empleados_salto_temporal",
+    "flag_empleados_anomalia_total",
+    "flag_patrimonio_no_positivo"
+  ],
+  "features_categoricas": [
+    "tipo_compania"
+  ],
+  "provincia_utilizada": false,
+  "modelo_parametros": {
+    "hidden_layer_sizes": [
+      64,
+      32
+    ],
+    "activation": "relu",
+    "solver": "adam",
+    "alpha": 0.01,
+    "batch_size": 512,
+    "learning_rate_init": 0.001,
+    "max_iter": 200,
+    "shuffle": true,
+    "random_state": 42,
+    "tol": 0.0001,
+    "early_stopping": false,
+    "n_iter_no_change": 10
+  },
+  "preprocesamiento": {
+    "capping": "P01-P99 aprendido exclusivamente desde TRAIN para las 9 features financieras numéricas.",
+    "numericas": "SimpleImputer(strategy='median') + StandardScaler, ambos aprendidos exclusivamente desde TRAIN.",
+    "booleanas": "SimpleImputer(strategy='most_frequent') aprendido desde TRAIN.",
+    "categoricas": "SimpleImputer(strategy='constant', fill_value='MISSING') + OneHotEncoder(handle_unknown='ignore'), aprendidos desde TRAIN."
+  },
+  "desbalance": {
+    "metodo": "sample_weight balanced",
+    "origen": "Calculado exclusivamente desde y_train."
+  },
+  "entrenamiento": {
+    "n_iter": 123,
+    "loss_final": 0.13809416496300544,
+    "convergence_warning": false,
+    "warning_messages": []
+  },
+  "resultados": {
+    "train": {
+      "PR_AUC": 0.12806662335791477,
+      "ROC_AUC": 0.9889038323183523
+    },
+    "validation": {
+      "PR_AUC": 0.010499601505096314,
+      "ROC_AUC": 0.797398335991548
+    },
+    "ranking_validation": [
+      {
+        "MODELO": "v10_mlp_financial",
+        "SPLIT": "VALIDATION",
+        "N": 98471,
+        "POSITIVOS": 34,
+        "K": 50,
+        "POSITIVOS_TOP_K": 2,
+        "PRECISION_AT_K": 0.04,
+        "RECALL_AT_K": 0.058823529411764705,
+        "LIFT_AT_K": 115.84823529411766
+      },
+      {
+        "MODELO": "v10_mlp_financial",
+        "SPLIT": "VALIDATION",
+        "N": 98471,
+        "POSITIVOS": 34,
+        "K": 100,
+        "POSITIVOS_TOP_K": 2,
+        "PRECISION_AT_K": 0.02,
+        "RECALL_AT_K": 0.058823529411764705,
+        "LIFT_AT_K": 57.92411764705883
+      },
+      {
+        "MODELO": "v10_mlp_financial",
+        "SPLIT": "VALIDATION",
+        "N": 98471,
+        "POSITIVOS": 34,
+        "K": 200,
+        "POSITIVOS_TOP_K": 4,
+        "PRECISION_AT_K": 0.02,
+        "RECALL_AT_K": 0.11764705882352941,
+        "LIFT_AT_K": 57.92411764705883
+      }
+    ]
+  },
+  "test": {
+    "periodo": "2022-2023",
+    "cargado": false,
+    "transformado": false,
+    "evaluado": false,
+    "estado": "RESERVADO"
+  },
+  "archivos_salida": {
+    "metricas": "reports/results/v10/v10_mlp_financial_metrics.csv",
+    "ranking": "reports/results/v10/v10_mlp_financial_ranking_metrics.csv",
+    "capping": "reports/results/v10/v10_mlp_financial_capping.csv",
+    "validation_top500": "reports/results/v10/v10_mlp_financial_validation_top500.csv",
+    "modelo": "models/v10/v10_mlp_financial.joblib",
+    "metadata": "reports/results/v10/v10_mlp_financial_metadata.json"
+  },
+  "entorno": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "pandas": "3.0.5",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1"
+  }
+}
