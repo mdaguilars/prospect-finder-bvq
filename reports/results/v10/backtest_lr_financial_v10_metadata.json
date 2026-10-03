@@ -1,0 +1,434 @@
+{
+  "experimento": "Backtest temporal Regresion Logistica financiera v10",
+  "fecha_ejecucion_utc": "2026-10-03T11:34:50.057092+00:00",
+  "dataset": "data/processed/v10_features_financial_2012_2023.csv.gz",
+  "modelo": "LogisticRegression",
+  "nombre_modelo": "v10_lr_financial",
+  "baseline_referencia": "v10_lr_no_provincia",
+  "target": "TARGET_24M",
+  "horizonte_target": "24 meses",
+  "numero_features_fisicas": 25,
+  "features_fisicas": [
+    "activos_final",
+    "patrimonio_final",
+    "bi_ingresos_ventas",
+    "bi_n_empleados",
+    "activos_final_t1",
+    "patrimonio_final_t1",
+    "bi_ingresos_ventas_t1",
+    "bi_n_empleados_t1",
+    "fin_ratio_patrimonio_activos",
+    "fin_roa",
+    "fin_margen_neto",
+    "fin_rotacion_activos",
+    "fin_roe",
+    "fin_crecimiento_activos",
+    "fin_crecimiento_patrimonio",
+    "fin_crecimiento_ventas",
+    "fin_crecimiento_empleados",
+    "TIENE_T_MENOS_1",
+    "flag_activos_negativos",
+    "flag_ventas_negativas",
+    "flag_empleados_fijo",
+    "flag_empleados_salto_temporal",
+    "flag_empleados_anomalia_total",
+    "flag_patrimonio_no_positivo",
+    "tipo_compania"
+  ],
+  "features_numericas_core": [
+    "activos_final",
+    "patrimonio_final",
+    "bi_ingresos_ventas",
+    "bi_n_empleados",
+    "activos_final_t1",
+    "patrimonio_final_t1",
+    "bi_ingresos_ventas_t1",
+    "bi_n_empleados_t1"
+  ],
+  "features_financieras_numericas": [
+    "fin_ratio_patrimonio_activos",
+    "fin_roa",
+    "fin_margen_neto",
+    "fin_rotacion_activos",
+    "fin_roe",
+    "fin_crecimiento_activos",
+    "fin_crecimiento_patrimonio",
+    "fin_crecimiento_ventas",
+    "fin_crecimiento_empleados"
+  ],
+  "features_booleanas": [
+    "TIENE_T_MENOS_1",
+    "flag_activos_negativos",
+    "flag_ventas_negativas",
+    "flag_empleados_fijo",
+    "flag_empleados_salto_temporal",
+    "flag_empleados_anomalia_total",
+    "flag_patrimonio_no_positivo"
+  ],
+  "features_categoricas": [
+    "tipo_compania"
+  ],
+  "provincia_utilizada": false,
+  "modelo_parametros": {
+    "penalty": "l2",
+    "C": 1.0,
+    "solver": "lbfgs",
+    "max_iter": 2000,
+    "class_weight": "balanced",
+    "random_state": 42
+  },
+  "backtest": {
+    "numero_folds": 4,
+    "folds": [
+      {
+        "FOLD": 1,
+        "TRAIN_INICIO": 2012,
+        "TRAIN_FIN": 2013,
+        "ANIO_EMBARGO": 2014,
+        "ANIO_EVALUACION": 2015
+      },
+      {
+        "FOLD": 2,
+        "TRAIN_INICIO": 2012,
+        "TRAIN_FIN": 2014,
+        "ANIO_EMBARGO": 2015,
+        "ANIO_EVALUACION": 2016
+      },
+      {
+        "FOLD": 3,
+        "TRAIN_INICIO": 2012,
+        "TRAIN_FIN": 2015,
+        "ANIO_EMBARGO": 2016,
+        "ANIO_EVALUACION": 2017
+      },
+      {
+        "FOLD": 4,
+        "TRAIN_INICIO": 2012,
+        "TRAIN_FIN": 2016,
+        "ANIO_EMBARGO": 2017,
+        "ANIO_EVALUACION": 2018
+      }
+    ],
+    "periodo": "2012-2018",
+    "tipo": "rolling-origin expanding window",
+    "embargo": "1 año fiscal entre TRAIN y evaluación"
+  },
+  "capping": {
+    "aplicado": true,
+    "variables": [
+      "fin_ratio_patrimonio_activos",
+      "fin_roa",
+      "fin_margen_neto",
+      "fin_rotacion_activos",
+      "fin_roe",
+      "fin_crecimiento_activos",
+      "fin_crecimiento_patrimonio",
+      "fin_crecimiento_ventas",
+      "fin_crecimiento_empleados"
+    ],
+    "percentil_inferior": 0.01,
+    "percentil_superior": 0.99,
+    "regla": "Los limites se aprenden exclusivamente desde el TRAIN de cada fold y luego se aplican sin recalcular al año de evaluación."
+  },
+  "preprocesamiento": {
+    "numericas": "Mediana y StandardScaler aprendidos exclusivamente desde TRAIN de cada fold.",
+    "booleanas": "SimpleImputer most_frequent aprendido desde TRAIN de cada fold.",
+    "categoricas": "SimpleImputer most_frequent + OneHotEncoder(handle_unknown='ignore') aprendidos desde TRAIN de cada fold."
+  },
+  "class_imbalance": "class_weight='balanced'",
+  "convergencia": [
+    {
+      "fold": 1,
+      "convergence_warning": false,
+      "warning_messages": []
+    },
+    {
+      "fold": 2,
+      "convergence_warning": false,
+      "warning_messages": []
+    },
+    {
+      "fold": 3,
+      "convergence_warning": false,
+      "warning_messages": []
+    },
+    {
+      "fold": 4,
+      "convergence_warning": false,
+      "warning_messages": []
+    }
+  ],
+  "test": {
+    "periodo": "2022-2023",
+    "cargado": false,
+    "transformado": false,
+    "evaluado": false,
+    "estado": "RESERVADO"
+  },
+  "resultados_por_fold": [
+    {
+      "MODELO": "v10_lr_financial",
+      "FOLD": 1,
+      "TRAIN_INICIO": 2012,
+      "TRAIN_FIN": 2013,
+      "ANIO_EMBARGO": 2014,
+      "ANIO_EVALUACION": 2015,
+      "N_TRAIN": 89298,
+      "POSITIVOS_TRAIN": 104,
+      "N_EVALUACION": 76468,
+      "POSITIVOS_EVALUACION": 43,
+      "PR_AUC_TRAIN": 0.04862558357524157,
+      "ROC_AUC_TRAIN": 0.9702127255886477,
+      "PR_AUC_EVALUACION": 0.012763531472212427,
+      "ROC_AUC_EVALUACION": 0.8023872013145583,
+      "GAP_PR_AUC": 0.035862052103029146,
+      "N_FEATURES_FISICAS": 25,
+      "N_FEATURES_TRANSFORMADAS": 33,
+      "CONVERGENCE_WARNING": false
+    },
+    {
+      "MODELO": "v10_lr_financial",
+      "FOLD": 2,
+      "TRAIN_INICIO": 2012,
+      "TRAIN_FIN": 2014,
+      "ANIO_EMBARGO": 2015,
+      "ANIO_EVALUACION": 2016,
+      "N_TRAIN": 141826,
+      "POSITIVOS_TRAIN": 143,
+      "N_EVALUACION": 79503,
+      "POSITIVOS_EVALUACION": 73,
+      "PR_AUC_TRAIN": 0.04828710743411035,
+      "ROC_AUC_TRAIN": 0.964780358437325,
+      "PR_AUC_EVALUACION": 0.011213741348907026,
+      "ROC_AUC_EVALUACION": 0.8606478694948081,
+      "GAP_PR_AUC": 0.03707336608520332,
+      "N_FEATURES_FISICAS": 25,
+      "N_FEATURES_TRANSFORMADAS": 33,
+      "CONVERGENCE_WARNING": false
+    },
+    {
+      "MODELO": "v10_lr_financial",
+      "FOLD": 3,
+      "TRAIN_INICIO": 2012,
+      "TRAIN_FIN": 2015,
+      "ANIO_EMBARGO": 2016,
+      "ANIO_EVALUACION": 2017,
+      "N_TRAIN": 218294,
+      "POSITIVOS_TRAIN": 186,
+      "N_EVALUACION": 83107,
+      "POSITIVOS_EVALUACION": 89,
+      "PR_AUC_TRAIN": 0.03834549887617927,
+      "ROC_AUC_TRAIN": 0.9412122405177193,
+      "PR_AUC_EVALUACION": 0.019291500264085368,
+      "ROC_AUC_EVALUACION": 0.8459702525592797,
+      "GAP_PR_AUC": 0.0190539986120939,
+      "N_FEATURES_FISICAS": 25,
+      "N_FEATURES_TRANSFORMADAS": 33,
+      "CONVERGENCE_WARNING": false
+    },
+    {
+      "MODELO": "v10_lr_financial",
+      "FOLD": 4,
+      "TRAIN_INICIO": 2012,
+      "TRAIN_FIN": 2016,
+      "ANIO_EMBARGO": 2017,
+      "ANIO_EVALUACION": 2018,
+      "N_TRAIN": 297797,
+      "POSITIVOS_TRAIN": 259,
+      "N_EVALUACION": 89818,
+      "POSITIVOS_EVALUACION": 59,
+      "PR_AUC_TRAIN": 0.030157604226738813,
+      "ROC_AUC_TRAIN": 0.9186325793212982,
+      "PR_AUC_EVALUACION": 0.01783551475922482,
+      "ROC_AUC_EVALUACION": 0.864835800423016,
+      "GAP_PR_AUC": 0.012322089467513994,
+      "N_FEATURES_FISICAS": 25,
+      "N_FEATURES_TRANSFORMADAS": 33,
+      "CONVERGENCE_WARNING": false
+    }
+  ],
+  "ranking_por_fold": [
+    {
+      "MODELO": "v10_lr_financial",
+      "FOLD": 1,
+      "ANIO_EVALUACION": 2015,
+      "N_EVALUACION": 76468,
+      "POSITIVOS_EVALUACION": 43,
+      "K": 50,
+      "POSITIVOS_TOP_K": 2,
+      "PRECISION_AT_K": 0.04,
+      "RECALL_AT_K": 0.046511627906976744,
+      "LIFT_AT_K": 71.13302325581395
+    },
+    {
+      "MODELO": "v10_lr_financial",
+      "FOLD": 1,
+      "ANIO_EVALUACION": 2015,
+      "N_EVALUACION": 76468,
+      "POSITIVOS_EVALUACION": 43,
+      "K": 100,
+      "POSITIVOS_TOP_K": 3,
+      "PRECISION_AT_K": 0.03,
+      "RECALL_AT_K": 0.06976744186046512,
+      "LIFT_AT_K": 53.349767441860465
+    },
+    {
+      "MODELO": "v10_lr_financial",
+      "FOLD": 1,
+      "ANIO_EVALUACION": 2015,
+      "N_EVALUACION": 76468,
+      "POSITIVOS_EVALUACION": 43,
+      "K": 200,
+      "POSITIVOS_TOP_K": 7,
+      "PRECISION_AT_K": 0.035,
+      "RECALL_AT_K": 0.16279069767441862,
+      "LIFT_AT_K": 62.241395348837216
+    },
+    {
+      "MODELO": "v10_lr_financial",
+      "FOLD": 2,
+      "ANIO_EVALUACION": 2016,
+      "N_EVALUACION": 79503,
+      "POSITIVOS_EVALUACION": 73,
+      "K": 50,
+      "POSITIVOS_TOP_K": 2,
+      "PRECISION_AT_K": 0.04,
+      "RECALL_AT_K": 0.0273972602739726,
+      "LIFT_AT_K": 43.56328767123288
+    },
+    {
+      "MODELO": "v10_lr_financial",
+      "FOLD": 2,
+      "ANIO_EVALUACION": 2016,
+      "N_EVALUACION": 79503,
+      "POSITIVOS_EVALUACION": 73,
+      "K": 100,
+      "POSITIVOS_TOP_K": 3,
+      "PRECISION_AT_K": 0.03,
+      "RECALL_AT_K": 0.0410958904109589,
+      "LIFT_AT_K": 32.67246575342466
+    },
+    {
+      "MODELO": "v10_lr_financial",
+      "FOLD": 2,
+      "ANIO_EVALUACION": 2016,
+      "N_EVALUACION": 79503,
+      "POSITIVOS_EVALUACION": 73,
+      "K": 200,
+      "POSITIVOS_TOP_K": 5,
+      "PRECISION_AT_K": 0.025,
+      "RECALL_AT_K": 0.0684931506849315,
+      "LIFT_AT_K": 27.22705479452055
+    },
+    {
+      "MODELO": "v10_lr_financial",
+      "FOLD": 3,
+      "ANIO_EVALUACION": 2017,
+      "N_EVALUACION": 83107,
+      "POSITIVOS_EVALUACION": 89,
+      "K": 50,
+      "POSITIVOS_TOP_K": 5,
+      "PRECISION_AT_K": 0.1,
+      "RECALL_AT_K": 0.056179775280898875,
+      "LIFT_AT_K": 93.37865168539327
+    },
+    {
+      "MODELO": "v10_lr_financial",
+      "FOLD": 3,
+      "ANIO_EVALUACION": 2017,
+      "N_EVALUACION": 83107,
+      "POSITIVOS_EVALUACION": 89,
+      "K": 100,
+      "POSITIVOS_TOP_K": 7,
+      "PRECISION_AT_K": 0.07,
+      "RECALL_AT_K": 0.07865168539325842,
+      "LIFT_AT_K": 65.3650561797753
+    },
+    {
+      "MODELO": "v10_lr_financial",
+      "FOLD": 3,
+      "ANIO_EVALUACION": 2017,
+      "N_EVALUACION": 83107,
+      "POSITIVOS_EVALUACION": 89,
+      "K": 200,
+      "POSITIVOS_TOP_K": 8,
+      "PRECISION_AT_K": 0.04,
+      "RECALL_AT_K": 0.0898876404494382,
+      "LIFT_AT_K": 37.35146067415731
+    },
+    {
+      "MODELO": "v10_lr_financial",
+      "FOLD": 4,
+      "ANIO_EVALUACION": 2018,
+      "N_EVALUACION": 89818,
+      "POSITIVOS_EVALUACION": 59,
+      "K": 50,
+      "POSITIVOS_TOP_K": 3,
+      "PRECISION_AT_K": 0.06,
+      "RECALL_AT_K": 0.05084745762711865,
+      "LIFT_AT_K": 91.34033898305084
+    },
+    {
+      "MODELO": "v10_lr_financial",
+      "FOLD": 4,
+      "ANIO_EVALUACION": 2018,
+      "N_EVALUACION": 89818,
+      "POSITIVOS_EVALUACION": 59,
+      "K": 100,
+      "POSITIVOS_TOP_K": 4,
+      "PRECISION_AT_K": 0.04,
+      "RECALL_AT_K": 0.06779661016949153,
+      "LIFT_AT_K": 60.893559322033894
+    },
+    {
+      "MODELO": "v10_lr_financial",
+      "FOLD": 4,
+      "ANIO_EVALUACION": 2018,
+      "N_EVALUACION": 89818,
+      "POSITIVOS_EVALUACION": 59,
+      "K": 200,
+      "POSITIVOS_TOP_K": 6,
+      "PRECISION_AT_K": 0.03,
+      "RECALL_AT_K": 0.1016949152542373,
+      "LIFT_AT_K": 45.67016949152542
+    }
+  ],
+  "resumen": [
+    {
+      "MODELO": "v10_lr_financial",
+      "N_FOLDS": 4,
+      "PR_AUC_MEDIA": 0.01527607196110741,
+      "PR_AUC_MEDIANA": 0.015299523115718623,
+      "PR_AUC_STD": 0.003894004006347387,
+      "PR_AUC_MIN": 0.011213741348907026,
+      "PR_AUC_MAX": 0.019291500264085368,
+      "ROC_AUC_MEDIA": 0.8434602809479156,
+      "ROC_AUC_MEDIANA": 0.853309061027044,
+      "GAP_PR_AUC_MEDIO": 0.026077876566960086,
+      "CONVERGENCE_WARNINGS": 0,
+      "POSITIVOS_TOP_50_TOTAL": 12,
+      "LIFT_AT_50_MEDIA": 74.85382539887273,
+      "LIFT_AT_50_STD": 23.151072250039846,
+      "POSITIVOS_TOP_100_TOTAL": 17,
+      "LIFT_AT_100_MEDIA": 53.07021217427358,
+      "LIFT_AT_100_STD": 14.474277873880057,
+      "POSITIVOS_TOP_200_TOTAL": 26,
+      "LIFT_AT_200_MEDIA": 43.12252007726013,
+      "LIFT_AT_200_STD": 14.809826156722758
+    }
+  ],
+  "archivos_salida": {
+    "metricas": "reports/results/v10/backtest_lr_financial_v10_metrics.csv",
+    "ranking": "reports/results/v10/backtest_lr_financial_v10_ranking_metrics.csv",
+    "summary": "reports/results/v10/backtest_lr_financial_v10_summary.csv",
+    "capping": "reports/results/v10/backtest_lr_financial_v10_capping.csv",
+    "metadata": "reports/results/v10/backtest_lr_financial_v10_metadata.json"
+  },
+  "entorno": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "pandas": "3.0.5",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1"
+  }
+}
