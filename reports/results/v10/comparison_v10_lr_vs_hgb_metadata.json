@@ -1,0 +1,51 @@
+{
+  "experimento": "Comparacion v10 Logistic Regression vs HistGradientBoosting",
+  "fecha_ejecucion_utc": "2026-10-03T03:36:06.890990+00:00",
+  "modelos_comparados": [
+    "v10_lr_no_provincia",
+    "v10_hgb"
+  ],
+  "baseline_logistico": "v10_lr_no_provincia",
+  "modelo_no_lineal": "v10_hgb",
+  "objetivo": "Comparar Logistic Regression y HistGradientBoosting bajo el mismo dataset, VALIDATION y protocolo temporal v10.",
+  "validation": {
+    "anio": 2020,
+    "lr_pr_auc": 0.0083873552950842,
+    "hgb_pr_auc": 0.0082878269711811,
+    "lr_roc_auc": 0.8832209194414582,
+    "hgb_roc_auc": 0.9266274517771594
+  },
+  "backtesting": {
+    "numero_folds": 4,
+    "lr_pr_auc_media": 0.0163626860451711,
+    "hgb_pr_auc_media": 0.0168908482502292,
+    "lr_pr_auc_std": 0.0033828911120629,
+    "hgb_pr_auc_std": 0.0032821375566894,
+    "folds_hgb_supera_lr_pr_auc": 1,
+    "folds_lr_iguala_o_supera_hgb": 3
+  },
+  "criterios_de_analisis": [
+    "PR-AUC VALIDATION",
+    "PR-AUC media backtest",
+    "variabilidad temporal",
+    "Precision@K",
+    "Recall@K",
+    "Lift@K",
+    "comportamiento por fold",
+    "riesgo de sobreajuste",
+    "interpretabilidad"
+  ],
+  "seleccion_modelo_final_realizada": false,
+  "motivo_no_seleccion_final": "La comparación forma parte de la fase de desarrollo. Aún quedan evaluación de modelos, interpretabilidad y análisis de sesgo antes de cerrar la selección final.",
+  "test": {
+    "periodo": "2022-2023",
+    "utilizado": false,
+    "estado": "RESERVADO - SIN EVALUACION"
+  },
+  "archivos_salida": {
+    "comparacion_general": "reports/results/v10/comparison_v10_lr_vs_hgb.csv",
+    "comparacion_por_fold": "reports/results/v10/comparison_v10_lr_vs_hgb_backtest_by_fold.csv",
+    "ranking_por_fold": "reports/results/v10/comparison_v10_lr_vs_hgb_ranking_by_fold.csv",
+    "metadata": "reports/results/v10/comparison_v10_lr_vs_hgb_metadata.json"
+  }
+}
