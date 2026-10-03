@@ -1,0 +1,99 @@
+{
+  "experimento": "Comparacion integral modelos v10",
+  "fecha_ejecucion_utc": "2026-10-03T04:41:39.588395+00:00",
+  "modelos_comparados": [
+    "v10_lr_no_provincia",
+    "v10_hgb",
+    "v10_mlp"
+  ],
+  "familias": {
+    "v10_lr_no_provincia": "LogisticRegression",
+    "v10_hgb": "HistGradientBoostingClassifier",
+    "v10_mlp": "MLPClassifier"
+  },
+  "objetivo": "Comparar Logistic Regression, HistGradientBoosting y MLP bajo el mismo dataset, VALIDATION 2020 y protocolo temporal rolling-origin v10.",
+  "dataset_logico": "v10_features_core_2012_2023.csv.gz",
+  "validation": {
+    "anio": 2020,
+    "utilizada_para_desarrollo": true
+  },
+  "backtesting": {
+    "periodo": "2012-2018",
+    "numero_folds": 4,
+    "embargo": "1 año entre TRAIN y evaluación"
+  },
+  "resultados_por_modelo": {
+    "v10_lr_no_provincia": {
+      "familia": "LogisticRegression",
+      "validation_pr_auc": 0.0083873552950842,
+      "validation_roc_auc": 0.8832209194414582,
+      "validation_positivos_top_50": 1,
+      "validation_positivos_top_100": 2,
+      "validation_positivos_top_200": 2,
+      "backtest_pr_auc_media": 0.0163626860451711,
+      "backtest_pr_auc_std": 0.0033828911120629,
+      "backtest_lift_50_media": 74.85382539887273,
+      "backtest_lift_100_media": 53.07021217427358,
+      "backtest_lift_200_media": 43.12252007726013
+    },
+    "v10_hgb": {
+      "familia": "HistGradientBoostingClassifier",
+      "validation_pr_auc": 0.0082878269711811,
+      "validation_roc_auc": 0.9266274517771594,
+      "validation_positivos_top_50": 0,
+      "validation_positivos_top_100": 0,
+      "validation_positivos_top_200": 6,
+      "backtest_pr_auc_media": 0.0168908482502292,
+      "backtest_pr_auc_std": 0.0032821375566894,
+      "backtest_lift_50_media": 56.68154967888214,
+      "backtest_lift_100_media": 56.04158318302089,
+      "backtest_lift_200_media": 45.49875885577463
+    },
+    "v10_mlp": {
+      "familia": "MLPClassifier",
+      "validation_pr_auc": 0.0091349595848784,
+      "validation_roc_auc": 0.8343359652545761,
+      "validation_positivos_top_50": 2,
+      "validation_positivos_top_100": 2,
+      "validation_positivos_top_200": 3,
+      "backtest_pr_auc_media": 0.0160090837023364,
+      "backtest_pr_auc_std": 0.0075582313460889,
+      "backtest_lift_50_media": 52.45885435617506,
+      "backtest_lift_100_media": 46.06681329786908,
+      "backtest_lift_200_media": 40.25964660465469
+    }
+  },
+  "criterios_principales": [
+    "PR-AUC VALIDATION",
+    "PR-AUC media backtest",
+    "PR-AUC mediana backtest",
+    "variabilidad temporal PR-AUC",
+    "Precision@50",
+    "Precision@100",
+    "Precision@200",
+    "Recall@50",
+    "Recall@100",
+    "Recall@200",
+    "Lift@50",
+    "Lift@100",
+    "Lift@200",
+    "comportamiento por fold",
+    "gap TRAIN vs evaluación",
+    "interpretabilidad",
+    "riesgo de sobreajuste"
+  ],
+  "numero_folds_comparados": 4,
+  "seleccion_modelo_final_realizada": false,
+  "motivo_no_seleccion_final": "La comparación corresponde todavía a la fase de desarrollo. Antes de cerrar el modelo final deben evaluarse los resultados conjuntamente, realizar interpretabilidad, analizar sesgos y decidir si procede ajuste controlado.",
+  "test": {
+    "periodo": "2022-2023",
+    "utilizado": false,
+    "estado": "RESERVADO - SIN EVALUACION"
+  },
+  "archivos_salida": {
+    "comparacion_general": "reports/results/v10/comparison_v10_models.csv",
+    "comparacion_por_fold": "reports/results/v10/comparison_v10_models_backtest_by_fold.csv",
+    "ranking_por_fold": "reports/results/v10/comparison_v10_models_ranking_by_fold.csv",
+    "metadata": "reports/results/v10/comparison_v10_models_metadata.json"
+  }
+}
