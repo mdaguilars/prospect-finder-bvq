@@ -1,0 +1,201 @@
+{
+  "experimento": "Comparacion HGB core vs HGB financial v10",
+  "fecha_ejecucion_utc": "2026-10-03T05:31:51.228970+00:00",
+  "objetivo": "Aislar el efecto de las nuevas features financieras manteniendo exactamente la misma configuracion del modelo HistGradientBoostingClassifier.",
+  "dataset": "data/processed/v10_features_financial_2012_2023.csv.gz",
+  "target": "TARGET_24M",
+  "horizonte_target": "24 meses",
+  "escenarios": {
+    "HGB_CORE": {
+      "numero_features": 15,
+      "features": [
+        "activos_final",
+        "patrimonio_final",
+        "bi_ingresos_ventas",
+        "bi_n_empleados",
+        "activos_final_t1",
+        "patrimonio_final_t1",
+        "bi_ingresos_ventas_t1",
+        "bi_n_empleados_t1",
+        "TIENE_T_MENOS_1",
+        "flag_activos_negativos",
+        "flag_ventas_negativas",
+        "flag_empleados_fijo",
+        "flag_empleados_salto_temporal",
+        "flag_empleados_anomalia_total",
+        "tipo_compania"
+      ]
+    },
+    "HGB_FINANCIAL": {
+      "numero_features": 25,
+      "features_core": [
+        "activos_final",
+        "patrimonio_final",
+        "bi_ingresos_ventas",
+        "bi_n_empleados",
+        "activos_final_t1",
+        "patrimonio_final_t1",
+        "bi_ingresos_ventas_t1",
+        "bi_n_empleados_t1",
+        "TIENE_T_MENOS_1",
+        "flag_activos_negativos",
+        "flag_ventas_negativas",
+        "flag_empleados_fijo",
+        "flag_empleados_salto_temporal",
+        "flag_empleados_anomalia_total",
+        "tipo_compania"
+      ],
+      "features_financieras": [
+        "fin_ratio_patrimonio_activos",
+        "fin_roa",
+        "fin_margen_neto",
+        "fin_rotacion_activos",
+        "fin_roe",
+        "fin_crecimiento_activos",
+        "fin_crecimiento_patrimonio",
+        "fin_crecimiento_ventas",
+        "fin_crecimiento_empleados",
+        "flag_patrimonio_no_positivo"
+      ],
+      "features_totales": [
+        "activos_final",
+        "patrimonio_final",
+        "bi_ingresos_ventas",
+        "bi_n_empleados",
+        "activos_final_t1",
+        "patrimonio_final_t1",
+        "bi_ingresos_ventas_t1",
+        "bi_n_empleados_t1",
+        "TIENE_T_MENOS_1",
+        "flag_activos_negativos",
+        "flag_ventas_negativas",
+        "flag_empleados_fijo",
+        "flag_empleados_salto_temporal",
+        "flag_empleados_anomalia_total",
+        "tipo_compania",
+        "fin_ratio_patrimonio_activos",
+        "fin_roa",
+        "fin_margen_neto",
+        "fin_rotacion_activos",
+        "fin_roe",
+        "fin_crecimiento_activos",
+        "fin_crecimiento_patrimonio",
+        "fin_crecimiento_ventas",
+        "fin_crecimiento_empleados",
+        "flag_patrimonio_no_positivo"
+      ]
+    }
+  },
+  "hgb_parametros": {
+    "loss": "log_loss",
+    "learning_rate": 0.05,
+    "max_iter": 150,
+    "max_leaf_nodes": 7,
+    "max_depth": 3,
+    "min_samples_leaf": 100,
+    "l2_regularization": 1.0,
+    "early_stopping": false,
+    "random_state": 42,
+    "class_weight": "balanced",
+    "categorical_features": "from_dtype"
+  },
+  "tuning_realizado": false,
+  "provincia_utilizada": false,
+  "validation": {
+    "anio": 2020,
+    "rol": "comparacion de desarrollo"
+  },
+  "backtest": {
+    "numero_folds": 4,
+    "periodo": "2012-2018",
+    "embargo": "1 año fiscal entre TRAIN y evaluacion"
+  },
+  "tratamiento_features_financieras": {
+    "capping": false,
+    "winsorizacion": false,
+    "imputacion_externa": false,
+    "manejo_missing": "Tratamiento nativo de HistGradientBoostingClassifier."
+  },
+  "categorica": {
+    "variable": "tipo_compania",
+    "tratamiento": "Categoria nativa. Las categorias se aprenden exclusivamente desde TRAIN en cada evaluacion."
+  },
+  "test": {
+    "periodo": "2022-2023",
+    "cargado": false,
+    "evaluado": false,
+    "estado": "RESERVADO"
+  },
+  "seleccion_final_realizada": false,
+  "nota": "Este experimento no selecciona automaticamente un modelo final. La comparacion debe revisarse considerando PR-AUC, estabilidad temporal, ranking y brecha TRAIN-evaluacion.",
+  "entorno": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "pandas": "3.0.5",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1"
+  },
+  "archivos_salida": {
+    "validation": "reports/results/v10/comparison_hgb_core_vs_financial_v10_validation.csv",
+    "backtest": "reports/results/v10/comparison_hgb_core_vs_financial_v10_backtest_metrics.csv",
+    "ranking": "reports/results/v10/comparison_hgb_core_vs_financial_v10_ranking_metrics.csv",
+    "summary": "reports/results/v10/comparison_hgb_core_vs_financial_v10_summary.csv",
+    "metadata": "reports/results/v10/comparison_hgb_core_vs_financial_v10_metadata.json"
+  },
+  "resumen": [
+    {
+      "MODELO": "HGB_CORE",
+      "DESCRIPCION": "HGB con conjunto core v10",
+      "N_FEATURES": 15,
+      "VALIDATION_PR_AUC": 0.008287826971181172,
+      "VALIDATION_ROC_AUC": 0.9266274517771594,
+      "VALIDATION_GAP_PR_AUC": 0.035534295730629786,
+      "VALIDATION_POSITIVOS_TOP_50": 0,
+      "VALIDATION_POSITIVOS_TOP_100": 0,
+      "VALIDATION_POSITIVOS_TOP_200": 6,
+      "BACKTEST_PR_AUC_MEDIA": 0.0168908482502292,
+      "BACKTEST_PR_AUC_MEDIANA": 0.018127303442059414,
+      "BACKTEST_PR_AUC_STD": 0.003282137556689472,
+      "BACKTEST_PR_AUC_MIN": 0.012158791280313181,
+      "BACKTEST_PR_AUC_MAX": 0.019149994836484788,
+      "BACKTEST_ROC_AUC_MEDIA": 0.8691462157124983,
+      "BACKTEST_GAP_PR_AUC_MEDIO": 0.0697488381688465,
+      "BACKTEST_POSITIVOS_TOP_50_TOTAL": 8,
+      "BACKTEST_LIFT_AT_50_MEDIA": 56.68154967888214,
+      "BACKTEST_LIFT_AT_50_STD": 37.01889444587665,
+      "BACKTEST_POSITIVOS_TOP_100_TOTAL": 16,
+      "BACKTEST_LIFT_AT_100_MEDIA": 56.04158318302089,
+      "BACKTEST_LIFT_AT_100_STD": 31.658753775959315,
+      "BACKTEST_POSITIVOS_TOP_200_TOTAL": 27,
+      "BACKTEST_LIFT_AT_200_MEDIA": 45.498758855774625,
+      "BACKTEST_LIFT_AT_200_STD": 25.27725586505134
+    },
+    {
+      "MODELO": "HGB_FINANCIAL",
+      "DESCRIPCION": "HGB core v10 mas 10 features financieras",
+      "N_FEATURES": 25,
+      "VALIDATION_PR_AUC": 0.00822901615342995,
+      "VALIDATION_ROC_AUC": 0.9371679348212563,
+      "VALIDATION_GAP_PR_AUC": 0.040090969277813145,
+      "VALIDATION_POSITIVOS_TOP_50": 2,
+      "VALIDATION_POSITIVOS_TOP_100": 2,
+      "VALIDATION_POSITIVOS_TOP_200": 3,
+      "BACKTEST_PR_AUC_MEDIA": 0.027948707471248876,
+      "BACKTEST_PR_AUC_MEDIANA": 0.028166527769215546,
+      "BACKTEST_PR_AUC_STD": 0.00997338256683577,
+      "BACKTEST_PR_AUC_MIN": 0.01555781016242888,
+      "BACKTEST_PR_AUC_MAX": 0.03990396418413552,
+      "BACKTEST_ROC_AUC_MEDIA": 0.8763042156183061,
+      "BACKTEST_GAP_PR_AUC_MEDIO": 0.09877890870212232,
+      "BACKTEST_POSITIVOS_TOP_50_TOTAL": 14,
+      "BACKTEST_LIFT_AT_50_MEDIA": 94.29991055208829,
+      "BACKTEST_LIFT_AT_50_STD": 46.43398363173579,
+      "BACKTEST_POSITIVOS_TOP_100_TOTAL": 24,
+      "BACKTEST_LIFT_AT_100_MEDIA": 83.55094335283093,
+      "BACKTEST_LIFT_AT_100_STD": 54.242078286136596,
+      "BACKTEST_POSITIVOS_TOP_200_TOTAL": 42,
+      "BACKTEST_LIFT_AT_200_MEDIA": 69.19861545357735,
+      "BACKTEST_LIFT_AT_200_STD": 20.08199181906891
+    }
+  ]
+}
