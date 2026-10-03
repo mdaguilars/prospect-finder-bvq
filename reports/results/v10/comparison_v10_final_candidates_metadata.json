@@ -1,0 +1,168 @@
+{
+  "experimento": "Comparacion integral v10 previa a seleccion final y apertura de TEST",
+  "fecha_ejecucion_utc": "2026-10-03T16:22:47.479517+00:00",
+  "objetivo": "Consolidar los resultados ya obtenidos para las familias LogisticRegression, HistGradientBoostingClassifier y MLPClassifier, comparando sus variantes core y financieras.",
+  "modelos_comparados": [
+    "v10_lr_no_provincia",
+    "v10_lr_financial",
+    "v10_hgb",
+    "v10_hgb_financial_c3",
+    "v10_mlp",
+    "v10_mlp_financial"
+  ],
+  "candidatos_por_familia": [
+    {
+      "FAMILIA": "HistGradientBoostingClassifier",
+      "MODELO": "v10_hgb_financial_c3"
+    },
+    {
+      "FAMILIA": "LogisticRegression",
+      "MODELO": "v10_lr_no_provincia"
+    },
+    {
+      "FAMILIA": "MLPClassifier",
+      "MODELO": "v10_mlp"
+    }
+  ],
+  "seleccion_final_proyecto": {
+    "realizada": false,
+    "motivo": "Este paso únicamente reduce cada familia a un candidato. La selección final se realizará después de revisar el comparador integral y antes de abrir TEST."
+  },
+  "criterios_principales": [
+    "PR-AUC en backtest temporal",
+    "mediana PR-AUC en backtest",
+    "desviacion temporal PR-AUC",
+    "Lift@50",
+    "Lift@100",
+    "Lift@200",
+    "positivos recuperados en ranking",
+    "brecha TRAIN-evaluacion",
+    "comportamiento en VALIDATION"
+  ],
+  "protocolo": {
+    "validation": {
+      "anio": 2020,
+      "observaciones": 98471,
+      "positivos": 34
+    },
+    "backtest": {
+      "folds": 4,
+      "evaluacion": [
+        2015,
+        2016,
+        2017,
+        2018
+      ],
+      "embargo": "1 año entre TRAIN y evaluación"
+    }
+  },
+  "test": {
+    "periodo": "2022-2023",
+    "estado": "RESERVADO",
+    "cargado_por_este_script": false,
+    "evaluado_por_este_script": false,
+    "regla": "TEST permanece cerrado hasta congelar el candidato final."
+  },
+  "delta_core_vs_financial": [
+    {
+      "FAMILIA": "LogisticRegression",
+      "MODELO_CORE": "v10_lr_no_provincia",
+      "MODELO_FINANCIAL": "v10_lr_financial",
+      "CORE_VALIDATION_PR_AUC": 0.0083873552950842,
+      "FINANCIAL_VALIDATION_PR_AUC": 0.0078821220162044,
+      "DELTA_VALIDATION_PR_AUC": -0.0005052332788797985,
+      "CORE_BACKTEST_PR_AUC_MEDIA": 0.0163626860451711,
+      "FINANCIAL_BACKTEST_PR_AUC_MEDIA": 0.0152760719611074,
+      "DELTA_BACKTEST_PR_AUC_MEDIA": -0.0010866140840637,
+      "DELTA_BACKTEST_PR_AUC_PCT": -0.06640805067480823,
+      "CORE_BACKTEST_PR_AUC_STD": 0.0033828911120629,
+      "FINANCIAL_BACKTEST_PR_AUC_STD": 0.0038940040063473,
+      "DELTA_BACKTEST_PR_AUC_STD": 0.0005111128942843998,
+      "CORE_LIFT_AT_50_MEDIA": 74.85382539887273,
+      "FINANCIAL_LIFT_AT_50_MEDIA": 74.85382539887273,
+      "DELTA_LIFT_AT_50_MEDIA": 0.0,
+      "CORE_LIFT_AT_100_MEDIA": 53.07021217427358,
+      "FINANCIAL_LIFT_AT_100_MEDIA": 53.07021217427358,
+      "DELTA_LIFT_AT_100_MEDIA": 0.0,
+      "CORE_LIFT_AT_200_MEDIA": 43.12252007726013,
+      "FINANCIAL_LIFT_AT_200_MEDIA": 43.12252007726013,
+      "DELTA_LIFT_AT_200_MEDIA": 0.0,
+      "CORE_GAP_PR_AUC_MEDIO": 0.0249740188770939,
+      "FINANCIAL_GAP_PR_AUC_MEDIO": 0.02607787656696
+    },
+    {
+      "FAMILIA": "HistGradientBoostingClassifier",
+      "MODELO_CORE": "v10_hgb",
+      "MODELO_FINANCIAL": "v10_hgb_financial_c3",
+      "CORE_VALIDATION_PR_AUC": 0.0082878269711811,
+      "FINANCIAL_VALIDATION_PR_AUC": 0.0086115638066688,
+      "DELTA_VALIDATION_PR_AUC": 0.00032373683548769967,
+      "CORE_BACKTEST_PR_AUC_MEDIA": 0.0168908482502292,
+      "FINANCIAL_BACKTEST_PR_AUC_MEDIA": 0.0294871742702687,
+      "DELTA_BACKTEST_PR_AUC_MEDIA": 0.012596326020039503,
+      "DELTA_BACKTEST_PR_AUC_PCT": 0.7457485754079034,
+      "CORE_BACKTEST_PR_AUC_STD": 0.0032821375566894,
+      "FINANCIAL_BACKTEST_PR_AUC_STD": 0.0027090371320715,
+      "DELTA_BACKTEST_PR_AUC_STD": -0.0005731004246178999,
+      "CORE_LIFT_AT_50_MEDIA": 56.68154967888214,
+      "FINANCIAL_LIFT_AT_50_MEDIA": 94.29991055208828,
+      "DELTA_LIFT_AT_50_MEDIA": 37.618360873206136,
+      "CORE_LIFT_AT_100_MEDIA": 56.04158318302089,
+      "FINANCIAL_LIFT_AT_100_MEDIA": 76.10208793358373,
+      "DELTA_LIFT_AT_100_MEDIA": 20.060504750562842,
+      "CORE_LIFT_AT_200_MEDIA": 45.49875885577463,
+      "FINANCIAL_LIFT_AT_200_MEDIA": 68.2672743875482,
+      "DELTA_LIFT_AT_200_MEDIA": 22.768515531773566,
+      "CORE_GAP_PR_AUC_MEDIO": 0.0697488381688465,
+      "FINANCIAL_GAP_PR_AUC_MEDIO": 0.0488024279024796
+    },
+    {
+      "FAMILIA": "MLPClassifier",
+      "MODELO_CORE": "v10_mlp",
+      "MODELO_FINANCIAL": "v10_mlp_financial",
+      "CORE_VALIDATION_PR_AUC": 0.0091349595848784,
+      "FINANCIAL_VALIDATION_PR_AUC": 0.0104996015050963,
+      "DELTA_VALIDATION_PR_AUC": 0.0013646419202179,
+      "CORE_BACKTEST_PR_AUC_MEDIA": 0.0160090837023364,
+      "FINANCIAL_BACKTEST_PR_AUC_MEDIA": 0.0132886101190134,
+      "DELTA_BACKTEST_PR_AUC_MEDIA": -0.002720473583323002,
+      "DELTA_BACKTEST_PR_AUC_PCT": -0.16993312258876941,
+      "CORE_BACKTEST_PR_AUC_STD": 0.0075582313460889,
+      "FINANCIAL_BACKTEST_PR_AUC_STD": 0.0057829375333838,
+      "DELTA_BACKTEST_PR_AUC_STD": -0.0017752938127051,
+      "CORE_LIFT_AT_50_MEDIA": 52.45885435617506,
+      "FINANCIAL_LIFT_AT_50_MEDIA": 46.509988780182894,
+      "DELTA_LIFT_AT_50_MEDIA": -5.948865575992166,
+      "CORE_LIFT_AT_100_MEDIA": 46.06681329786908,
+      "FINANCIAL_LIFT_AT_100_MEDIA": 46.42644380742357,
+      "DELTA_LIFT_AT_100_MEDIA": 0.35963050955448495,
+      "CORE_LIFT_AT_200_MEDIA": 40.25964660465469,
+      "FINANCIAL_LIFT_AT_200_MEDIA": 36.82773399546342,
+      "DELTA_LIFT_AT_200_MEDIA": -3.431912609191272,
+      "CORE_GAP_PR_AUC_MEDIO": 0.1083776395696379,
+      "FINANCIAL_GAP_PR_AUC_MEDIO": 0.1810613453397172
+    }
+  ],
+  "archivos_entrada": [
+    "reports/results/v10/comparison_v10_models.csv",
+    "reports/results/v10/v10_lr_financial_metrics.csv",
+    "reports/results/v10/v10_lr_financial_ranking_metrics.csv",
+    "reports/results/v10/backtest_lr_financial_v10_summary.csv",
+    "reports/results/v10/v10_mlp_financial_metrics.csv",
+    "reports/results/v10/v10_mlp_financial_ranking_metrics.csv",
+    "reports/results/v10/backtest_mlp_financial_v10_summary.csv",
+    "reports/results/v10/tune_hgb_financial_v10_summary.csv"
+  ],
+  "archivos_salida": {
+    "comparacion_integral": "reports/results/v10/comparison_v10_final_candidates.csv",
+    "delta_por_familia": "reports/results/v10/comparison_v10_final_candidates_family_delta.csv",
+    "candidatos_por_familia": "reports/results/v10/comparison_v10_family_candidates.csv",
+    "metadata": "reports/results/v10/comparison_v10_final_candidates_metadata.json"
+  },
+  "entorno": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "pandas": "3.0.5",
+    "numpy": "2.5.3"
+  }
+}
