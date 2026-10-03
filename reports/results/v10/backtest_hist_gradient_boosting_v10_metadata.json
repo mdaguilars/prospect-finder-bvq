@@ -1,0 +1,199 @@
+{
+  "experimento": "Backtesting temporal HistGradientBoosting v10",
+  "modelo": "HistGradientBoostingClassifier",
+  "nombre_modelo": "v10_hgb",
+  "fecha_ejecucion_utc": "2026-10-03T03:29:54.787962+00:00",
+  "objetivo": "Evaluar la estabilidad temporal de HistGradientBoosting v10 utilizando exactamente el mismo protocolo rolling-origin utilizado para las variantes Logistic Regression v10.",
+  "dataset": "data/processed/v10_features_core_2012_2023.csv.gz",
+  "target": "TARGET_24M",
+  "horizonte_target": "24 meses",
+  "periodo_backtest": "2012-2018",
+  "validation_2020_utilizada": false,
+  "test_2022_2023_utilizado": false,
+  "test_estado": "RESERVADO - SIN EVALUACION",
+  "numero_observaciones_backtest": 470722,
+  "numero_positivos_backtest": 407,
+  "folds": [
+    {
+      "FOLD": 1,
+      "TRAIN_INICIO": 2012,
+      "TRAIN_FIN": 2013,
+      "ANIO_EMBARGO": 2014,
+      "ANIO_EVALUACION": 2015
+    },
+    {
+      "FOLD": 2,
+      "TRAIN_INICIO": 2012,
+      "TRAIN_FIN": 2014,
+      "ANIO_EMBARGO": 2015,
+      "ANIO_EVALUACION": 2016
+    },
+    {
+      "FOLD": 3,
+      "TRAIN_INICIO": 2012,
+      "TRAIN_FIN": 2015,
+      "ANIO_EMBARGO": 2016,
+      "ANIO_EVALUACION": 2017
+    },
+    {
+      "FOLD": 4,
+      "TRAIN_INICIO": 2012,
+      "TRAIN_FIN": 2016,
+      "ANIO_EMBARGO": 2017,
+      "ANIO_EVALUACION": 2018
+    }
+  ],
+  "features_numericas": [
+    "activos_final",
+    "patrimonio_final",
+    "bi_ingresos_ventas",
+    "bi_n_empleados",
+    "activos_final_t1",
+    "patrimonio_final_t1",
+    "bi_ingresos_ventas_t1",
+    "bi_n_empleados_t1"
+  ],
+  "features_booleanas": [
+    "TIENE_T_MENOS_1",
+    "flag_activos_negativos",
+    "flag_ventas_negativas",
+    "flag_empleados_fijo",
+    "flag_empleados_salto_temporal",
+    "flag_empleados_anomalia_total"
+  ],
+  "features_categoricas": [
+    "tipo_compania"
+  ],
+  "numero_features_fisicas": 15,
+  "provincia_utilizada_como_predictor": false,
+  "baseline_comparacion": "v10_lr_no_provincia",
+  "configuracion_modelo": {
+    "loss": "log_loss",
+    "learning_rate": 0.05,
+    "max_iter": 150,
+    "max_leaf_nodes": 7,
+    "max_depth": 3,
+    "min_samples_leaf": 100,
+    "l2_regularization": 1.0,
+    "early_stopping": false,
+    "random_state": 42,
+    "class_weight": "balanced",
+    "categorical_features": "from_dtype"
+  },
+  "origen_configuracion": "Configuracion regularizada heredada de v8. No se realiza tuning durante este backtesting.",
+  "manejo_missing_numerico": "Nativo de HistGradientBoostingClassifier.",
+  "escalamiento": false,
+  "categorical_features": "from_dtype",
+  "categorias_aprendidas_por_fold": [
+    {
+      "fold": 1,
+      "categorias_train": {
+        "tipo_compania": [
+          "ANÓNIMA                                           ",
+          "ANÓNIMA  EN PREDIOS RÚSTICOS                      ",
+          "ANÓNIMA MULTINACIONAL ANDINA                      ",
+          "ASOCIACIÓN O CONSORCIO                            ",
+          "COMANDITA POR ACCIONES                            ",
+          "ECONOMÍA MIXTA                                    ",
+          "RESPONSABILIDAD LIMITADA                          ",
+          "SOCIEDAD POR ACCIONES SIMPLIFICADA                ",
+          "SUCURSAL  EXTRANJERA                              "
+        ]
+      },
+      "categorias_desconocidas_evaluacion": {
+        "tipo_compania": 0
+      }
+    },
+    {
+      "fold": 2,
+      "categorias_train": {
+        "tipo_compania": [
+          "ANÓNIMA                                           ",
+          "ANÓNIMA  EN PREDIOS RÚSTICOS                      ",
+          "ANÓNIMA MULTINACIONAL ANDINA                      ",
+          "ASOCIACIÓN O CONSORCIO                            ",
+          "COMANDITA POR ACCIONES                            ",
+          "ECONOMÍA MIXTA                                    ",
+          "RESPONSABILIDAD LIMITADA                          ",
+          "SOCIEDAD POR ACCIONES SIMPLIFICADA                ",
+          "SUCURSAL  EXTRANJERA                              "
+        ]
+      },
+      "categorias_desconocidas_evaluacion": {
+        "tipo_compania": 0
+      }
+    },
+    {
+      "fold": 3,
+      "categorias_train": {
+        "tipo_compania": [
+          "ANÓNIMA                                           ",
+          "ANÓNIMA  EN PREDIOS RÚSTICOS                      ",
+          "ANÓNIMA MULTINACIONAL ANDINA                      ",
+          "ASOCIACIÓN O CONSORCIO                            ",
+          "COMANDITA POR ACCIONES                            ",
+          "ECONOMÍA MIXTA                                    ",
+          "RESPONSABILIDAD LIMITADA                          ",
+          "SOCIEDAD POR ACCIONES SIMPLIFICADA                ",
+          "SUCURSAL  EXTRANJERA                              "
+        ]
+      },
+      "categorias_desconocidas_evaluacion": {
+        "tipo_compania": 0
+      }
+    },
+    {
+      "fold": 4,
+      "categorias_train": {
+        "tipo_compania": [
+          "ANÓNIMA                                           ",
+          "ANÓNIMA  EN PREDIOS RÚSTICOS                      ",
+          "ANÓNIMA MULTINACIONAL ANDINA                      ",
+          "ASOCIACIÓN O CONSORCIO                            ",
+          "COMANDITA POR ACCIONES                            ",
+          "ECONOMÍA MIXTA                                    ",
+          "RESPONSABILIDAD LIMITADA                          ",
+          "SOCIEDAD POR ACCIONES SIMPLIFICADA                ",
+          "SUCURSAL  EXTRANJERA                              "
+        ]
+      },
+      "categorias_desconocidas_evaluacion": {
+        "tipo_compania": 0
+      }
+    }
+  ],
+  "metricas_principales": [
+    "PR-AUC",
+    "Precision@50",
+    "Precision@100",
+    "Precision@200",
+    "Recall@50",
+    "Recall@100",
+    "Recall@200",
+    "Lift@50",
+    "Lift@100",
+    "Lift@200"
+  ],
+  "metrica_complementaria": "ROC-AUC",
+  "numero_folds_ejecutados": 4,
+  "entorno": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "pandas": "3.0.5",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1"
+  },
+  "archivos_salida": {
+    "metricas": "reports/results/v10/backtest_hist_gradient_boosting_v10_metrics.csv",
+    "ranking": "reports/results/v10/backtest_hist_gradient_boosting_v10_ranking_metrics.csv",
+    "resumen": "reports/results/v10/backtest_hist_gradient_boosting_v10_summary.csv",
+    "metadata": "reports/results/v10/backtest_hist_gradient_boosting_v10_metadata.json"
+  },
+  "notas": [
+    "El backtesting utiliza exclusivamente observaciones pertenecientes al TRAIN oficial v10 2012-2018.",
+    "Cada fold mantiene un año completo de embargo.",
+    "Las categorias de tipo_compania se aprenden exclusivamente desde TRAIN de cada fold.",
+    "VALIDATION 2020 no participa en este backtesting.",
+    "TEST 2022-2023 permanece completamente cerrado."
+  ]
+}
