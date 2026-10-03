@@ -1,0 +1,81 @@
+{
+  "experimento": "Comparacion de variantes Logistic Regression v10",
+  "fecha_ejecucion_utc": "2026-10-03T03:09:49.517145+00:00",
+  "objetivo": "Contrastar las cuatro configuraciones de Regresion Logistica v10 utilizando conjuntamente VALIDATION 2020 y el backtesting temporal interno a TRAIN 2012-2018.",
+  "modelos_comparados": [
+    "v10_lr",
+    "v10_lr_no_provincia",
+    "v10_lr_no_categoricas",
+    "v10_lr_no_tipo_compania"
+  ],
+  "validation": {
+    "anio": 2020,
+    "funcion": "Conjunto oficial de comparacion durante la fase de desarrollo.",
+    "metrica_principal": "PR-AUC"
+  },
+  "backtesting": {
+    "periodo": "2012-2018",
+    "numero_folds": 4,
+    "tipo": "rolling-origin con ventana expansiva",
+    "embargo": "1 ejercicio completo entre TRAIN y evaluacion",
+    "funcion": "Evaluar estabilidad temporal."
+  },
+  "baseline_logistico_seleccionado": "v10_lr_no_provincia",
+  "alcance_seleccion": "Baseline seleccionado dentro de la familia de Regresion Logistica v10. No constituye el modelo final de Prospect Finder BVQ.",
+  "criterio_decision": [
+    "PR-AUC de VALIDATION 2020 se utiliza como evidencia principal de comparacion durante la fase de desarrollo.",
+    "El backtesting temporal se utiliza como evidencia complementaria de estabilidad.",
+    "Se consideran adicionalmente Lift@K y variabilidad temporal.",
+    "No se selecciona una configuracion por ROC-AUC de manera aislada.",
+    "TEST 2022-2023 no participa en la decision."
+  ],
+  "evidencia_seleccion": {
+    "modelo_seleccionado": "v10_lr_no_provincia",
+    "modelo_mayor_pr_auc_validation": "v10_lr_no_provincia",
+    "modelo_mayor_pr_auc_media_backtest": "v10_lr_no_categoricas",
+    "validation_pr_auc_seleccionado": 0.0083873552950842,
+    "backtest_pr_auc_media_seleccionado": 0.0163626860451711,
+    "backtest_pr_auc_std_seleccionado": 0.0033828911120629,
+    "backtest_lift50_medio_seleccionado": 74.85382539887273,
+    "backtest_lift100_medio_seleccionado": 53.07021217427358,
+    "backtest_lift200_medio_seleccionado": 43.12252007726013,
+    "gap_absoluto_pr_auc_backtest_vs_maximo": 0.00015800399212229782,
+    "gap_relativo_pr_auc_backtest_vs_maximo": 0.009564006816036346
+  },
+  "comparacion_con_mejor_backtest": {
+    "modelo": "v10_lr_no_categoricas",
+    "pr_auc_media": 0.0165206900372934,
+    "pr_auc_std": 0.0040059382719984,
+    "lift50_medio": 74.85382539887273,
+    "lift100_medio": 48.6243982207852,
+    "lift200_medio": 43.12252007726013
+  },
+  "baseline_seleccionado_resultados": {
+    "validation_pr_auc": 0.0083873552950842,
+    "validation_roc_auc": 0.8832209194414582,
+    "backtest_pr_auc_media": 0.0163626860451711,
+    "backtest_pr_auc_mediana": 0.0157418787014689,
+    "backtest_pr_auc_std": 0.0033828911120629,
+    "backtest_lift50_medio": 74.85382539887273,
+    "backtest_lift100_medio": 53.07021217427358,
+    "backtest_lift200_medio": 43.12252007726013
+  },
+  "test": {
+    "periodo": "2022-2023",
+    "utilizado": false,
+    "estado": "RESERVADO - SIN EVALUACION"
+  },
+  "archivos_fuente": {
+    "backtest_summary": "reports/results/v10/backtest_logistic_v10_summary.csv",
+    "validation_metrics": {
+      "v10_lr": "reports/results/v10/v10_lr_metrics.csv",
+      "v10_lr_no_provincia": "reports/results/v10/v10_lr_no_provincia_metrics.csv",
+      "v10_lr_no_categoricas": "reports/results/v10/v10_lr_no_categoricas_metrics.csv",
+      "v10_lr_no_tipo_compania": "reports/results/v10/v10_lr_no_tipo_compania_metrics.csv"
+    }
+  },
+  "archivos_salida": {
+    "comparacion": "reports/results/v10/comparison_logistic_v10_variants.csv",
+    "metadata": "reports/results/v10/comparison_logistic_v10_variants_metadata.json"
+  }
+}
