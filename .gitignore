@@ -29,6 +29,14 @@ models/*
 reports/results/*
 !reports/results/.gitkeep
 
+# Resultados reproducibles de experimentos v10
+!reports/results/v10/
+reports/results/v10/*
+!reports/results/v10/.gitkeep
+!reports/results/v10/*.csv
+!reports/results/v10/*.json
+!reports/results/v10/*.txt
+
 # Salidas temporales de auditoría y validación
 /salida_paso*.txt
 
