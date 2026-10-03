@@ -1,0 +1,180 @@
+{
+  "experimento": "Regresion Logistica financiera v10",
+  "fecha_ejecucion_utc": "2026-10-03T11:24:57.513158+00:00",
+  "dataset": "data/processed/v10_features_financial_2012_2023.csv.gz",
+  "modelo": "LogisticRegression",
+  "baseline_referencia": "v10_lr_no_provincia",
+  "objetivo": "Evaluar el baseline de Regresion Logistica incorporando las nuevas features financieras sin modificar la configuracion del modelo.",
+  "target": "TARGET_24M",
+  "horizonte_target": "24 meses",
+  "modelo_parametros": {
+    "penalty": "l2",
+    "C": 1.0,
+    "solver": "lbfgs",
+    "max_iter": 2000,
+    "class_weight": "balanced",
+    "random_state": 42
+  },
+  "features_fisicas": [
+    "activos_final",
+    "patrimonio_final",
+    "bi_ingresos_ventas",
+    "bi_n_empleados",
+    "activos_final_t1",
+    "patrimonio_final_t1",
+    "bi_ingresos_ventas_t1",
+    "bi_n_empleados_t1",
+    "fin_ratio_patrimonio_activos",
+    "fin_roa",
+    "fin_margen_neto",
+    "fin_rotacion_activos",
+    "fin_roe",
+    "fin_crecimiento_activos",
+    "fin_crecimiento_patrimonio",
+    "fin_crecimiento_ventas",
+    "fin_crecimiento_empleados",
+    "TIENE_T_MENOS_1",
+    "flag_activos_negativos",
+    "flag_ventas_negativas",
+    "flag_empleados_fijo",
+    "flag_empleados_salto_temporal",
+    "flag_empleados_anomalia_total",
+    "flag_patrimonio_no_positivo",
+    "tipo_compania"
+  ],
+  "numero_features_fisicas": 25,
+  "features_numericas_core": [
+    "activos_final",
+    "patrimonio_final",
+    "bi_ingresos_ventas",
+    "bi_n_empleados",
+    "activos_final_t1",
+    "patrimonio_final_t1",
+    "bi_ingresos_ventas_t1",
+    "bi_n_empleados_t1"
+  ],
+  "features_financieras_numericas": [
+    "fin_ratio_patrimonio_activos",
+    "fin_roa",
+    "fin_margen_neto",
+    "fin_rotacion_activos",
+    "fin_roe",
+    "fin_crecimiento_activos",
+    "fin_crecimiento_patrimonio",
+    "fin_crecimiento_ventas",
+    "fin_crecimiento_empleados"
+  ],
+  "features_booleanas_core": [
+    "TIENE_T_MENOS_1",
+    "flag_activos_negativos",
+    "flag_ventas_negativas",
+    "flag_empleados_fijo",
+    "flag_empleados_salto_temporal",
+    "flag_empleados_anomalia_total"
+  ],
+  "features_financieras_booleanas": [
+    "flag_patrimonio_no_positivo"
+  ],
+  "features_categoricas": [
+    "tipo_compania"
+  ],
+  "provincia_utilizada": false,
+  "preprocesamiento": {
+    "numericas": "SimpleImputer(strategy='median') + StandardScaler(), ajustados solo con TRAIN.",
+    "booleanas": "SimpleImputer(strategy='most_frequent'), ajustado solo con TRAIN.",
+    "categoricas": "SimpleImputer(strategy='most_frequent') + OneHotEncoder(handle_unknown='ignore'), ajustados solo con TRAIN.",
+    "capping_financieras": {
+      "aplicado": true,
+      "variables": [
+        "fin_ratio_patrimonio_activos",
+        "fin_roa",
+        "fin_margen_neto",
+        "fin_rotacion_activos",
+        "fin_roe",
+        "fin_crecimiento_activos",
+        "fin_crecimiento_patrimonio",
+        "fin_crecimiento_ventas",
+        "fin_crecimiento_empleados"
+      ],
+      "percentil_inferior": 0.01,
+      "percentil_superior": 0.99,
+      "aprendido_desde": "TRAIN exclusivamente",
+      "validation": "Los limites aprendidos en TRAIN se aplican sin recalcular."
+    }
+  },
+  "class_imbalance": {
+    "metodo": "class_weight='balanced'",
+    "sample_weight_adicional": false
+  },
+  "train": {
+    "filas": 470722,
+    "positivos": 407
+  },
+  "validation": {
+    "anio": 2020,
+    "filas": 98471,
+    "positivos": 34,
+    "rol": "evaluacion de desarrollo"
+  },
+  "resultados": {
+    "train_pr_auc": 0.02710481028583683,
+    "train_roc_auc": 0.9085555995052822,
+    "validation_pr_auc": 0.007882122016204493,
+    "validation_roc_auc": 0.8886277816387789,
+    "gap_pr_auc": 0.01922268826963234,
+    "ranking_validation": [
+      {
+        "K": 50,
+        "POSITIVOS_TOP_K": 1,
+        "PRECISION_AT_K": 0.02,
+        "RECALL_AT_K": 0.029411764705882353,
+        "LIFT_AT_K": 57.92411764705883
+      },
+      {
+        "K": 100,
+        "POSITIVOS_TOP_K": 2,
+        "PRECISION_AT_K": 0.02,
+        "RECALL_AT_K": 0.058823529411764705,
+        "LIFT_AT_K": 57.92411764705883
+      },
+      {
+        "K": 200,
+        "POSITIVOS_TOP_K": 2,
+        "PRECISION_AT_K": 0.01,
+        "RECALL_AT_K": 0.058823529411764705,
+        "LIFT_AT_K": 28.962058823529414
+      }
+    ]
+  },
+  "convergencia": {
+    "warning": false,
+    "mensajes": []
+  },
+  "numero_features_transformadas": 33,
+  "test": {
+    "periodo": "2022-2023",
+    "cargado": false,
+    "transformado": false,
+    "evaluado": false,
+    "estado": "RESERVADO"
+  },
+  "backtest": {
+    "realizado_en_este_script": false,
+    "nota": "El backtest temporal se ejecutara en un script separado. Los limites de capping deberan aprenderse nuevamente dentro del TRAIN de cada fold."
+  },
+  "archivos_salida": {
+    "metricas": "reports/results/v10/v10_lr_financial_metrics.csv",
+    "ranking": "reports/results/v10/v10_lr_financial_ranking_metrics.csv",
+    "capping": "reports/results/v10/v10_lr_financial_capping.csv",
+    "top500_validation": "reports/results/v10/v10_lr_financial_validation_top500.csv",
+    "metadata": "reports/results/v10/v10_lr_financial_metadata.json",
+    "modelo_local": "models/v10/v10_lr_financial.joblib"
+  },
+  "entorno": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "pandas": "3.0.5",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1"
+  }
+}
