@@ -2,1351 +2,1424 @@
 
 ## 1. Propósito
 
-Este documento describe las principales variables utilizadas en el proyecto Prospect Finder BVQ.
+Este documento describe las variables, campos operacionales y estructuras de datos vigentes de **Prospect Finder BVQ v10**.
 
-El objetivo es mantener trazabilidad sobre:
+Su objetivo es mantener trazabilidad sobre:
 
-- nombre de la variable;
+- nombre técnico;
 - significado;
 - origen;
 - tipo de dato;
-- transformación aplicada;
-- disponibilidad;
-- tratamiento de valores faltantes;
+- temporalidad;
+- transformación;
 - utilización dentro del modelo;
-- consideraciones metodológicas.
+- utilización dentro del producto;
+- tratamiento de valores faltantes;
+- consideraciones de leakage, calidad e interpretación.
 
-Este diccionario corresponde al MVP desarrollado con información financiera del período 2015–2023.
+Este documento reemplaza la descripción histórica del MVP y del Baseline v1 como referencia principal del proyecto.
 
----
+La versión vigente utiliza información correspondiente al período:
 
-## 2. Unidad de análisis
+`2012–2023`
 
-La unidad de análisis del proyecto es:
+y el modelo final congelado:
 
-**empresa-año**
+`v10_hgb_financial_c3`
 
-Cada observación representa la información disponible para una empresa en un período anual determinado.
+con configuración:
 
-La empresa se identifica principalmente mediante su RUC.
-
-La clave conceptual de una observación es:
-
-`RUC + ANIO`
+`C3_CONSERVATIVE`
 
 ---
 
-## 3. Variable objetivo
+## 2. Unidades de análisis
 
-La variable objetivo es:
+El proyecto utiliza dos unidades diferentes según la etapa.
+
+### 2.1 Modelado
+
+La unidad analítica es:
+
+`empresa-año`
+
+Cada fila representa la información de una empresa para un año determinado.
+
+La identificación técnica principal utiliza:
+
+`EXPEDIENTE_KEY + ANIO`
+
+El RUC se conserva como identificador empresarial y mecanismo de integración, pero no se utiliza como predictor.
+
+### 2.2 Producto operacional
+
+La unidad del producto es:
+
+`empresa`
+
+Para el ranking operacional actual se utiliza una observación por empresa correspondiente a:
+
+`ANIO = 2023`
+
+con fecha de decisión:
+
+`2024-05-01`
+
+Cada empresa aparece una sola vez dentro del ranking.
+
+---
+
+## 3. Fuentes principales
+
+### 3.1 Superintendencia de Compañías, Valores y Seguros — información financiera y empresarial
+
+Constituye la fuente principal para construir las variables empresariales y financieras utilizadas por v10.
+
+Entre la información integrada se encuentran:
+
+- activos;
+- patrimonio;
+- ingresos por ventas;
+- número de empleados;
+- utilidad neta;
+- tipo de compañía;
+- provincia;
+- información histórica necesaria para rezagos;
+- información utilizada para controles de calidad.
+
+Los distintos archivos y estructuras históricas son integrados antes de construir las features del modelo.
+
+### 3.2 Registro del Mercado de Valores
+
+Se utiliza para construir:
 
 `TARGET_24M`
 
-Esta variable indica si una empresa que todavía no era emisora en una determinada fecha de corte se registra por primera vez como emisor dentro de los siguientes 24 meses.
+a partir de la primera inscripción conocida de cada emisor.
 
-Interpretación:
+El evento se utiliza exclusivamente para:
 
-- `1`: se registra por primera vez como emisor dentro del horizonte definido.
-- `0`: no se registra como nuevo emisor dentro de ese horizonte.
-
-Las empresas que ya eran emisoras en la fecha de corte correspondiente son excluidas del universo elegible.
-
----
-
-## 4. Fuentes principales
-
-### 4.1 SCVS — Estados financieros
-
-Fuente principal utilizada para construir las variables financieras predictoras.
-
-Información utilizada:
-
-- cuentas contables;
-- identificación de empresas;
-- clasificación CIIU;
-- información histórica anual.
-
-Ubicación:
-
-`data/raw/scvs/estados_financieros/`
-
----
-
-### 4.2 SCVS — Registro del Mercado de Valores
-
-Fuente utilizada para construir la variable objetivo.
-
-Información principal:
-
-- RUC del emisor;
-- primera fecha de inscripción como emisor.
-
-Ubicación:
-
-`data/raw/scvs/mercado_valores/`
-
-La primera inscripción fue contrastada entre dos fuentes del Registro del Mercado de Valores.
-
-Se identificaron 619 RUC con información disponible en ambas fuentes y no se encontraron diferencias en la primera fecha de inscripción.
-
----
-
-### 4.3 Bolsa de Valores Quito
-
-La información del Data Warehouse de la BVQ se considera complementaria.
-
-Su utilización actual se orienta a:
-
+- entrenamiento;
 - validación;
+- TEST;
+- evaluaciones retrospectivas posteriores.
+
+No se presenta como variable de entrada en el producto operacional.
+
+### 3.3 Bolsa de Valores Quito
+
+La información de la BVQ se utiliza como fuente complementaria para:
+
 - contraste;
+- validación;
+- conocimiento de negocio;
 - potencial enriquecimiento futuro.
 
-No constituye la fuente principal de las variables utilizadas por el Baseline v1.
+No constituye una variable predictiva automática por el solo hecho de estar disponible.
+
+---
+
+## 4. Principales artefactos de datos v10
+
+### 4.1 Base integrada
+
+`data/processed/v10_base_integrated_2012_2023.csv.gz`
+
+Contiene la base integrada utilizada para construir las features v10.
+
+### 4.2 Dataset core
+
+`data/processed/v10_features_core_2012_2023.csv.gz`
+
+Contiene:
+
+`22 columnas`
+
+Incluye:
+
+- identificación;
+- target;
+- split;
+- variables financieras actuales;
+- variables del período anterior;
+- tipo de compañía;
+- provincia;
+- banderas de calidad.
+
+### 4.3 Dataset financiero
+
+`data/processed/v10_features_financial_2012_2023.csv.gz`
+
+Contiene:
+
+`1.030.671 observaciones`
+
+y:
+
+`32 columnas`
+
+Agrega al dataset core:
+
+- `fin_ratio_patrimonio_activos`;
+- `fin_roa`;
+- `fin_margen_neto`;
+- `fin_rotacion_activos`;
+- `fin_roe`;
+- `flag_patrimonio_no_positivo`;
+- `fin_crecimiento_activos`;
+- `fin_crecimiento_patrimonio`;
+- `fin_crecimiento_ventas`;
+- `fin_crecimiento_empleados`.
+
+Este es el dataset de features utilizado por el modelo final y por la explicación operacional.
 
 ---
 
 # 5. Variables de identificación y trazabilidad
 
-## 5.1 RUC
+## 5.1 `ANIO`
 
-**Nombre técnico:** `RUC`
+**Descripción:** año de la observación financiera.
 
-**Descripción:**  
-Registro Único de Contribuyentes utilizado para identificar a la empresa.
+**Tipo:** entero.
 
-**Tipo:**  
-Texto / identificador.
+**Uso como predictor:** no.
 
-**Fuente:**  
-SCVS.
+**Uso metodológico:** sí.
 
-**Unidad:**  
-No aplica.
+Permite:
 
-**Transformación:**  
-Normalización como identificador.
-
-**Uso en modelado:**  
-No se utiliza como predictor.
-
-**Uso en pipeline:**  
-Sí.
-
-**Finalidad:**
-
-- integrar fuentes;
-- identificar empresas;
-- construir series históricas;
-- asociar empresas con eventos de inscripción.
-
-**Consideración:**  
-Debe tratarse como identificador y no como variable numérica.
-
----
-
-## 5.2 EXPEDIENTE
-
-**Nombre técnico:** `EXPEDIENTE`
-
-**Descripción:**  
-Identificador administrativo disponible en información de la SCVS.
-
-**Tipo:**  
-Identificador.
-
-**Fuente:**  
-SCVS.
-
-**Uso en modelado:**  
-No.
-
-**Uso:**  
-Trazabilidad y validación.
-
----
-
-## 5.3 NOMBRE
-
-**Nombre técnico:** `NOMBRE`
-
-**Descripción:**  
-Nombre o razón social de la empresa.
-
-**Tipo:**  
-Texto.
-
-**Fuente:**  
-SCVS.
-
-**Uso en modelado:**  
-No.
-
-**Uso potencial:**  
-Presentación de resultados y validación posterior.
-
-**Consideración:**  
-No debe utilizarse como predictor porque podría introducir información no relacionada con la situación financiera de la empresa.
-
----
-
-## 5.4 ANIO
-
-**Nombre técnico:** `ANIO`
-
-**Descripción:**  
-Año correspondiente a la observación financiera.
-
-**Tipo:**  
-Entero.
-
-**Fuente:**  
-Derivado del período del estado financiero.
-
-**Uso en modelado:**  
-No se utiliza directamente como predictor en el Baseline v1.
-
-**Uso en pipeline:**  
-Sí.
-
-**Finalidad:**
-
-- construir la unidad empresa-año;
-- ordenar temporalmente;
+- mantener la secuencia temporal;
+- generar rezagos;
 - construir el target;
-- definir TRAIN, VALIDATION y TEST.
+- asignar los splits;
+- seleccionar la observación operacional 2023.
 
 ---
 
-## 5.5 PLAN_CONTABLE
+## 5.2 `EXPEDIENTE_KEY`
 
-**Nombre técnico:** `PLAN_CONTABLE`
+**Descripción:** identificador estable utilizado para relacionar una empresa entre datasets y componentes operacionales.
 
-**Descripción:**  
-Identifica la estructura contable de origen utilizada en determinado archivo o período.
+**Tipo:** entero / identificador.
 
-**Tipo:**  
-Categórica.
+**Uso como predictor:** no.
 
-**Fuente:**  
-Proceso de inventario y homologación de SCVS.
+**Uso operacional:** sí.
 
-**Valores principales utilizados:**
+Es la clave principal utilizada por:
 
-- `PLAN_622`
-- `PLAN_639`
-- `PLAN_807`
-- `PLAN_819`
-- `PLAN_830`
-- `PLAN_868`
-- `PLAN_925`
+- ranking operacional;
+- API;
+- PostgreSQL;
+- explicabilidad individual;
+- similitud con emisores.
 
-**Uso en modelado:**  
-No.
-
-**Uso:**  
-Trazabilidad y control de calidad.
-
-**Justificación de exclusión:**  
-El modelo no debe aprender diferencias administrativas o históricas asociadas con cambios de formato contable.
+No debe interpretarse como característica empresarial.
 
 ---
 
-## 5.6 SPLIT
+## 5.3 `RUC`
 
-**Nombre técnico:** `SPLIT`
+**Descripción:** Registro Único de Contribuyentes de la empresa.
 
-**Descripción:**  
-Identifica el conjunto temporal al que pertenece cada observación.
+**Tipo:** texto / identificador.
 
-**Tipo:**  
-Categórica.
+**Uso como predictor:** no.
+
+**Uso operacional:** sí.
+
+Permite:
+
+- identificar empresas;
+- búsqueda;
+- integración entre fuentes;
+- validación;
+- presentación en la ficha.
+
+Debe conservarse como texto para evitar pérdida de formato.
+
+---
+
+## 5.4 `NOMBRE`
+
+**Descripción:** razón social de la empresa.
+
+**Tipo:** texto.
+
+**Uso como predictor:** no.
+
+**Uso operacional:** sí.
+
+Se utiliza para:
+
+- presentación;
+- búsqueda;
+- validación.
+
+No se utiliza como predictor para evitar que el modelo aprenda patrones asociados al texto del nombre.
+
+---
+
+## 5.5 `SPLIT`
+
+**Descripción:** identifica el conjunto temporal asignado a la observación.
+
+**Tipo:** categórica metodológica.
+
+**Valores vigentes de v10:**
+
+| Valor | Período |
+|---|---|
+| `TRAIN` | 2012–2018 |
+| `EMBARGO1` | 2019 |
+| `VALIDATION` | 2020 |
+| `EMBARGO2` | 2021 |
+| `TEST` | 2022–2023 |
+
+**Uso como predictor:** no.
+
+**Uso metodológico:** sí.
+
+La división temporal fue congelada antes de la apertura final de TEST.
+
+---
+
+## 5.6 `provincia`
+
+**Descripción:** provincia registrada para la empresa.
+
+**Tipo:** categórica / texto.
+
+**Uso como predictor:** **no**.
+
+**Uso operacional:** sí.
+
+Se utiliza para:
+
+- filtros;
+- análisis descriptivo;
+- análisis de concentración;
+- revisión de sesgos;
+- presentación.
+
+La provincia permanece expresamente fuera de las 25 variables predictivas del modelo v10.
+
+---
+
+# 6. Variable objetivo
+
+## 6.1 `TARGET_24M`
+
+**Descripción:** indica si una empresa que todavía no era emisora en la fecha de decisión correspondiente se registra por primera vez como emisor dentro de los siguientes 24 meses.
+
+**Tipo:** binaria.
 
 **Valores:**
 
-- `TRAIN`
-- `VALIDATION`
-- `TEST`
+- `1`: ocurre la primera inscripción dentro del horizonte;
+- `0`: no ocurre dentro del horizonte.
 
-**Asignación actual:**
+**Fuente:** Registro del Mercado de Valores.
 
-- TRAIN: 2015–2020
-- VALIDATION: 2021
-- TEST: 2022–2023
+**Uso como predictor:** no.
 
-**Uso en modelado:**  
-No como predictor.
+**Uso:** entrenamiento y evaluación.
 
-**Uso metodológico:**  
-Sí.
+### Regla temporal
 
----
+Para cada observación empresa-año:
 
-# 6. Variables financieras base
+1. la empresa debe ser elegible en el momento de decisión;
+2. no debe ser ya emisor;
+3. el evento positivo se determina únicamente con la primera inscripción dentro del horizonte futuro definido.
 
-## 6.1 ACTIVO_TOTAL
+El target nunca forma parte del vector predictivo.
 
-**Nombre técnico:** `ACTIVO_TOTAL`
-
-**Descripción:**  
-Valor total de los activos de la empresa.
-
-**Tipo:**  
-Numérica continua.
-
-**Unidad:**  
-Monetaria, según los valores reportados en la fuente.
-
-**Fuente:**  
-Estados financieros SCVS.
-
-**Transformación:**  
-Homologación entre diferentes planes contables.
-
-**Disponibilidad en dataset armonizado:**  
-Completa para las observaciones procesadas.
-
-**Uso directo en Baseline v1:**  
-No.
-
-**Variable derivada utilizada:**  
-`LOG_ACTIVO_TOTAL`
+En el producto operacional el target no se expone al usuario.
 
 ---
 
-## 6.2 ACTIVO_CORRIENTE
+# 7. Protocolo temporal v10
 
-**Nombre técnico:** `ACTIVO_CORRIENTE`
+La división congelada utilizada por el proyecto es:
 
-**Descripción:**  
-Total de activos clasificados como corrientes.
+| Conjunto | Período | Observaciones | Positivos |
+|---|---:|---:|---:|
+| TRAIN | 2012–2018 | 470.722 | 407 |
+| EMBARGO 1 | 2019 | 91.934 | 34 |
+| VALIDATION | 2020 | 98.471 | 34 |
+| EMBARGO 2 | 2021 | 109.099 | 39 |
+| TEST | 2022–2023 | 260.445 | 54 |
 
-**Tipo:**  
-Numérica continua.
-
-**Fuente:**  
-Estados financieros SCVS.
-
-**Transformación:**  
-Homologación contable.
-
-**Disponibilidad:**  
-Completa en el dataset armonizado.
-
-**Uso directo en Baseline v1:**  
-No.
-
-**Variables derivadas:**
-
-- `LOG_ACTIVO_CORRIENTE`
-- `LIQUIDEZ_CORRIENTE`
+Los períodos de embargo permiten reducir el riesgo de contaminación temporal alrededor de los períodos de evaluación.
 
 ---
 
-## 6.3 EFECTIVO
+# 8. Variables financieras actuales
 
-**Nombre técnico:** `EFECTIVO`
+## 8.1 `activos_final`
 
-**Descripción:**  
-Efectivo y equivalentes de efectivo reportados por la empresa.
+**Descripción:** activos totales consolidados para el período actual.
 
-**Tipo:**  
-Numérica continua.
+**Tipo:** numérica continua.
 
-**Fuente:**  
-Estados financieros SCVS.
+**Unidad:** monetaria.
 
-**Transformación:**  
-Homologación contable.
+**Uso en modelo v10:** sí.
 
-**Disponibilidad:**  
-Completa en el dataset armonizado.
+**Uso en producto:** sí.
 
-**Variables derivadas:**
-
-- `LOG_EFECTIVO`
-- `EFECTIVO_ACTIVOS`
+Representa una medida de escala empresarial.
 
 ---
 
-## 6.4 PASIVO_TOTAL
+## 8.2 `patrimonio_final`
 
-**Nombre técnico:** `PASIVO_TOTAL`
+**Descripción:** patrimonio consolidado para el período actual.
 
-**Descripción:**  
-Valor total de las obligaciones de la empresa.
+**Tipo:** numérica continua.
 
-**Tipo:**  
-Numérica continua.
+**Unidad:** monetaria.
 
-**Fuente:**  
-Estados financieros SCVS.
+**Uso en modelo v10:** sí.
 
-**Transformación:**  
-Homologación contable.
+**Uso en producto:** sí.
 
-**Disponibilidad:**  
-Completa en el dataset armonizado.
-
-**Variables derivadas:**
-
-- `LOG_PASIVO_TOTAL`
-- `ENDEUDAMIENTO`
-- `PASIVO_CORRIENTE_PASIVO`
+Puede presentar valores no positivos. Esa condición se conserva adicionalmente mediante una bandera específica.
 
 ---
 
-## 6.5 PASIVO_CORRIENTE
+## 8.3 `bi_ingresos_ventas`
 
-**Nombre técnico:** `PASIVO_CORRIENTE`
+**Descripción:** ingresos por ventas correspondientes al período actual.
 
-**Descripción:**  
-Obligaciones clasificadas como corrientes.
+**Tipo:** numérica continua.
 
-**Tipo:**  
-Numérica continua.
+**Unidad:** monetaria.
 
-**Fuente:**  
-Estados financieros SCVS.
+**Uso en modelo v10:** sí.
 
-**Transformación:**  
-Homologación contable.
-
-**Disponibilidad:**  
-Completa en el dataset armonizado.
-
-**Variables derivadas:**
-
-- `LOG_PASIVO_CORRIENTE`
-- `LIQUIDEZ_CORRIENTE`
-- `PASIVO_CORRIENTE_PASIVO`
+**Uso en producto:** sí.
 
 ---
 
-## 6.6 PASIVO_NO_CORRIENTE
+## 8.4 `bi_n_empleados`
 
-**Nombre técnico:** `PASIVO_NO_CORRIENTE`
+**Descripción:** número de empleados disponible para la empresa en el período actual.
 
-**Descripción:**  
-Obligaciones clasificadas como no corrientes.
+**Tipo:** numérica.
 
-**Tipo:**  
-Numérica continua.
+**Unidad:** personas.
 
-**Fuente:**  
-Estados financieros SCVS.
+**Uso en modelo v10:** sí.
 
-**Transformación:**  
-Homologación contable.
+**Uso en producto:** sí.
 
-**Disponibilidad:**  
-Completa en el dataset armonizado.
-
-**Variable derivada:**  
-`LOG_PASIVO_NO_CORRIENTE`
+Dispone de controles de calidad específicos debido a posibles anomalías o saltos temporales.
 
 ---
 
-## 6.7 PATRIMONIO
+# 9. Variables rezagadas `t-1`
 
-**Nombre técnico:** `PATRIMONIO`
+Estas variables representan información correspondiente al período anual inmediatamente anterior cuando existe información histórica compatible.
 
-**Descripción:**  
-Valor patrimonial reportado por la empresa.
+## 9.1 `activos_final_t1`
 
-**Tipo:**  
-Numérica continua.
+**Descripción:** activos del período anterior.
 
-**Fuente:**  
-Estados financieros SCVS.
+**Tipo:** numérica continua.
 
-**Transformación:**  
-Homologación contable.
-
-**Disponibilidad:**  
-Completa en el dataset armonizado.
-
-**Variables derivadas:**
-
-- `LOG_PATRIMONIO`
-- `AUTONOMIA_FINANCIERA`
+**Uso en modelo:** sí.
 
 ---
 
-## 6.8 CAPITAL
+## 9.2 `patrimonio_final_t1`
 
-**Nombre técnico:** `CAPITAL`
+**Descripción:** patrimonio del período anterior.
 
-**Descripción:**  
-Capital registrado dentro del estado financiero.
+**Tipo:** numérica continua.
 
-**Tipo:**  
-Numérica continua.
-
-**Fuente:**  
-Estados financieros SCVS.
-
-**Transformación:**  
-Homologación contable.
-
-**Disponibilidad:**  
-Completa en el dataset armonizado.
-
-**Variables derivadas:**
-
-- `LOG_CAPITAL`
-- `CAPITAL_ACTIVOS`
+**Uso en modelo:** sí.
 
 ---
 
-## 6.9 UTILIDAD_NETA
+## 9.3 `bi_ingresos_ventas_t1`
 
-**Nombre técnico:** `UTILIDAD_NETA`
+**Descripción:** ingresos por ventas del período anterior.
 
-**Descripción:**  
-Resultado neto del período correspondiente a la empresa.
+**Tipo:** numérica continua.
 
-**Tipo:**  
-Numérica continua.
-
-**Fuente:**  
-Estados financieros SCVS.
-
-**Transformación:**  
-Homologación contable.
-
-**Disponibilidad:**  
-Completa en el dataset armonizado.
-
-**Variables derivadas:**
-
-- `LOG_UTILIDAD_NETA`
-- `ROA`
-
-**Consideración:**  
-Puede presentar valores negativos cuando la empresa registra pérdida.
+**Uso en modelo:** sí.
 
 ---
 
-# 7. Variables monetarias transformadas
+## 9.4 `bi_n_empleados_t1`
 
-Las variables financieras de magnitud monetaria utilizan una transformación logarítmica con signo.
+**Descripción:** número de empleados del período anterior.
 
-Transformación:
+**Tipo:** numérica.
 
-`sign(x) × log(1 + |x|)`
-
-Esta transformación permite:
-
-- reducir diferencias extremas de escala;
-- conservar valores negativos;
-- conservar el cero;
-- mantener información sobre la dirección del valor.
+**Uso en modelo:** sí.
 
 ---
 
-## 7.1 LOG_ACTIVO_TOTAL
+# 10. Indicadores financieros derivados
 
-**Origen:**  
-`ACTIVO_TOTAL`
+## 10.1 `fin_ratio_patrimonio_activos`
 
-**Tipo:**  
-Numérica continua.
+**Descripción:** relación entre patrimonio y activos.
 
-**Transformación:**  
-Logaritmo con signo.
+**Tipo:** numérica continua.
 
-**Uso en Baseline v1:**  
-Sí.
+**Interpretación conceptual:**
 
-**Valores faltantes:**  
-No esperados a partir de la variable base armonizada.
+`patrimonio / activos`
 
----
+**Uso en modelo:** sí.
 
-## 7.2 LOG_ACTIVO_CORRIENTE
-
-**Origen:**  
-`ACTIVO_CORRIENTE`
-
-**Tipo:**  
-Numérica continua.
-
-**Transformación:**  
-Logaritmo con signo.
-
-**Uso en Baseline v1:**  
-Sí.
+**Uso en producto:** sí.
 
 ---
 
-## 7.3 LOG_EFECTIVO
+## 10.2 `fin_roa`
 
-**Origen:**  
-`EFECTIVO`
+**Descripción:** indicador de rentabilidad sobre activos.
 
-**Tipo:**  
-Numérica continua.
+**Tipo:** numérica continua.
 
-**Transformación:**  
-Logaritmo con signo.
+**Interpretación conceptual:** relaciona utilidad neta con activos.
 
-**Uso en Baseline v1:**  
-Sí.
+**Uso en modelo:** sí.
 
----
+**Uso en producto:** sí.
 
-## 7.4 LOG_PASIVO_TOTAL
-
-**Origen:**  
-`PASIVO_TOTAL`
-
-**Tipo:**  
-Numérica continua.
-
-**Transformación:**  
-Logaritmo con signo.
-
-**Uso en Baseline v1:**  
-Sí.
+Puede ser negativo cuando el resultado neto es negativo.
 
 ---
 
-## 7.5 LOG_PASIVO_CORRIENTE
+## 10.3 `fin_margen_neto`
 
-**Origen:**  
-`PASIVO_CORRIENTE`
+**Descripción:** margen neto observado para la empresa.
 
-**Tipo:**  
-Numérica continua.
+**Tipo:** numérica continua.
 
-**Transformación:**  
-Logaritmo con signo.
+**Interpretación conceptual:** relaciona utilidad neta con ingresos por ventas.
 
-**Uso en Baseline v1:**  
-Sí.
+**Uso en modelo:** sí.
+
+**Uso en producto:** sí.
 
 ---
 
-## 7.6 LOG_PASIVO_NO_CORRIENTE
+## 10.4 `fin_rotacion_activos`
 
-**Origen:**  
-`PASIVO_NO_CORRIENTE`
+**Descripción:** relación entre actividad comercial y activos.
 
-**Tipo:**  
-Numérica continua.
+**Tipo:** numérica continua.
 
-**Transformación:**  
-Logaritmo con signo.
+**Interpretación conceptual:** relaciona ingresos por ventas con activos.
 
-**Uso en Baseline v1:**  
-Sí.
+**Uso en modelo:** sí.
+
+**Uso en producto:** sí.
 
 ---
 
-## 7.7 LOG_PATRIMONIO
+## 10.5 `fin_roe`
 
-**Origen:**  
-`PATRIMONIO`
+**Descripción:** indicador de rentabilidad sobre patrimonio.
 
-**Tipo:**  
-Numérica continua.
+**Tipo:** numérica continua.
 
-**Transformación:**  
-Logaritmo con signo.
+**Interpretación conceptual:** relaciona utilidad neta con patrimonio cuando el denominador permite una medición válida.
 
-**Uso en Baseline v1:**  
-Sí.
+**Uso en modelo:** sí.
+
+**Uso en producto:** sí.
 
 ---
 
-## 7.8 LOG_CAPITAL
+# 11. Variables de crecimiento
 
-**Origen:**  
-`CAPITAL`
+Las variables de crecimiento utilizan información de los períodos actual y anterior.
 
-**Tipo:**  
-Numérica continua.
+Su cálculo se realiza dentro del builder:
 
-**Transformación:**  
-Logaritmo con signo.
+`src/features/build_v10_financial_features.py`
 
-**Uso en Baseline v1:**  
-Sí.
+Las reglas de construcción preservan valores faltantes cuando no existe información histórica suficiente o cuando una operación no puede calcularse de forma válida.
 
----
+## 11.1 `fin_crecimiento_activos`
 
-## 7.9 LOG_UTILIDAD_NETA
+**Descripción:** variación relativa de activos entre el período actual y `t-1`.
 
-**Origen:**  
-`UTILIDAD_NETA`
+**Tipo:** numérica continua.
 
-**Tipo:**  
-Numérica continua.
-
-**Transformación:**  
-Logaritmo con signo.
-
-**Uso en Baseline v1:**  
-Sí.
-
-**Consideración:**  
-La transformación preserva el signo de pérdidas y utilidades.
+**Uso en modelo:** sí.
 
 ---
 
-# 8. Razones financieras
+## 11.2 `fin_crecimiento_patrimonio`
 
-## 8.1 LIQUIDEZ_CORRIENTE
+**Descripción:** variación relativa del patrimonio entre el período actual y `t-1`.
 
-**Nombre técnico:**  
-`LIQUIDEZ_CORRIENTE`
+**Tipo:** numérica continua.
 
-**Descripción:**  
-Relación entre activo corriente y pasivo corriente.
-
-**Fórmula:**
-
-`ACTIVO_CORRIENTE / PASIVO_CORRIENTE`
-
-**Tipo:**  
-Numérica continua.
-
-**Unidad:**  
-Razón.
-
-**Disponibilidad aproximada:**  
-68,04 %.
-
-**Valores faltantes:**  
-Se producen principalmente cuando el denominador no permite calcular una razón válida.
-
-**Tratamiento en modelo:**  
-Imputación mediante mediana calculada exclusivamente en TRAIN.
-
-**Uso en Baseline v1:**  
-Sí.
+**Uso en modelo:** sí.
 
 ---
 
-## 8.2 ENDEUDAMIENTO
+## 11.3 `fin_crecimiento_ventas`
 
-**Nombre técnico:**  
-`ENDEUDAMIENTO`
+**Descripción:** variación relativa de ingresos por ventas entre el período actual y `t-1`.
 
-**Descripción:**  
-Proporción de activos financiada mediante pasivos.
+**Tipo:** numérica continua.
 
-**Fórmula:**
-
-`PASIVO_TOTAL / ACTIVO_TOTAL`
-
-**Tipo:**  
-Numérica continua.
-
-**Unidad:**  
-Proporción.
-
-**Disponibilidad aproximada:**  
-95,81 %.
-
-**Tratamiento de faltantes:**  
-Imputación mediante mediana de TRAIN.
-
-**Uso en Baseline v1:**  
-Sí.
+**Uso en modelo:** sí.
 
 ---
 
-## 8.3 AUTONOMIA_FINANCIERA
+## 11.4 `fin_crecimiento_empleados`
 
-**Nombre técnico:**  
-`AUTONOMIA_FINANCIERA`
+**Descripción:** variación relativa del número de empleados entre el período actual y `t-1`.
 
-**Descripción:**  
-Proporción del activo financiada mediante patrimonio.
+**Tipo:** numérica continua.
 
-**Fórmula:**
-
-`PATRIMONIO / ACTIVO_TOTAL`
-
-**Tipo:**  
-Numérica continua.
-
-**Unidad:**  
-Proporción.
-
-**Disponibilidad aproximada:**  
-95,81 %.
-
-**Tratamiento de faltantes:**  
-Mediana de TRAIN.
-
-**Uso en Baseline v1:**  
-Sí.
+**Uso en modelo:** sí.
 
 ---
 
-## 8.4 ROA
+# 12. Variables booleanas y de calidad utilizadas por el modelo
 
-**Nombre técnico:**  
-`ROA`
+## 12.1 `TIENE_T_MENOS_1`
 
-**Descripción:**  
-Relación entre utilidad neta y activos.
+**Descripción:** indica disponibilidad de información compatible del período anterior.
 
-**Fórmula:**
+**Tipo:** booleana.
 
-`UTILIDAD_NETA / ACTIVO_TOTAL`
+**Uso en modelo:** sí.
 
-**Tipo:**  
-Numérica continua.
-
-**Unidad:**  
-Proporción.
-
-**Disponibilidad aproximada:**  
-95,81 %.
-
-**Tratamiento de faltantes:**  
-Mediana de TRAIN.
-
-**Uso en Baseline v1:**  
-Sí.
-
-**Consideración:**  
-Puede tomar valores negativos cuando existe pérdida neta.
+Permite que el modelo distinga entre una observación con y sin historia anual previa disponible.
 
 ---
 
-## 8.5 EFECTIVO_ACTIVOS
+## 12.2 `flag_activos_negativos`
 
-**Nombre técnico:**  
-`EFECTIVO_ACTIVOS`
+**Descripción:** identifica observaciones con activos negativos.
 
-**Descripción:**  
-Participación del efectivo dentro del total de activos.
+**Tipo:** booleana.
 
-**Fórmula:**
+**Uso en modelo:** sí.
 
-`EFECTIVO / ACTIVO_TOTAL`
-
-**Tipo:**  
-Numérica continua.
-
-**Disponibilidad aproximada:**  
-95,81 %.
-
-**Tratamiento de faltantes:**  
-Mediana de TRAIN.
-
-**Uso en Baseline v1:**  
-Sí.
+**Finalidad:** conservar explícitamente una condición atípica de calidad o consistencia.
 
 ---
 
-## 8.6 CAPITAL_ACTIVOS
+## 12.3 `flag_ventas_negativas`
 
-**Nombre técnico:**  
-`CAPITAL_ACTIVOS`
+**Descripción:** identifica observaciones con ingresos por ventas negativos.
 
-**Descripción:**  
-Relación entre capital y activos totales.
+**Tipo:** booleana.
 
-**Fórmula:**
-
-`CAPITAL / ACTIVO_TOTAL`
-
-**Tipo:**  
-Numérica continua.
-
-**Disponibilidad aproximada:**  
-95,81 %.
-
-**Tratamiento de faltantes:**  
-Mediana de TRAIN.
-
-**Uso en Baseline v1:**  
-Sí.
+**Uso en modelo:** sí.
 
 ---
 
-## 8.7 PASIVO_CORRIENTE_PASIVO
+## 12.4 `flag_empleados_fijo`
 
-**Nombre técnico:**  
-`PASIVO_CORRIENTE_PASIVO`
+**Descripción:** identifica patrones considerados anómalos o artificialmente constantes en la información de empleados según las reglas de preparación v10.
 
-**Descripción:**  
-Participación de las obligaciones corrientes dentro del pasivo total.
+**Tipo:** booleana.
 
-**Fórmula:**
-
-`PASIVO_CORRIENTE / PASIVO_TOTAL`
-
-**Tipo:**  
-Numérica continua.
-
-**Disponibilidad aproximada:**  
-71,03 %.
-
-**Tratamiento de faltantes:**  
-Mediana de TRAIN.
-
-**Uso en Baseline v1:**  
-Sí.
+**Uso en modelo:** sí.
 
 ---
 
-# 9. Variable sectorial
+## 12.5 `flag_empleados_salto_temporal`
 
-## 9.1 SECTOR_CIIU
+**Descripción:** identifica cambios temporales atípicos en la serie de número de empleados.
 
-**Nombre técnico:**  
-`SECTOR_CIIU`
+**Tipo:** booleana.
 
-**Descripción:**  
-Sección principal de la actividad económica de la empresa según clasificación CIIU.
-
-**Origen:**  
-Información empresarial SCVS.
-
-**Tipo:**  
-Categórica.
-
-**Construcción:**  
-Se utiliza la primera sección de la clasificación CIIU.
-
-**Disponibilidad aproximada:**  
-99,98 %.
-
-**Tratamiento de faltantes:**  
-Imputación mediante la categoría más frecuente calculada en TRAIN.
-
-**Transformación en Baseline v1:**  
-One-Hot Encoding.
-
-**Configuración:**  
-`handle_unknown="ignore"`
-
-**Uso en Baseline v1:**  
-Sí.
-
-**Uso en Baseline v2:**  
-No.
-
-**Consideración metodológica:**  
-El análisis mostró diferencias importantes en la cantidad de eventos positivos entre sectores.
-
-Por esta razón se evaluó un Baseline v2 eliminando completamente `SECTOR_CIIU`.
-
-El Baseline v2 no mejoró las métricas prioritarias y se mantuvo la variable sectorial dentro del Baseline v1.
+**Uso en modelo:** sí.
 
 ---
 
-# 10. Variable objetivo
+## 12.6 `flag_empleados_anomalia_total`
 
-## 10.1 TARGET_24M
+**Descripción:** indicador consolidado de anomalía en información de empleados.
 
-**Nombre técnico:**  
-`TARGET_24M`
+**Tipo:** booleana.
 
-**Descripción:**  
-Indica si una empresa elegible se registra por primera vez como emisor dentro de los siguientes 24 meses.
-
-**Tipo:**  
-Binaria.
-
-**Valores:**
-
-- `0`
-- `1`
-
-**Fuente:**  
-Construida a partir del Registro del Mercado de Valores de la SCVS.
-
-**Evento utilizado:**  
-Primera inscripción como emisor.
-
-**Uso en modelado:**  
-Variable objetivo.
-
-**Uso como predictor:**  
-No.
+**Uso en modelo:** sí.
 
 ---
 
-## 11. Regla temporal de TARGET_24M
+## 12.7 `flag_patrimonio_no_positivo`
 
-Para una empresa y año `t`, se considera positiva cuando:
+**Descripción:** identifica observaciones en las que el patrimonio es menor o igual a cero.
 
-1. la empresa todavía no era emisora al 31 de diciembre de `t`; y
-2. su primera inscripción ocurre después de esa fecha y hasta el 31 de diciembre de `t + 2`.
+**Tipo:** booleana.
 
-Las empresas que ya eran emisoras son excluidas del universo prospectable.
+**Uso en modelo:** sí.
 
----
-
-## 12. Distribución de TARGET_24M
-
-Dataset etiquetado:
-
-| Indicador | Valor |
-|---|---:|
-| Observaciones | 884.072 |
-| Positivos | 440 |
-| Negativos | 883.632 |
-| Prevalencia | 0,0498 % |
-
-La variable objetivo presenta un desbalance extremo.
+Permite conservar explícitamente una condición relevante para interpretar determinados indicadores patrimoniales.
 
 ---
 
-## 13. Distribución anual de positivos
+# 13. Variable categórica del modelo
 
-| Año | Positivos |
-|---|---:|
-| 2015 | 39 |
-| 2016 | 58 |
-| 2017 | 93 |
-| 2018 | 78 |
-| 2019 | 39 |
-| 2020 | 33 |
-| 2021 | 42 |
-| 2022 | 36 |
-| 2023 | 22 |
-| **Total** | **440** |
+## 13.1 `tipo_compania`
 
-La frecuencia de nuevos emisores cambia a lo largo del período.
+**Descripción:** forma societaria registrada para la empresa.
 
----
+**Tipo:** categórica.
 
-# 14. Resumen de variables utilizadas por Baseline v1
+**Uso en modelo:** sí.
 
-El Baseline v1 utiliza 17 variables predictoras.
+**Uso en producto:** sí.
 
-### Numéricas
+La variable se procesa como categoría nativa del modelo.
 
-1. `LOG_ACTIVO_TOTAL`
-2. `LOG_ACTIVO_CORRIENTE`
-3. `LOG_EFECTIVO`
-4. `LOG_PASIVO_TOTAL`
-5. `LOG_PASIVO_CORRIENTE`
-6. `LOG_PASIVO_NO_CORRIENTE`
-7. `LOG_PATRIMONIO`
-8. `LOG_CAPITAL`
-9. `LOG_UTILIDAD_NETA`
-10. `LIQUIDEZ_CORRIENTE`
-11. `ENDEUDAMIENTO`
-12. `AUTONOMIA_FINANCIERA`
-13. `ROA`
-14. `EFECTIVO_ACTIVOS`
-15. `CAPITAL_ACTIVOS`
-16. `PASIVO_CORRIENTE_PASIVO`
+Las categorías utilizadas durante inferencia se alinean con las categorías observadas en TRAIN.
 
-### Categórica
-
-17. `SECTOR_CIIU`
+Las categorías posteriores no deben redefinir retrospectivamente el vocabulario utilizado durante el entrenamiento de v10.
 
 ---
 
-# 15. Resumen de tratamiento de faltantes
+# 14. Vector predictivo final v10
 
-## Variables monetarias transformadas
+El modelo final utiliza exactamente:
 
-Las variables base homologadas presentan cobertura completa dentro del dataset armonizado utilizado.
+`25 variables`
 
-No se espera ausencia sistemática en sus transformaciones logarítmicas.
+distribuidas en:
 
----
+- `17` numéricas;
+- `7` booleanas;
+- `1` categórica.
 
-## Razones financieras
+## 14.1 Variables numéricas
 
-Los valores faltantes se mantienen cuando una razón no puede calcularse adecuadamente, principalmente por condiciones asociadas con el denominador.
+1. `activos_final`
+2. `patrimonio_final`
+3. `bi_ingresos_ventas`
+4. `bi_n_empleados`
+5. `activos_final_t1`
+6. `patrimonio_final_t1`
+7. `bi_ingresos_ventas_t1`
+8. `bi_n_empleados_t1`
+9. `fin_ratio_patrimonio_activos`
+10. `fin_roa`
+11. `fin_margen_neto`
+12. `fin_rotacion_activos`
+13. `fin_roe`
+14. `fin_crecimiento_activos`
+15. `fin_crecimiento_patrimonio`
+16. `fin_crecimiento_ventas`
+17. `fin_crecimiento_empleados`
 
-No se reemplazan artificialmente durante la etapa de construcción de features.
+## 14.2 Variables booleanas
 
-Durante el modelado se utiliza:
+18. `TIENE_T_MENOS_1`
+19. `flag_activos_negativos`
+20. `flag_ventas_negativas`
+21. `flag_empleados_fijo`
+22. `flag_empleados_salto_temporal`
+23. `flag_empleados_anomalia_total`
+24. `flag_patrimonio_no_positivo`
 
-`SimpleImputer(strategy="median")`
+## 14.3 Variable categórica
 
-El imputador se ajusta exclusivamente con TRAIN.
+25. `tipo_compania`
 
----
-
-## Variable sectorial
-
-Para `SECTOR_CIIU` se utiliza:
-
-`SimpleImputer(strategy="most_frequent")`
-
-ajustado exclusivamente con TRAIN.
-
----
-
-# 16. Escalamiento
-
-Las variables numéricas utilizadas por la regresión logística son transformadas mediante:
-
-`StandardScaler`
-
-El escalador se ajusta exclusivamente con TRAIN.
-
-Los parámetros calculados sobre TRAIN se aplican posteriormente a VALIDATION y TEST.
-
----
-
-# 17. Variables excluidas del modelo
-
-Las siguientes variables no forman parte del vector predictivo del Baseline v1:
-
-- `RUC`
-- `EXPEDIENTE`
-- `NOMBRE`
-- `ANIO`
-- `PLAN_CONTABLE`
-- `SPLIT`
-- `TARGET_24M`
-- fechas relacionadas con la inscripción como emisor.
+Este orden debe mantenerse consistente con el artefacto congelado.
 
 ---
 
-# 18. Razones de exclusión
+# 15. Modelo final asociado al diccionario
 
-## Identificadores
+**Nombre:**
 
-`RUC`, `EXPEDIENTE` y `NOMBRE` identifican a la empresa, pero no representan características financieras que se desee generalizar.
+`v10_hgb_financial_c3`
+
+**Configuración:**
+
+`C3_CONSERVATIVE`
+
+**Algoritmo:**
+
+`HistGradientBoostingClassifier`
+
+**Artefacto:**
+
+`models/v10/v10_hgb_financial_c3_final.joblib`
+
+El artefacto registra:
+
+- modelo;
+- nombre del modelo;
+- configuración;
+- lista de features;
+- variables numéricas;
+- variables booleanas;
+- variable categórica;
+- target;
+- período de entrenamiento;
+- período de TEST.
+
+El modelo permanece congelado.
+
+Ninguna modificación posterior del frontend, SHAP o motor de similitud cambia estas 25 variables.
 
 ---
 
-## ANIO
+# 16. Tratamiento de tipos y faltantes
 
-Se utiliza para construir la separación temporal, pero no se incorpora directamente como predictor en el Baseline v1.
+## 16.1 Variables numéricas
 
----
+Las variables numéricas se convierten al tipo requerido por el modelo.
 
-## PLAN_CONTABLE
+Los valores infinitos se normalizan como faltantes antes de procesos como explicabilidad.
 
-Se conserva para trazabilidad, pero se excluye para evitar que el modelo aprenda diferencias derivadas de cambios administrativos o históricos en las estructuras de reporte.
+El modelo final conserva la lógica validada de v10 para trabajar con valores faltantes.
 
----
+No debe aplicarse retrospectivamente la estrategia histórica del Baseline v1 basada en:
 
-## SPLIT
+`SimpleImputer + StandardScaler`
 
-Es una variable metodológica utilizada exclusivamente para controlar la evaluación.
-
----
-
-## TARGET_24M
-
-Es la variable objetivo y nunca debe utilizarse como predictor.
+porque esa descripción corresponde a una etapa anterior y no al modelo final v10.
 
 ---
 
-## Fechas futuras
+## 16.2 Variables booleanas
 
-Las fechas utilizadas para determinar el evento futuro no forman parte de las variables predictoras.
+Se conservan conceptualmente como:
+
+- `0`;
+- `1`;
+- valor faltante cuando corresponda.
 
 ---
 
-# 19. Control de data leakage
+## 16.3 Variable categórica
 
-La selección y tratamiento de variables busca evitar que el modelo acceda a información futura.
+`tipo_compania`
 
-Los principales controles son:
+se procesa con categorías provenientes de TRAIN.
+
+---
+
+# 17. Variables expresamente excluidas del modelo v10
+
+No forman parte del vector predictivo:
+
+- `ANIO`;
+- `EXPEDIENTE_KEY`;
+- `RUC`;
+- `NOMBRE`;
+- `SPLIT`;
+- `provincia`;
+- `TARGET_24M`;
+- fechas de inscripción;
+- ranking;
+- score;
+- percentiles;
+- variables de similitud;
+- datos obtenidos después de la fecha de decisión.
+
+También fueron excluidos preventivamente durante la construcción de v10 campos administrativos o con riesgo de leakage, entre ellos:
+
+- `cia_imvalores`;
+- `id_estado_financiero`;
+- `posicion_general`.
+
+---
+
+# 18. Control de data leakage
+
+Los principales controles de v10 son:
 
 - separación temporal;
-- preprocesamiento ajustado únicamente con TRAIN;
-- exclusión de información posterior al corte;
-- exclusión de empresas que ya eran emisoras;
-- exclusión del target como predictor;
-- exclusión de fechas futuras;
-- exclusión de información derivada directamente del resultado.
+- períodos de embargo;
+- target construido hacia adelante;
+- exclusión de empresas que ya eran emisoras al momento correspondiente;
+- exclusión del target y fechas futuras del vector predictivo;
+- categorías de `tipo_compania` aprendidas desde TRAIN;
+- construcción de rezagos únicamente con información histórica;
+- congelamiento del modelo antes de TEST;
+- no utilización de eventos posteriores para alterar retrospectivamente el ranking operacional.
+
+La información posterior a la fecha de decisión puede utilizarse para evaluación retrospectiva, pero no para modificar el resultado histórico.
 
 ---
 
-# 20. Limitación temporal pendiente
+# 19. Ranking operacional
 
-Actualmente se utiliza el año fiscal como referencia para construir las observaciones.
+El producto actual utiliza:
 
-Existe una diferencia potencial entre:
+`ANIO = 2023`
 
-- fecha de cierre del estado financiero;
-- fecha de presentación;
-- fecha de publicación;
-- fecha real en que la información estuvo disponible.
+Fecha de decisión:
 
-Esta diferencia deberá investigarse en siguientes etapas para fortalecer el control de leakage temporal.
+`2024-05-01`
 
----
+Universo prospectable:
 
-# 21. Variables planificadas
+`137.156 empresas`
 
-Todavía no forman parte del dataset actual, pero se encuentran priorizadas para siguientes iteraciones.
+Archivo:
 
-## Variables de crecimiento
+`data/processed/v10_operational_ranking_2024_05_01.csv.gz`
 
-Se evaluarán:
+El score se presenta en la interfaz como:
 
-- crecimiento de activos;
-- crecimiento de patrimonio;
-- crecimiento de capital;
-- crecimiento de utilidad;
-- crecimiento de efectivo.
+**Índice de Afinidad Bursátil**
+
+No representa una probabilidad calibrada.
 
 ---
 
-## Variables de tendencia
+# 20. Tabla `operational_prospects`
 
-Se evaluarán:
+PostgreSQL almacena una fila por empresa operacional.
 
-- tendencia de activos;
-- tendencia de patrimonio;
-- tendencia de endeudamiento;
-- tendencia de liquidez;
-- tendencia de rentabilidad;
-- crecimiento acumulado;
-- estabilidad de resultados.
+Tabla:
+
+`operational_prospects`
+
+Registros:
+
+`137.156`
+
+## 20.1 Identificación
+
+| Campo | Tipo lógico | Descripción |
+|---|---|---|
+| `expediente_key` | entero | Clave principal del prospecto |
+| `ruc` | texto | RUC de la empresa |
+| `nombre` | texto | Razón social |
+| `anio` | entero | Año financiero utilizado |
+| `fecha_decision` | fecha | Fecha de decisión operacional |
+| `tipo_compania` | texto | Forma societaria |
+| `provincia` | texto | Provincia registrada |
+
+## 20.2 Ranking
+
+| Campo | Tipo lógico | Descripción |
+|---|---|---|
+| `ranking` | entero | Posición global dentro del universo |
+| `score_afinidad` | decimal | Score generado por v10 |
+| `percentil_ranking` | decimal | Posición relativa dentro del universo |
+
+`score_afinidad` no debe interpretarse como una probabilidad.
+
+## 20.3 Calidad y cobertura
+
+| Campo | Tipo lógico | Descripción |
+|---|---|---|
+| `n_features_disponibles` | entero | Número de features consideradas disponibles |
+| `pct_features_disponibles` | decimal | Porcentaje de disponibilidad utilizado como señal de calidad |
+
+Estos campos describen cobertura.
+
+No modifican por sí mismos el score ya calculado.
+
+## 20.4 Información financiera expuesta
+
+| Campo | Tipo lógico |
+|---|---|
+| `activos_final` | decimal |
+| `patrimonio_final` | decimal |
+| `bi_ingresos_ventas` | decimal |
+| `bi_n_empleados` | decimal |
+| `fin_ratio_patrimonio_activos` | decimal |
+| `fin_roa` | decimal |
+| `fin_margen_neto` | decimal |
+| `fin_rotacion_activos` | decimal |
+| `fin_roe` | decimal |
+| `fin_crecimiento_activos` | decimal |
+| `fin_crecimiento_patrimonio` | decimal |
+| `fin_crecimiento_ventas` | decimal |
+| `fin_crecimiento_empleados` | decimal |
+
+## 20.5 Trazabilidad de modelo
+
+| Campo | Descripción |
+|---|---|
+| `modelo` | Nombre de la versión de modelo utilizada |
+| `configuracion_modelo` | Configuración del modelo |
 
 ---
 
-## Ventanas temporales
+# 21. Motor de similitud con emisores históricos
 
-Podrán construirse variables correspondientes a:
+La similitud es un componente independiente del modelo predictivo.
 
-- un año;
-- dos años;
-- tres años.
+No modifica:
 
-Todas deberán calcularse exclusivamente con información disponible antes de la fecha de corte.
+- `score_afinidad`;
+- ranking;
+- percentil.
+
+No existe una fórmula como:
+
+`afinidad + similitud`
+
+Las dos señales se presentan por separado.
+
+## 21.1 Variables de similitud
+
+El motor utiliza siete dimensiones:
+
+1. activos;
+2. patrimonio;
+3. ingresos por ventas;
+4. número de empleados;
+5. patrimonio / activos;
+6. ROA;
+7. rotación de activos.
+
+Las variables se llevan a percentiles anuales y posteriormente se calcula una distancia euclidiana.
+
+La similitud se expresa en una escala:
+
+`0–100`
+
+Una mayor similitud representa mayor cercanía financiera dentro de este espacio.
+
+No representa probabilidad de emisión.
 
 ---
 
-# 22. Variables provenientes de nuevas fuentes
+# 22. Tabla `issuer_similarity_summary`
 
-En fases posteriores podrán evaluarse variables provenientes de:
+Tabla:
 
-- otras fuentes de SCVS;
-- información interna de BVQ;
-- fuentes empresariales públicas;
-- variables sectoriales;
-- variables macroeconómicas.
+`issuer_similarity_summary`
+
+Registros:
+
+`137.156`
+
+| Campo | Tipo lógico | Descripción |
+|---|---|---|
+| `expediente_key` | entero | Empresa prospecto |
+| `comparables_disponibles` | booleano | Indica si fue posible calcular comparables |
+| `similitud_emisor_top1` | decimal | Similitud con el emisor histórico más cercano |
+| `similitud_emisores_top5_promedio` | decimal | Promedio de similitud de los cinco primeros comparables |
+| `distancia_emisor_top1` | decimal | Distancia del comparable más cercano |
+| `n_emisores_comparados` | entero | Número de perfiles evaluados |
+| `estado_similitud` | texto | Estado del cálculo |
+| `metodologia_similitud` | texto | Descripción metodológica registrada |
+
+Cobertura actual:
+
+- empresas con similitud calculable: `131.320`;
+- empresas sin información suficiente: `5.836`.
+
+La falta de similitud no elimina a una empresa del ranking.
+
+---
+
+# 23. Tabla `issuer_similarity_matches`
+
+Tabla:
+
+`issuer_similarity_matches`
+
+Registros:
+
+`656.600`
+
+Cada prospecto con información suficiente puede tener hasta cinco comparables históricos.
+
+| Campo | Descripción |
+|---|---|
+| `id` | Identificador del registro |
+| `expediente_key` | Prospecto analizado |
+| `ranking_v10` | Ranking del prospecto |
+| `score_afinidad` | Score v10 del prospecto |
+| `orden_comparable` | Posición del comparable, de 1 a 5 |
+| `similitud` | Índice de similitud 0–100 |
+| `distancia_percentiles` | Distancia euclidiana en el espacio de percentiles |
+| `emisor_expediente_key` | Identificador del emisor comparable |
+| `emisor_ruc` | RUC del emisor |
+| `emisor_nombre` | Nombre del emisor |
+| `emisor_anio_perfil` | Año del perfil financiero utilizado |
+| `emisor_fecha_decision_perfil` | Fecha de decisión asociada al perfil |
+| `emisor_fecha_primera_inscripcion` | Primera inscripción conocida como emisor |
+| `emisor_tipo_compania` | Tipo de compañía del emisor |
+| `emisor_provincia` | Provincia del emisor |
+| `mismo_tipo_compania` | Indica si prospecto y emisor comparten tipo societario |
+
+Los emisores utilizados como referencia deben ser conocidos hasta la fecha de decisión correspondiente.
+
+---
+
+# 24. Universo de referencia de similitud
+
+Para el corte:
+
+`2024-05-01`
+
+se identificaron:
+
+`288 emisores conocidos`
+
+De ellos:
+
+`272`
+
+disponían de perfiles completos para las siete variables requeridas.
+
+Los emisores posteriores al corte no se utilizan como referencia operacional.
+
+---
+
+# 25. Campos de explicabilidad SHAP
+
+La API de explicabilidad individual devuelve información asociada a cada factor.
+
+Los principales campos son:
+
+| Campo | Descripción |
+|---|---|
+| `feature` | Nombre técnico de la variable |
+| `label` | Nombre comprensible para el usuario |
+| `value` | Valor observado de la empresa |
+| `shap_value` | Contribución SHAP con signo |
+| `abs_shap_value` | Magnitud absoluta de la contribución |
+| `direction` | Sentido de la contribución |
+
+Valores de `direction` utilizados por el frontend:
+
+- `aumenta_afinidad`;
+- `reduce_afinidad`;
+- `sin_impacto`.
+
+SHAP explica cómo una variable contribuyó al score del modelo.
+
+No demuestra causalidad.
+
+---
+
+# 26. Etiquetas de negocio para explicabilidad
+
+La capa de presentación utiliza etiquetas comprensibles.
+
+| Variable técnica | Etiqueta |
+|---|---|
+| `activos_final` | Activos |
+| `patrimonio_final` | Patrimonio |
+| `bi_ingresos_ventas` | Ingresos por ventas |
+| `bi_n_empleados` | Número de empleados |
+| `activos_final_t1` | Activos del año anterior |
+| `patrimonio_final_t1` | Patrimonio del año anterior |
+| `bi_ingresos_ventas_t1` | Ingresos por ventas del año anterior |
+| `bi_n_empleados_t1` | Número de empleados del año anterior |
+| `fin_ratio_patrimonio_activos` | Relación patrimonio / activos |
+| `fin_roa` | ROA |
+| `fin_margen_neto` | Margen neto |
+| `fin_rotacion_activos` | Rotación de activos |
+| `fin_roe` | ROE |
+| `fin_crecimiento_activos` | Crecimiento de activos |
+| `fin_crecimiento_patrimonio` | Crecimiento de patrimonio |
+| `fin_crecimiento_ventas` | Crecimiento de ventas |
+| `fin_crecimiento_empleados` | Crecimiento de empleados |
+| `TIENE_T_MENOS_1` | Disponibilidad de información histórica |
+| `flag_activos_negativos` | Bandera de activos negativos |
+| `flag_ventas_negativas` | Bandera de ventas negativas |
+| `flag_empleados_fijo` | Bandera de empleados con valor fijo |
+| `flag_empleados_salto_temporal` | Bandera de salto temporal en empleados |
+| `flag_empleados_anomalia_total` | Bandera de anomalía en empleados |
+| `flag_patrimonio_no_positivo` | Bandera de patrimonio no positivo |
+| `tipo_compania` | Tipo de compañía |
+
+---
+
+# 27. Campos visibles en la interfaz
+
+La primera versión funcional del frontend presenta principalmente:
+
+### Ranking
+
+- ranking;
+- empresa;
+- provincia;
+- tipo de compañía;
+- Índice de Afinidad Bursátil;
+- percentil;
+- similitud con emisor;
+- calidad.
+
+### Ficha individual
+
+- razón social;
+- RUC;
+- provincia;
+- tipo de compañía;
+- ranking;
+- score;
+- percentil;
+- activos;
+- patrimonio;
+- ingresos por ventas;
+- empleados;
+- factores SHAP;
+- comparables históricos;
+- advertencias de interpretación.
+
+No todos los campos existentes en PostgreSQL deben mostrarse simultáneamente.
+
+La capa de presentación prioriza información útil para análisis comercial.
+
+---
+
+# 28. Diferencia entre datos de modelo y datos de producto
+
+Debe mantenerse la siguiente separación:
+
+| Tipo | Ejemplos | ¿Afecta el score? |
+|---|---|---|
+| Predictor v10 | activos, ventas, crecimiento, tipo compañía | Sí |
+| Identificación | RUC, nombre, expediente | No |
+| Contexto | provincia | No |
+| Resultado | score, ranking, percentil | Resultado del modelo |
+| Calidad | disponibilidad | No modifica retroactivamente el score |
+| Similitud | comparables, similitud 0–100 | No |
+| Explicabilidad | SHAP | Explica el score; no lo modifica |
+
+---
+
+# 29. Control de interpretación
+
+## 29.1 Score
+
+`score_afinidad`
+
+es una señal relativa de priorización.
+
+No es una probabilidad calibrada.
+
+## 29.2 Percentil
+
+`percentil_ranking`
+
+ubica relativamente a la empresa dentro del universo operacional.
+
+No representa probabilidad.
+
+## 29.3 Similitud
+
+La similitud mide cercanía de perfil financiero frente a emisores históricos.
+
+No constituye una predicción independiente.
+
+## 29.4 SHAP
+
+SHAP describe contribuciones al resultado del modelo.
+
+No demuestra causalidad.
+
+---
+
+# 30. Campos no expuestos como señales predictivas
+
+Los siguientes datos pueden existir en fuentes o procesos internos, pero no deben confundirse con variables del modelo:
+
+- RUC;
+- nombre;
+- expediente;
+- provincia;
+- fechas de inscripción;
+- ranking;
+- comparables;
+- similitud;
+- variables de interfaz;
+- campos administrativos;
+- eventos conocidos posteriormente.
+
+---
+
+# 31. Archivos operacionales
+
+Ranking:
+
+`data/processed/v10_operational_ranking_2024_05_01.csv.gz`
+
+Resumen de similitud:
+
+`data/processed/v10_issuer_similarity_summary_2024_05_01.csv.gz`
+
+Comparables:
+
+`data/processed/v10_issuer_similarity_matches_2024_05_01.csv.gz`
+
+Top 500 utilizado como salida de revisión:
+
+`reports/results/v10/product/v10_operational_top500_2024_05_01.csv`
+
+Los datasets operacionales contienen información empresarial y no forman parte del código fuente publicado.
+
+---
+
+# 32. Persistencia PostgreSQL
+
+La base operacional contiene:
+
+| Tabla | Registros |
+|---|---:|
+| `operational_prospects` | 137.156 |
+| `issuer_similarity_summary` | 137.156 |
+| `issuer_similarity_matches` | 656.600 |
+| **Total** | **930.912** |
+
+La base es utilizada por FastAPI.
+
+El frontend no consulta PostgreSQL directamente.
+
+---
+
+# 33. API y exposición de datos
+
+Los principales endpoints relacionados con este diccionario son:
+
+`GET /api/prospects`
+
+`GET /api/prospects/{expediente_key}`
+
+`GET /api/catalogs`
+
+`GET /api/explainability/global`
+
+`GET /api/explainability/prospects/{expediente_key}`
+
+La API funciona como capa de separación entre:
+
+- frontend;
+- PostgreSQL;
+- modelo;
+- servicios de explicabilidad.
+
+---
+
+# 34. Normalización de textos
+
+La capa operacional normaliza textos utilizados para presentación y filtros.
+
+Esto permite reducir diferencias producidas por:
+
+- espacios finales;
+- espacios internos repetidos;
+- inconsistencias menores de formato.
+
+La normalización de presentación no modifica retroactivamente las categorías con las que fue entrenado el modelo.
+
+---
+
+# 35. Calidad de información
+
+El proyecto conserva señales explícitas de calidad en dos niveles.
+
+### Nivel de features
+
+Banderas como:
+
+- activos negativos;
+- ventas negativas;
+- patrimonio no positivo;
+- anomalías de empleados;
+- disponibilidad de `t-1`.
+
+### Nivel de producto
+
+Campos como:
+
+- `n_features_disponibles`;
+- `pct_features_disponibles`.
+
+La calidad no debe utilizarse como regla automática de rechazo de una empresa.
+
+---
+
+# 36. Variables futuras
+
+El modelo v10 se encuentra congelado.
+
+Por tanto, variables nuevas no deben incorporarse retroactivamente.
+
+Posibles ampliaciones deberán evaluarse en una nueva versión, por ejemplo:
+
+`v11`
+
+Entre ellas podrían considerarse:
+
+- tendencias multianuales;
+- promedios móviles;
+- volatilidad;
+- información sectorial adicional;
+- variables macroeconómicas;
+- nuevas fuentes empresariales;
+- información interna BVQ con justificación metodológica.
 
 Toda nueva variable deberá documentar:
 
 - fuente;
 - fecha de disponibilidad;
-- período;
+- definición;
 - fórmula;
 - cobertura;
+- tratamiento de faltantes;
 - riesgo de leakage;
-- condiciones de uso;
-- tratamiento de faltantes.
+- justificación;
+- efecto sobre reproducibilidad.
 
 ---
 
-# 23. Resumen compacto del dataset de modelado
-
-| Variable | Tipo | Fuente / origen | Uso |
-|---|---|---|---|
-| `LOG_ACTIVO_TOTAL` | Numérica | `ACTIVO_TOTAL` | Predictor |
-| `LOG_ACTIVO_CORRIENTE` | Numérica | `ACTIVO_CORRIENTE` | Predictor |
-| `LOG_EFECTIVO` | Numérica | `EFECTIVO` | Predictor |
-| `LOG_PASIVO_TOTAL` | Numérica | `PASIVO_TOTAL` | Predictor |
-| `LOG_PASIVO_CORRIENTE` | Numérica | `PASIVO_CORRIENTE` | Predictor |
-| `LOG_PASIVO_NO_CORRIENTE` | Numérica | `PASIVO_NO_CORRIENTE` | Predictor |
-| `LOG_PATRIMONIO` | Numérica | `PATRIMONIO` | Predictor |
-| `LOG_CAPITAL` | Numérica | `CAPITAL` | Predictor |
-| `LOG_UTILIDAD_NETA` | Numérica | `UTILIDAD_NETA` | Predictor |
-| `LIQUIDEZ_CORRIENTE` | Numérica | Razón financiera | Predictor |
-| `ENDEUDAMIENTO` | Numérica | Razón financiera | Predictor |
-| `AUTONOMIA_FINANCIERA` | Numérica | Razón financiera | Predictor |
-| `ROA` | Numérica | Razón financiera | Predictor |
-| `EFECTIVO_ACTIVOS` | Numérica | Razón financiera | Predictor |
-| `CAPITAL_ACTIVOS` | Numérica | Razón financiera | Predictor |
-| `PASIVO_CORRIENTE_PASIVO` | Numérica | Razón financiera | Predictor |
-| `SECTOR_CIIU` | Categórica | SCVS / CIIU | Predictor |
-| `TARGET_24M` | Binaria | Registro Mercado de Valores | Target |
-
----
-
-# 24. Disponibilidad resumida
-
-| Variable | Disponibilidad aproximada |
-|---|---:|
-| Variables financieras base homologadas | 100 % |
-| Variables logarítmicas | 100 % |
-| `LIQUIDEZ_CORRIENTE` | 68,04 % |
-| `ENDEUDAMIENTO` | 95,81 % |
-| `AUTONOMIA_FINANCIERA` | 95,81 % |
-| `ROA` | 95,81 % |
-| `EFECTIVO_ACTIVOS` | 95,81 % |
-| `CAPITAL_ACTIVOS` | 95,81 % |
-| `PASIVO_CORRIENTE_PASIVO` | 71,03 % |
-| `SECTOR_CIIU` | 99,98 % |
-| `TARGET_24M` | 100 % en dataset etiquetado |
-
----
-
-# 25. Archivos relacionados
-
-Dataset armonizado:
-
-`data/interim/scvs_financials_harmonized_2015_2023.csv.gz`
-
-Dataset etiquetado:
-
-`data/processed/mvp_labeled_2015_2023.csv.gz`
-
-Dataset de features:
-
-`data/processed/mvp_features_2015_2023.csv.gz`
-
-Configuración de homologación:
-
-`config/scvs_account_mapping.csv`
-
-Construcción del dataset armonizado:
-
-`src/data/build_scvs_harmonized_dataset.py`
-
-Construcción del dataset etiquetado:
-
-`src/data/build_mvp_labeled_dataset.py`
-
-Ingeniería de variables:
-
-`src/features/build_mvp_features.py`
-
----
-
-# 26. Mantenimiento del diccionario
+# 37. Mantenimiento del diccionario
 
 Este documento deberá actualizarse cuando:
 
-- se incorpore una nueva variable;
-- se elimine una variable;
+- se incorpore una nueva versión del modelo;
+- cambie una variable;
 - cambie una fórmula;
 - cambie una fuente;
-- cambie el tratamiento de faltantes;
-- cambie la disponibilidad;
-- se incorporen variables temporales;
-- se agreguen nuevas fuentes;
-- se modifique la definición del target.
+- cambie una regla de temporalidad;
+- cambie la estructura operacional;
+- cambie el contrato de la API;
+- cambie una tabla PostgreSQL;
+- cambie la lógica de similitud;
+- cambie la salida de explicabilidad;
+- se agreguen nuevas variables de producto.
 
-Cada cambio relevante deberá quedar registrado también en la bitácora del proyecto.
+Los cambios relevantes deben registrarse también en la bitácora del proyecto.
 
 ---
 
-# 27. Estado actual
+# 38. Estado actual
 
-El diccionario documenta las variables utilizadas por el MVP y el Baseline v1.
+El diccionario vigente documenta:
 
-Actualmente se dispone de:
+- dataset v10 2012–2023;
+- target `TARGET_24M`;
+- protocolo temporal v10;
+- 25 predictores del modelo final;
+- variables actuales y `t-1`;
+- ratios financieros;
+- crecimiento;
+- banderas de calidad;
+- variable categórica `tipo_compania`;
+- exclusión de `provincia` del modelo;
+- ranking operacional;
+- score y percentil;
+- campos de calidad;
+- motor de similitud;
+- tablas PostgreSQL;
+- campos SHAP;
+- campos visibles en el frontend.
 
-- nueve variables financieras base homologadas;
-- nueve transformaciones logarítmicas;
-- siete razones financieras;
-- una variable sectorial;
-- una variable objetivo;
-- variables de identificación y trazabilidad.
+La referencia metodológica vigente es v10.
 
-Las siguientes iteraciones ampliarán este conjunto principalmente con variables temporales y de crecimiento.
+Los componentes correspondientes al antiguo MVP y Baseline v1 se conservan únicamente como evidencia histórica del proceso de desarrollo y no deben utilizarse para describir el modelo final.
