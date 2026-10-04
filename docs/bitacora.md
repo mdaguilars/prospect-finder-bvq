@@ -10,14 +10,25 @@ Su propósito es mantener trazabilidad sobre:
 - decisiones metodológicas;
 - experimentos ejecutados;
 - resultados relevantes;
-- aprendizajes obtenidos;
-- limitaciones identificadas;
-- riesgos metodológicos;
-- próximos ajustes.
+- aprendizajes;
+- limitaciones;
+- riesgos;
+- evolución del producto;
+- próximos pasos.
 
-La cronología utiliza como referencia los commits registrados en Git y GitHub.
+La cronología utiliza como referencia los commits registrados en Git y GitHub cuando estos se encuentran disponibles.
 
-El proyecto mantiene los resultados históricos de cada etapa sin reemplazarlos retrospectivamente. Cuando una modificación metodológica cambia el dataset, el target, las divisiones temporales o el protocolo de evaluación, los resultados anteriores se conservan como evidencia histórica, pero no se comparan directamente como si provinieran del mismo experimento.
+Los resultados históricos no se reemplazan retrospectivamente.
+
+Cuando cambia:
+
+- el dataset;
+- el target;
+- el protocolo temporal;
+- las variables;
+- la metodología de evaluación;
+
+los resultados anteriores se mantienen como evidencia histórica y no se comparan directamente como si correspondieran al mismo experimento.
 
 ---
 
@@ -35,7 +46,7 @@ Sistema inteligente basado en aprendizaje automático y redes neuronales para id
 
 ---
 
-# 3. Registro cronológico
+# 3. Etapa inicial del proyecto
 
 ## 3.1 Creación de la estructura inicial — 6 de septiembre de 2026
 
@@ -50,7 +61,7 @@ Se creó la estructura inicial del repositorio para separar:
 - datos originales;
 - datos intermedios;
 - datos procesados;
-- código fuente;
+- código;
 - notebooks;
 - modelos;
 - resultados;
@@ -59,11 +70,16 @@ Se creó la estructura inicial del repositorio para separar:
 
 ### Decisión
 
-Se estableció desde el inicio una estructura modular para evitar mezclar los archivos originales con los productos derivados del procesamiento.
+Mantener desde el inicio una estructura modular que separe los archivos originales de los productos derivados del procesamiento.
 
 ### Aprendizaje
 
-La separación por etapas facilita la reproducibilidad y permite identificar con mayor claridad dónde se produce cada transformación.
+La separación por etapas facilita:
+
+- reproducibilidad;
+- mantenimiento;
+- auditoría;
+- trazabilidad.
 
 ---
 
@@ -75,31 +91,35 @@ La separación por etapas facilita la reproducibilidad y permite identificar con
 
 ### Actividades
 
-Se documentó el entorno técnico utilizado para el proyecto.
-
-Se registraron componentes como:
+Se documentaron:
 
 - Python;
 - Visual Studio Code;
 - PowerShell;
 - Git;
 - GitHub;
-- entorno virtual;
+- `.venv`;
 - principales dependencias.
 
-También se estableció el uso de archivos de requerimientos para registrar las dependencias.
+Se incorporaron:
+
+`requirements.txt`
+
+y:
+
+`requirements-lock.txt`
 
 ### Decisión
 
-Utilizar un entorno virtual `.venv` específico para el proyecto.
+Utilizar un entorno virtual específico para Prospect Finder BVQ.
 
 ### Aprendizaje
 
-Registrar las versiones del entorno desde las primeras etapas reduce problemas posteriores de reproducibilidad.
+Registrar versiones del entorno desde las primeras etapas reduce problemas posteriores de reproducibilidad.
 
 ---
 
-## 3.3 Validación del entorno Jupyter — 7 de septiembre de 2026
+## 3.3 Validación de Jupyter — 7 de septiembre de 2026
 
 **Commit:** `87b257a`
 
@@ -107,19 +127,21 @@ Registrar las versiones del entorno desde las primeras etapas reduce problemas p
 
 ### Actividades
 
-Se incorporó un notebook para verificar que Jupyter estuviera utilizando el intérprete de Python correspondiente al entorno virtual del proyecto.
-
-Archivo:
+Se creó:
 
 `notebooks/00_validacion_entorno.ipynb`
 
+para verificar que Jupyter utilizara el intérprete correspondiente al entorno virtual.
+
 ### Decisión
 
-Utilizar notebooks principalmente para exploración y validación, manteniendo los procesos reproducibles principales en scripts Python.
+Utilizar notebooks principalmente para:
 
-### Aprendizaje
+- exploración;
+- pruebas;
+- validaciones.
 
-Es necesario confirmar el kernel utilizado por Jupyter para evitar ejecutar análisis con librerías o versiones distintas de las configuradas para el proyecto.
+Los procesos principales reproducibles se implementan mediante scripts Python.
 
 ---
 
@@ -129,11 +151,7 @@ Es necesario confirmar el kernel utilizado por Jupyter para evitar ejecutar aná
 
 **Mensaje Git:** `Add data source inventory`
 
-### Actividades
-
-Se organizó el inventario inicial de fuentes disponibles para el proyecto.
-
-Se identificaron como fuentes principales:
+### Fuentes identificadas
 
 - estados financieros de la Superintendencia de Compañías, Valores y Seguros;
 - Registro del Mercado de Valores de la SCVS;
@@ -141,17 +159,17 @@ Se identificaron como fuentes principales:
 
 ### Decisión
 
-Utilizar la información financiera de SCVS como fuente principal de variables predictoras.
+Utilizar información financiera de SCVS como fuente principal de variables empresariales y financieras.
 
-La información interna de BVQ se mantiene como fuente complementaria de validación y potencial enriquecimiento.
+La información BVQ se mantiene como fuente complementaria para integración y validación.
 
 ### Aprendizaje
 
-Las fuentes presentan estructuras diferentes entre períodos, por lo que no es posible utilizarlas directamente sin una etapa previa de análisis y homologación.
+Las estructuras históricas difieren entre períodos y requieren homologación antes del modelado.
 
 ---
 
-## 3.5 Primera construcción del dataset del MVP — 20 de septiembre de 2026
+## 3.5 Primera construcción del dataset — 20 de septiembre de 2026
 
 **Commit:** `71f28ce`
 
@@ -159,35 +177,27 @@ Las fuentes presentan estructuras diferentes entre períodos, por lo que no es p
 
 ### Actividades
 
-Se desarrolló una primera versión del proceso de construcción del dataset.
+Se desarrolló una primera versión del proceso reproducible de integración.
 
-Se comenzó a estructurar la unidad de análisis:
+Se estableció como unidad de análisis:
 
 `empresa-año`
 
-También se avanzó en la integración de información financiera histórica.
-
-### Decisión
-
-Utilizar la combinación conceptual de empresa y año como base para construir las observaciones del modelo.
-
 ### Aprendizaje
 
-La variación histórica de los planes contables obliga a definir reglas explícitas de homologación antes de entrenar cualquier modelo.
+La evolución histórica de las estructuras contables requiere reglas explícitas de homologación.
 
 ---
 
-## 3.6 Dataset reproducible y primera metodología temporal — 20 de septiembre de 2026
+# 4. Primer ciclo metodológico v1–v3
+
+## 4.1 Dataset reproducible inicial
 
 **Commit:** `9231e85`
 
 **Mensaje Git:** `Build reproducible SCVS MVP dataset and temporal features`
 
-### Actividades
-
-Se consolidó el proceso reproducible de construcción del dataset inicial del MVP.
-
-Se analizaron ocho estructuras contables:
+Se analizaron las estructuras:
 
 - `PLAN_413`
 - `PLAN_622`
@@ -198,7 +208,7 @@ Se analizaron ocho estructuras contables:
 - `PLAN_868`
 - `PLAN_925`
 
-Para el MVP inicial se utilizaron:
+En el primer MVP se utilizaron principalmente:
 
 - `PLAN_622`
 - `PLAN_639`
@@ -208,17 +218,15 @@ Para el MVP inicial se utilizaron:
 - `PLAN_868`
 - `PLAN_925`
 
-`PLAN_413` fue excluido de esta primera etapa debido a su baja cobertura y ausencia de eventos positivos en las cohortes evaluadas.
+`PLAN_413` fue excluido inicialmente por baja cobertura y ausencia de eventos positivos dentro de las cohortes evaluadas.
 
-### Resultado del dataset armonizado
+### Resultado histórico
 
 - 887.469 observaciones empresa-año;
-- 166.389 empresas únicas;
+- 166.389 empresas;
 - período 2015–2023.
 
-### Variables homologadas
-
-Se construyó un conjunto común de nueve variables:
+### Variables homologadas iniciales
 
 - `ACTIVO_TOTAL`
 - `ACTIVO_CORRIENTE`
@@ -230,39 +238,43 @@ Se construyó un conjunto común de nueve variables:
 - `CAPITAL`
 - `UTILIDAD_NETA`
 
-### Validaciones
+### Validaciones contables
 
-Se verificó:
+Se verificó aproximadamente:
 
 `Activo = Pasivo + Patrimonio`
 
-con cumplimiento de aproximadamente **99,24 %** dentro de una diferencia relativa de 0,01 %.
+con cumplimiento cercano a:
 
-También se verificó:
+`99,24 %`
+
+También:
 
 `Pasivo total = Pasivo corriente + Pasivo no corriente`
 
-con cumplimiento aproximado de **99,31 %**.
+con cumplimiento aproximado de:
 
-### Primera construcción del target
+`99,31 %`.
 
-Se definió:
+---
+
+## 4.2 Primera versión de TARGET_24M
+
+Se construyó:
 
 `TARGET_24M`
 
-para representar si una empresa se registra por primera vez como emisor dentro de los siguientes 24 meses.
+para identificar empresas que se registraban como emisores dentro de los 24 meses posteriores a una observación.
 
-Con la metodología temporal inicial se obtuvieron:
+Resultado de esta primera metodología:
 
 - 884.072 observaciones;
 - 166.107 empresas;
 - 440 positivos;
 - 883.632 negativos;
-- prevalencia aproximada de 0,0498 %.
+- prevalencia aproximada: 0,0498 %.
 
-### Primera división temporal
-
-Se definió inicialmente:
+### División temporal inicial
 
 - TRAIN: 2015–2020;
 - VALIDATION: 2021;
@@ -270,31 +282,21 @@ Se definió inicialmente:
 
 ### Decisión
 
-No utilizar un split aleatorio.
+No utilizar un split aleatorio como mecanismo principal de evaluación.
 
-### Aprendizaje
+### Nota
 
-El problema presenta un desbalance de clases extremo, por lo que Accuracy no resulta una métrica adecuada para evaluar el desempeño.
+Este procedimiento corresponde únicamente al ciclo histórico v1–v3.
 
-### Nota metodológica posterior
-
-Los valores de target y las divisiones temporales de esta sección corresponden al **primer ciclo metodológico v1–v3**.
-
-Posteriormente se identificó que el año fiscal no representaba de manera suficientemente conservadora la fecha en la que la información financiera podía considerarse disponible para una decisión real.
-
-Por este motivo, desde v4 se adoptó una metodología temporal corregida. Los resultados de esta sección se mantienen exclusivamente como evidencia histórica.
+Posteriormente se determinó que la disponibilidad temporal de la información financiera requería una regla más conservadora.
 
 ---
 
-## 3.7 Baseline v1 — Regresión logística
+## 4.3 Baseline v1 — Regresión logística
 
 **Commit:** `f215802`
 
 **Mensaje Git:** `Add reproducible logistic regression baseline v1`
-
-### Actividades
-
-Se desarrolló el primer modelo de referencia mediante regresión logística.
 
 Configuración principal:
 
@@ -305,8 +307,6 @@ Configuración principal:
 - `max_iter = 2000`;
 - `random_state = 42`.
 
-Se utilizaron variables financieras transformadas, razones financieras y `SECTOR_CIIU`.
-
 ### Resultados históricos
 
 | Conjunto | PR-AUC | ROC-AUC |
@@ -315,7 +315,7 @@ Se utilizaron variables financieras transformadas, razones financieras y `SECTOR
 | VALIDATION | 0,031095 | 0,940593 |
 | TEST | 0,007291 | 0,927740 |
 
-### Ranking histórico en VALIDATION
+### VALIDATION Top-K
 
 | K | Positivos | Precision@K | Recall@K | Lift@K |
 |---:|---:|---:|---:|---:|
@@ -323,51 +323,31 @@ Se utilizaron variables financieras transformadas, razones financieras y `SECTOR
 | 100 | 5 | 0,0500 | 0,1190 | 129,88 |
 | 200 | 5 | 0,0250 | 0,1190 | 64,94 |
 
-### Decisión de ese momento
+### Aprendizaje
 
-Utilizar el Baseline v1 como modelo de referencia para los experimentos iniciales.
+El problema debía tratarse principalmente como:
 
-### Aprendizajes
+**ranking y priorización**
 
-El modelo mostró que existía señal predictiva en las variables utilizadas.
-
-También se observó:
-
-- degradación temporal;
-- número elevado de falsos positivos con threshold 0,50;
-- bajo Recall@K en períodos posteriores.
-
-Se concluyó que el problema debía abordarse principalmente como un problema de **ranking y priorización**, no como una clasificación operativa basada directamente en un threshold de 0,50.
-
-### Nota
-
-TEST 2022–2023 fue utilizado en esta etapa histórica para evaluar el Baseline v1.
-
-Este TEST no debe confundirse con el TEST temporalmente corregido utilizado a partir de v4, que permanece reservado.
+y no como clasificación operativa utilizando directamente threshold 0,50.
 
 ---
 
-## 3.8 Baseline v2 — Análisis de la variable sectorial
+## 4.4 Baseline v2 — Eliminación del sector
 
 **Commit:** `d1e6070`
 
 **Mensaje Git:** `Add sector stability analysis and logistic baseline v2`
 
-### Objetivo
-
-Evaluar si `SECTOR_CIIU` estaba introduciendo inestabilidad temporal.
-
-### Modificación
-
-Se eliminó únicamente:
+Se eliminó:
 
 `SECTOR_CIIU`
 
-El resto del pipeline se mantuvo equivalente al Baseline v1.
+manteniendo el resto del pipeline equivalente.
 
-### Resultados históricos en VALIDATION
+### Resultados históricos VALIDATION
 
-| Métrica | Baseline v1 | Baseline v2 |
+| Métrica | v1 | v2 |
 |---|---:|---:|
 | PR-AUC | 0,031095 | 0,024402 |
 | ROC-AUC | 0,940593 | 0,961619 |
@@ -375,37 +355,23 @@ El resto del pipeline se mantuvo equivalente al Baseline v1.
 | Precision@50 | 0,1000 | 0,0800 |
 | Recall@50 | 0,1190 | 0,0952 |
 
-### Decisión de ese momento
+### Decisión
 
-No reemplazar el Baseline v1.
-
-### Justificación
-
-Aunque el modelo sin sector mejoró ROC-AUC y Recall al threshold 0,50, disminuyó PR-AUC y las métricas Top 50.
+No reemplazar v1.
 
 ### Aprendizaje
 
-Una mejora de ROC-AUC no necesariamente representa una mejora útil para el problema organizacional.
-
-Las métricas deben seleccionarse en función del objetivo real de priorización.
-
-### Uso de TEST
-
-TEST no fue utilizado para seleccionar esta variante.
+Una mejora de ROC-AUC no garantiza una mejora operacional en el ranking.
 
 ---
 
-## 3.9 Experimento v3 — Regularización logística
+## 4.5 Experimento v3 — Regularización
 
 **Commit:** `c47c931`
 
 **Mensaje Git:** `Add logistic regularization experiment v3`
 
-### Objetivo
-
-Evaluar si modificar la intensidad de regularización permitía mejorar el desempeño de la regresión logística.
-
-### Valores evaluados
+Se probaron:
 
 - `C = 0.001`
 - `C = 0.01`
@@ -413,7 +379,7 @@ Evaluar si modificar la intensidad de regularización permitía mejorar el desem
 - `C = 1`
 - `C = 10`
 
-### Resultados históricos en VALIDATION
+### Resultados históricos
 
 | C | PR-AUC | ROC-AUC |
 |---:|---:|---:|
@@ -423,9 +389,7 @@ Evaluar si modificar la intensidad de regularización permitía mejorar el desem
 | 1 | 0,031095 | 0,940593 |
 | 10 | 0,031135 | 0,934021 |
 
-`C = 10` obtuvo el mayor PR-AUC, pero la diferencia frente a `C = 1` fue aproximadamente 0,000040.
-
-Las métricas Top 50, Top 100 y Top 200 no presentaron una mejora respecto de `C = 1`.
+La diferencia entre `C = 10` y `C = 1` en PR-AUC fue mínima.
 
 ### Decisión
 
@@ -435,183 +399,113 @@ Mantener:
 
 como configuración de referencia de esa etapa.
 
-### Aprendizaje
-
-Una diferencia numérica mínima en una métrica no constituye necesariamente una mejora material.
-
-La selección debe considerar simultáneamente:
-
-- magnitud de la mejora;
-- estabilidad;
-- métricas de ranking;
-- complejidad añadida.
-
-### Uso de TEST
-
-TEST no fue utilizado para seleccionar el hiperparámetro.
-
 ---
 
-## 3.10 Figuras y resúmenes de errores
+## 4.6 Figuras y análisis de errores
 
 **Commit:** `95a516a`
 
 **Mensaje Git:** `Add baseline evaluation figures and error summaries`
 
-### Actividades
-
-Se generaron visualizaciones para facilitar el análisis de resultados.
-
-Entre las figuras producidas se encuentran:
+Se generaron:
 
 - distribución de clases;
 - Precision-Recall;
 - matriz de confusión;
-- positivos identificados por Top-K;
+- positivos Top-K;
 - Lift@K;
 - Precision@K.
 
-### Decisión
-
-Versionar figuras y resultados agregados necesarios para interpretar los experimentos.
-
-### Aprendizaje
-
-Las métricas numéricas aisladas no permiten comprender completamente el comportamiento del modelo.
-
----
-
-## 3.11 Análisis detallado de errores
+Posteriormente:
 
 **Commit:** `b280b8b`
 
 **Mensaje Git:** `Add detailed baseline error analysis`
 
-### Actividades
-
-Se profundizó en el análisis de:
+Se profundizó en:
 
 - verdaderos positivos;
 - falsos positivos;
 - falsos negativos;
-- posición de eventos positivos dentro del ranking;
+- posición de los positivos;
 - sectores;
-- perfiles financieros agregados.
-
-### Decisión
-
-Mantener el análisis de errores como parte de la evaluación de nuevos modelos.
+- perfiles financieros.
 
 ### Aprendizaje
 
-Una buena métrica agregada no garantiza que los casos más importantes para el negocio aparezcan en las primeras posiciones del ranking.
+Las métricas agregadas no son suficientes para determinar utilidad comercial.
 
 ---
 
-## 3.12 Informe de resultados preliminares
+## 4.7 Informe preliminar
 
 **Commit:** `343708d`
 
 **Mensaje Git:** `Add preliminary results report`
 
-### Actividades
+Se consolidó:
 
-Se consolidaron los resultados obtenidos en el primer ciclo metodológico.
-
-El informe integró:
-
-- objetivo del prototipo;
+- objetivo;
 - fuentes;
 - dataset;
 - variables;
 - metodología;
 - división temporal;
-- Baseline v1;
-- experimentos v2 y v3;
+- baselines;
 - métricas;
 - ranking;
-- análisis de errores;
+- errores;
 - fortalezas;
 - limitaciones;
-- relación con el problema organizacional de la BVQ;
 - próximos pasos.
-
-### Decisión
-
-Mantener un documento consolidado de resultados además de la documentación técnica específica de cada experimento.
-
-### Aprendizaje
-
-La documentación debe explicar no solamente qué resultado obtuvo un modelo, sino también:
-
-- qué se modificó;
-- por qué se modificó;
-- cómo se evaluó;
-- qué se aprendió;
-- qué decisión se tomó después del experimento.
 
 ---
 
-# 4. Corrección metodológica temporal
+# 5. Corrección metodológica temporal
 
-## 4.1 Problema identificado
+## 5.1 Problema identificado
 
-Después del ciclo v1–v3 se revisó con mayor profundidad la disponibilidad temporal de los estados financieros.
+Los archivos financieros identificaban el ejercicio fiscal, pero no la fecha exacta en la que la información de cada empresa estuvo disponible para una decisión comercial.
 
-Los archivos utilizados de SCVS identifican el ejercicio fiscal, pero no contienen una fecha individual de presentación o publicación que permita conocer exactamente cuándo cada estado financiero estuvo disponible para una decisión de prospección.
+Utilizar el cierre fiscal como fecha de decisión podía introducir una hipótesis temporal demasiado optimista.
 
-Utilizar directamente el cierre del ejercicio como fecha de decisión podía introducir una hipótesis temporal demasiado optimista.
+---
 
-## 4.2 Regla conservadora adoptada
+## 5.2 Regla conservadora
 
-Se adoptó una regla normativa y reproducible de disponibilidad:
+Se adoptó:
 
 - ejercicio fiscal: año `t`;
-- fecha ordinaria máxima de disponibilidad asumida: `30/04/t+1`;
+- fecha ordinaria máxima asumida de disponibilidad: `30/04/t+1`;
 - fecha de decisión: `01/05/t+1`;
-- inicio del horizonte objetivo: `01/05/t+1`;
+- inicio del horizonte: `01/05/t+1`;
 - fin del horizonte de 24 meses: `30/04/t+3`.
 
-Esta regla constituye una **suposición normativa conservadora**.
+Esta regla es una:
 
-No representa la fecha real individual de presentación de cada compañía.
+**suposición normativa conservadora**
 
-## 4.3 Elegibilidad
+y no la fecha real individual de presentación de cada empresa.
 
-Una observación empresa-año solo permanece en el universo prospectable cuando la empresa todavía no había sido registrada como emisor antes de la fecha de decisión correspondiente.
+---
 
-Las observaciones posteriores a la primera inscripción se excluyen.
+## 5.3 Elegibilidad
 
-## 4.4 Nuevo dataset etiquetado
+Una observación permanece prospectable únicamente cuando la empresa todavía no era emisor antes de la fecha de decisión.
 
-Con la metodología temporal corregida se obtuvieron:
+Las observaciones posteriores a su primera inscripción como emisor son excluidas.
 
-- 887.469 observaciones financieras originales;
-- 166.389 empresas;
-- 619 emisores históricos identificados;
-- 3.481 observaciones correspondientes a empresas que ya eran emisoras antes de la fecha de decisión;
-- **883.988 observaciones elegibles**;
-- **423 observaciones positivas**;
-- prevalencia aproximada de **0,0479 %**.
+---
 
-### Distribución de positivos por año
+## 5.4 Dataset temporal corregido del ciclo v4–v9
 
-| Año | Observaciones elegibles | Positivos |
-|---:|---:|---:|
-| 2015 | 75.715 | 41 |
-| 2016 | 79.234 | 73 |
-| 2017 | 82.417 | 89 |
-| 2018 | 86.689 | 59 |
-| 2019 | 91.932 | 34 |
-| 2020 | 98.470 | 34 |
-| 2021 | 109.095 | 39 |
-| 2022 | 123.283 | 32 |
-| 2023 | 137.153 | 22 |
-| **Total** | **883.988** | **423** |
+Resultado:
 
-## 4.5 Nueva separación temporal
+- 883.988 observaciones elegibles;
+- 423 positivos;
+- prevalencia aproximada: 0,0479 %.
 
-Se definió el siguiente protocolo:
+### División temporal
 
 | Conjunto | Período | Observaciones | Positivos |
 |---|---|---:|---:|
@@ -621,317 +515,172 @@ Se definió el siguiente protocolo:
 | EMBARGO TEST | 2021 | 109.095 | 39 |
 | TEST | 2022–2023 | 260.436 | 54 |
 
-### Justificación de los embargos
-
-El horizonte objetivo es de 24 meses.
-
-Por esta razón, se dejan períodos intermedios entre TRAIN, VALIDATION y TEST para reducir el riesgo de que ventanas objetivo superpuestas generen contaminación temporal entre conjuntos.
-
-## 4.6 Decisión
-
-A partir de v4, esta metodología temporal corregida reemplaza a la metodología de desarrollo utilizada en v1–v3.
-
-Los resultados de v1–v3 se mantienen como evidencia histórica, pero no se comparan numéricamente de forma directa con v4–v9 como si correspondieran al mismo protocolo.
-
-## 4.7 TEST reservado
-
-El conjunto:
-
-`TEST 2022–2023`
-
-de la metodología temporal corregida **no ha sido utilizado para seleccionar modelos v4–v9**.
-
-Permanece reservado para una evaluación posterior una vez que:
-
-- datos;
-- variables;
-- familia de modelo;
-- hiperparámetros;
-- protocolo de evaluación
-
-se encuentren suficientemente estabilizados.
-
----
-
-# 5. Ciclo experimental v4–v9
-
-## 5.1 Experimento v4 — Regresión logística con metodología temporal corregida
-
-**Commit:** `69d29da`
-
-### Objetivo
-
-Reentrenar una regresión logística utilizando la nueva construcción temporal del target y el nuevo protocolo de evaluación.
-
-### Características
-
-Se mantuvo información sectorial.
-
-### Resultados en VALIDATION 2020
-
-- PR-AUC: **0,004570**
-- ROC-AUC: **0,920359**
-- positivos Top 50: **0**
-- positivos Top 100: **1**
-- positivos Top 200: **1**
-
-### Aprendizaje
-
-La corrección metodológica redujo de manera importante el desempeño aparente respecto de los resultados históricos v1–v3.
-
-Esto no debe interpretarse como un deterioro causado por el algoritmo, sino como consecuencia de un protocolo temporal más estricto y de una definición del problema más cercana al escenario real de decisión.
-
----
-
-## 5.2 Experimento v5 — Regresión logística sin sector
-
-**Commit:** `69d29da`
-
-### Objetivo
-
-Reevaluar el efecto de eliminar la variable sectorial bajo la metodología temporal corregida.
-
-### Resultados en VALIDATION 2020
-
-- PR-AUC: **0,005311**
-- ROC-AUC: **0,924389**
-- positivos Top 50: **0**
-- positivos Top 100: **1**
-- positivos Top 200: **1**
-
-### Aprendizaje
-
-La exclusión del sector produjo una pequeña mejora en PR-AUC respecto de v4 bajo el nuevo protocolo.
-
-Sin embargo, el comportamiento Top-K continuó siendo limitado.
-
 ### Decisión
 
-Mantener la experimentación sin `SECTOR_CIIU` en la siguiente fase para evaluar si la trayectoria financiera aportaba una señal más útil que la información sectorial estática.
+A partir de v4, esta metodología reemplazó a la metodología temporal utilizada en v1–v3.
+
+Los resultados anteriores se mantuvieron exclusivamente como evidencia histórica.
 
 ---
 
-## 5.3 Experimento v6 — Regresión logística con variables temporales
+# 6. Ciclo experimental v4–v9
 
-**Commit:** `c44f24e`
+## 6.1 v4 — Regresión logística
 
-### Objetivo
-
-Incorporar información de trayectoria financiera y evaluar si un modelo lineal podía aprovechar cambios interanuales además de la fotografía financiera del año actual.
-
-### Ingeniería de variables
-
-Se construyó un dataset con:
-
-- 16 variables actuales;
-- 17 variables temporales relacionadas con el período anterior;
-- 33 variables numéricas en total.
-
-No se utilizó `SECTOR_CIIU`.
-
-### Preprocesamiento
-
-Se aplicó:
-
-- imputación por mediana;
-- `StandardScaler`;
-- ajuste del preprocesamiento exclusivamente con TRAIN.
-
-### Modelo
-
-Regresión logística con:
-
-- `C = 1.0`;
-- `class_weight = balanced`;
-- `solver = lbfgs`;
-- `max_iter = 2000`;
-- `random_state = 42`.
-
-### Resultados en VALIDATION 2020
-
-- PR-AUC: **0,005254**
-- ROC-AUC: **0,906290**
-- positivos Top 50: **1**
-- positivos Top 100: **1**
-- positivos Top 200: **1**
-
-### Aprendizaje
-
-Las variables temporales permitieron introducir trayectoria empresarial, pero la regresión logística continuó mostrando una capacidad limitada de concentración en las primeras posiciones.
-
-v6 se conserva como **baseline comparable** para evaluar modelos no lineales que utilicen exactamente el mismo conjunto de variables y protocolo temporal.
-
----
-
-## 5.4 Experimento v7 — HistGradientBoosting inicial
-
-**Commit:** `1c6555c`
-
-### Objetivo
-
-Evaluar si un modelo no lineal basado en boosting podía capturar interacciones que la regresión logística no representaba adecuadamente.
-
-### Resultado observado
-
-TRAIN:
-
-- PR-AUC aproximado: **0,871232**
+**Commit:** `69d29da`
 
 VALIDATION 2020:
 
-- PR-AUC: **0,004980**
-- ROC-AUC: **0,816540**
-- positivos Top 50: **1**
-- positivos Top 100: **1**
-- positivos Top 200: **2**
+- PR-AUC: 0,004570;
+- ROC-AUC: 0,920359;
+- Top 50: 0 positivos;
+- Top 100: 1;
+- Top 200: 1.
+
+### Aprendizaje
+
+La corrección temporal redujo el desempeño aparente.
+
+Esto refleja una evaluación más exigente y no necesariamente un deterioro del algoritmo.
+
+---
+
+## 6.2 v5 — Regresión logística sin sector
+
+**Commit:** `69d29da`
+
+VALIDATION:
+
+- PR-AUC: 0,005311;
+- ROC-AUC: 0,924389;
+- Top 50: 0;
+- Top 100: 1;
+- Top 200: 1.
+
+### Decisión
+
+Continuar explorando modelos sin `SECTOR_CIIU`.
+
+---
+
+## 6.3 v6 — Regresión logística con trayectoria
+
+**Commit:** `c44f24e`
+
+Se incorporaron variables actuales y temporales.
+
+VALIDATION:
+
+- PR-AUC: 0,005254;
+- ROC-AUC: 0,906290;
+- Top 50: 1;
+- Top 100: 1;
+- Top 200: 1.
+
+### Decisión
+
+Mantener v6 como baseline comparable del ciclo.
+
+---
+
+## 6.4 v7 — HistGradientBoosting inicial
+
+**Commit:** `1c6555c`
+
+TRAIN:
+
+- PR-AUC aproximado: 0,871232.
+
+VALIDATION:
+
+- PR-AUC: 0,004980;
+- ROC-AUC: 0,816540;
+- Top 50: 1;
+- Top 100: 1;
+- Top 200: 2.
 
 ### Diagnóstico
 
-La diferencia extremadamente grande entre TRAIN y VALIDATION evidenció un fuerte sobreajuste.
+Sobreajuste severo.
 
 ### Decisión
 
-No conservar v7 como candidato.
-
-Utilizar su comportamiento como evidencia para diseñar una versión más regularizada.
-
-### Aprendizaje
-
-Incrementar la capacidad del modelo sin controlar adecuadamente su complejidad puede producir excelentes resultados en entrenamiento y una generalización deficiente.
+Descartar v7 como candidato.
 
 ---
 
-## 5.5 Experimento v8 — HistGradientBoosting regularizado
+## 6.5 v8 — HistGradientBoosting regularizado
 
 **Commit:** `d81bbfa`
 
-### Objetivo
-
-Reducir el sobreajuste observado en v7 mediante regularización explícita.
-
-### Cambios principales respecto de v7
+Configuración regularizada:
 
 | Parámetro | v7 | v8 |
 |---|---:|---:|
-| `learning_rate` | 0,10 | 0,05 |
-| `max_iter` | 100 | 150 |
-| `max_leaf_nodes` | 31 | 7 |
-| `max_depth` | sin límite explícito | 3 |
-| `min_samples_leaf` | 20 | 100 |
-| `l2_regularization` | 0 | 1,0 |
-| ponderación de clases | balanced | balanced |
+| learning_rate | 0,10 | 0,05 |
+| max_iter | 100 | 150 |
+| max_leaf_nodes | 31 | 7 |
+| max_depth | Sin límite | 3 |
+| min_samples_leaf | 20 | 100 |
+| l2_regularization | 0 | 1,0 |
 
-### Resultados en VALIDATION 2020
+VALIDATION:
 
-- PR-AUC: **0,011805**
-- ROC-AUC: **0,922378**
-- positivos Top 50: **2**
-- positivos Top 100: **3**
-- positivos Top 200: **4**
-
-### Ranking
-
-| K | Positivos | Precision@K | Recall@K | Lift@K |
-|---:|---:|---:|---:|---:|
-| 50 | 2 | 0,0400 | 0,0588 | 115,85 |
-| 100 | 3 | 0,0300 | 0,0882 | 86,89 |
-| 200 | 4 | 0,0200 | 0,1176 | 57,92 |
+- PR-AUC: 0,011805;
+- ROC-AUC: 0,922378;
+- Top 50: 2;
+- Top 100: 3;
+- Top 200: 4.
 
 ### Decisión
 
-v8 se convierte en el **benchmark de mejor desempeño observado hasta el momento bajo la metodología temporal corregida**.
-
-No se considera todavía un modelo final.
-
-### Aprendizaje
-
-La regularización permitió reducir el sobreajuste de v7 y mejorar de manera importante la capacidad de priorización frente a v6 en VALIDATION.
+v8 se convirtió en el mejor benchmark del ciclo v4–v9.
 
 ---
 
-## 5.6 Backtest temporal rolling-origin de v8
+## 6.6 Backtesting v8
 
 **Commit:** `0565ead`
 
-### Objetivo
+Folds:
 
-Evaluar si el desempeño de v8 se mantenía en múltiples ventanas temporales y no dependía exclusivamente de VALIDATION 2020.
+- evaluación 2018;
+- evaluación 2019;
+- evaluación 2020.
 
-### Protocolo
+Resultados:
 
-Se utilizaron tres folds rolling-origin:
+| Año | PR-AUC | ROC-AUC | Top 50 | Lift@50 |
+|---:|---:|---:|---:|---:|
+| 2018 | 0,034551 | 0,884906 | 5 | 146,93 |
+| 2019 | 0,016766 | 0,938953 | 2 | 108,16 |
+| 2020 | 0,011805 | 0,922378 | 2 | 115,85 |
 
-#### Fold 1
+PR-AUC promedio:
 
-- TRAIN: 2015–2016
-- EMBARGO: 2017
-- EVALUACIÓN: 2018
+`0,021041`
 
-#### Fold 2
+Lift@50 promedio:
 
-- TRAIN: 2015–2017
-- EMBARGO: 2018
-- EVALUACIÓN: 2019
+`123,64`
 
-#### Fold 3
+### Aprendizaje
 
-- TRAIN: 2015–2018
-- EMBARGO: 2019
-- EVALUACIÓN: 2020
-
-Los años 2021–2023 no participaron.
-
-### Resultados
-
-| Año evaluación | Positivos | PR-AUC | ROC-AUC | Positivos Top 50 | Lift@50 |
-|---:|---:|---:|---:|---:|---:|
-| 2018 | 59 | 0,034551 | 0,884906 | 5 | 146,93 |
-| 2019 | 34 | 0,016766 | 0,938953 | 2 | 108,16 |
-| 2020 | 34 | 0,011805 | 0,922378 | 2 | 115,85 |
-
-### Estabilidad descriptiva de PR-AUC
-
-- media: **0,021041**
-- mediana: **0,016766**
-- desviación estándar muestral: **0,011960**
-
-### ROC-AUC
-
-- media aproximada: **0,915412**
-- mediana: **0,922378**
-- desviación estándar muestral aproximada: **0,027689**
-
-### Lift@50
-
-- media aproximada: **123,64**
-- mediana: **115,85**
-- rango aproximado: **108,16–146,93**
-
-### Interpretación
-
-v8 mantiene capacidad de priorización por encima de una selección aleatoria en las tres ventanas evaluadas.
-
-Sin embargo, existe variabilidad entre años.
-
-Debido a que solo existen tres folds, estas medidas se interpretan de forma descriptiva y no como intervalos formales de confianza.
+v8 mantuvo capacidad de priorización en varias ventanas, aunque con variabilidad temporal.
 
 ---
 
-## 5.7 Experimento v9 — MLP
+## 6.7 v9 — MLP
 
 **Commit:** `1ae9531`
 
-### Objetivo
+VALIDATION:
 
-Incorporar una primera alternativa basada en red neuronal multicapa para comparar su comportamiento frente a los modelos tabulares.
-
-### Resultados en VALIDATION 2020
-
-- PR-AUC: **0,005262**
-- ROC-AUC: **0,848818**
-- positivos Top 50: **0**
-- positivos Top 100: **0**
-- positivos Top 200: **0**
+- PR-AUC: 0,005262;
+- ROC-AUC: 0,848818;
+- Top 50: 0;
+- Top 100: 0;
+- Top 200: 0.
 
 ### Decisión
 
@@ -939,863 +688,1911 @@ No sustituir v8.
 
 ### Aprendizaje
 
-La mayor complejidad de una red neuronal no produjo automáticamente un mejor desempeño para este problema extremadamente desbalanceado y con pocos eventos positivos.
-
-### Alcance
-
-v9 constituye una primera experimentación con MLP.
-
-No se considera todavía el cumplimiento definitivo del componente de redes neuronales previsto en la propuesta académica.
-
-Antes del cierre del proyecto deberá desarrollarse y documentarse una alternativa con **TensorFlow/Keras**, manteniendo el mismo rigor temporal de evaluación.
+Una red neuronal más compleja no garantiza mejor desempeño en un problema tabular extremadamente desbalanceado.
 
 ---
 
-## 5.8 Backtest temporal rolling-origin de v6
+## 6.8 Backtest v6
 
 **Commit:** `c6fadce`
 
-### Objetivo
+Resultados:
 
-Construir una comparación estadísticamente más justa entre v6 y v8 utilizando:
-
-- exactamente las mismas ventanas temporales;
-- el mismo universo de evaluación;
-- el mismo conjunto de 33 variables;
-- el mismo protocolo de embargo;
-- TEST reservado.
-
-### Resultados
-
-| Año evaluación | PR-AUC | ROC-AUC | Positivos Top 50 | Lift@50 |
+| Año | PR-AUC | ROC-AUC | Top 50 | Lift@50 |
 |---:|---:|---:|---:|---:|
 | 2018 | 0,015520 | 0,897956 | 1 | 29,39 |
 | 2019 | 0,013212 | 0,918509 | 2 | 108,16 |
 | 2020 | 0,005254 | 0,906290 | 1 | 57,92 |
 
-### Estabilidad descriptiva de PR-AUC
+PR-AUC promedio:
 
-- media: **0,011329**
-- mediana: **0,013212**
-- desviación estándar muestral: **0,005386**
+`0,011329`
 
-### Lift@50
+Lift@50 promedio:
 
-- media aproximada: **65,15**
-
-### Aprendizaje
-
-v6 presenta menor dispersión de PR-AUC que v8, pero alrededor de un nivel de desempeño promedio inferior.
-
-Una desviación estándar menor no debe interpretarse de forma aislada como evidencia de superioridad.
+`65,15`
 
 ---
 
-## 5.9 Comparación temporal v6 vs v8
+## 6.9 Comparación v6 vs. v8
 
 **Commit:** `99a8ca0`
 
 **Mensaje Git:** `add v6 vs v8 temporal comparison`
 
-### Objetivo
+Se verificó programáticamente que ambos modelos utilizaran:
 
-Automatizar una comparación reproducible entre:
+- mismos folds;
+- mismos períodos;
+- mismo universo de evaluación;
+- mismas variables comparables;
+- mismo protocolo.
 
-- v6 — Logistic Regression con variables temporales;
-- v8 — HistGradientBoosting regularizado.
+### PR-AUC
 
-### Validación de comparabilidad
-
-El script verifica programáticamente igualdad entre ambos experimentos en:
-
-- fold;
-- inicio de TRAIN;
-- fin de TRAIN;
-- año de evaluación;
-- observaciones de TRAIN;
-- positivos de TRAIN;
-- observaciones de evaluación;
-- positivos de evaluación.
-
-El resultado confirmó que:
-
-**los folds, períodos de entrenamiento y universos de evaluación son idénticos.**
-
-### PR-AUC por año
-
-| Año | v6 | v8 | Diferencia v8 - v6 |
+| Año | v6 | v8 | Diferencia |
 |---:|---:|---:|---:|
 | 2018 | 0,015520 | 0,034551 | +0,019031 |
 | 2019 | 0,013212 | 0,016766 | +0,003554 |
 | 2020 | 0,005254 | 0,011805 | +0,006550 |
 
-### Cambio relativo de PR-AUC
-
-- 2018: **+122,62 %**
-- 2019: **+26,90 %**
-- 2020: **+124,67 %**
-
-### Resumen promedio
+Promedios:
 
 | Métrica | v6 | v8 |
 |---|---:|---:|
-| PR-AUC promedio | 0,011329 | 0,021041 |
-| Desv. estándar muestral PR-AUC | 0,005386 | 0,011960 |
-| Lift@50 promedio | 65,15 | 123,64 |
-
-### Cambio promedio
-
-- mejora relativa de PR-AUC promedio: **+85,73 %**
-- mejora relativa de Lift@50 promedio: **+89,77 %**
-
-### ROC-AUC por año
-
-El comportamiento de ROC-AUC no es uniforme:
-
-- en 2018 v6 supera a v8;
-- en 2019 v8 supera a v6;
-- en 2020 v8 supera a v6.
-
-Por esta razón no se concluye que v8 domine todas las métricas.
-
-### Interpretación
-
-La evidencia disponible favorece a v8 principalmente en las métricas directamente relacionadas con la priorización:
-
-- PR-AUC;
-- concentración Top-K;
-- Lift@50.
-
-v8 obtiene un PR-AUC superior a v6 en los tres años evaluados y un Lift@50 promedio sustancialmente superior.
-
-v6 presenta una menor desviación estándar del PR-AUC, pero esa menor dispersión ocurre alrededor de un rendimiento promedio más bajo.
-
-### Limitación estadística
-
-Solo existen tres folds temporales.
-
-Por esta razón:
-
-- la variabilidad se reporta de forma descriptiva;
-- no se presentan intervalos formales de confianza;
-- no se realizan afirmaciones de significancia estadística que los datos disponibles no permiten sustentar.
+| PR-AUC | 0,011329 | 0,021041 |
+| Lift@50 | 65,15 | 123,64 |
 
 ### Decisión
 
-Mantener a v8 como **benchmark actual bajo la metodología temporal corregida**.
-
-No utilizar todavía TEST 2022–2023.
+Mantener v8 como benchmark histórico del ciclo.
 
 ---
 
+# 7. Nueva generación v10
 
-# 6. Estado metodológico actual
+## 7.1 Dataset base v10
 
-## 6.1 Unidad de análisis
-
-La unidad de análisis continúa siendo:
-
-`empresa-año`
-
-## 6.2 Horizonte objetivo
-
-El horizonte es de:
-
-**24 meses**
-
-## 6.3 Fecha de decisión
-
-Para un ejercicio fiscal `t`, la fecha de decisión utilizada es:
-
-`01/05/t+1`
-
-Esta regla se mantiene como supuesto normativo conservador de disponibilidad de información.
-
-## 6.4 Elegibilidad
-
-Las empresas que ya habían sido emisoras antes de la fecha de decisión quedan excluidas del universo prospectable.
-
-## 6.5 Dataset base v10 congelado
-
-A partir de octubre de 2026 se congeló una nueva generación de datos:
-
-**Dataset base v10 — 2012–2023**
-
-Archivo local generado:
-
-`data/processed/v10_base_integrated_2012_2023.csv.gz`
-
-Script reproducible:
-
-`scripts/build_v10_base.py`
-
-SHA-256 validado:
-
-`b44f9ccf309c20a59be436953a0c6e7f9a3dc1f11cc6f2c87e41c1676a3a2a8d`
-
-El dataset v10 integra `bi_ranking` con el dataset financiero histórico armonizado y aplica reglas explícitas de identidad, elegibilidad, target y fallback financiero.
-
-## 6.6 Universo congelado v10
-
-El universo final contiene:
-
-- **1.030.671 observaciones elegibles**;
-- **568 observaciones positivas**;
-- **310 RUC positivos únicos**;
-- **0 duplicados empresa-año**;
-- prevalencia positiva de **0,055110 %**.
-
-El período utilizado es:
-
-**2012–2023**
-
-## 6.7 Procedencia del universo v10
-
-Dentro del universo elegible final:
-
-- `AMBAS`: **815.331** observaciones;
-- `SOLO_BI`: **146.683** observaciones;
-- `SOLO_HISTORICO`: **68.657** observaciones.
-
-## 6.8 Reglas de identidad
-
-La prioridad de identificación empresarial es:
-
-1. `bi_compania`;
-2. RUC histórico único asociado al mismo `EXPEDIENTE`;
-3. RUC histórico de la propia fila cuando las opciones anteriores no están disponibles.
-
-Se excluyeron **535 filas** correspondientes a **276 expedientes únicos** porque no fue posible obtener un RUC utilizable de forma determinística.
-
-No se utilizaron coincidencias por nombre ni fuzzy matching.
-
-## 6.9 Target v10
-
-La definición del target se mantiene como:
-
-`TARGET_24M = 1`
-
-cuando la empresa registra su primera inscripción efectiva como emisor dentro de los 24 meses posteriores a la fecha de decisión.
-
-La fuente principal es:
-
-`listado_entes_65001_1789908466941.xlsx`
-
-La validación cruzada contra fichas registrales efectivas produjo:
-
-- **619 RUC** efectivos en ambas fuentes;
-- **619 fechas coincidentes**;
-- **0 diferencias de fecha**.
-
-Se consideran efectivos los estados:
-
-- `VIGENTE`;
-- `CANCELADA`.
-
-No se consideran positivos estados como:
-
-- inscripción negada;
-- ente creado;
-- en proceso de inscripción.
-
-## 6.10 Variables financieras consolidadas
-
-Para v10 se definieron reglas específicas de integración.
-
-### Activos
-
-Variable final:
-
-`activos_final`
-
-Prioridad:
-
-1. `bi_activos`;
-2. fallback histórico cuando el bloque financiero BI está completamente en cero;
-3. fallback histórico para observaciones solo históricas.
-
-Resultado:
-
-- **92.640** fallbacks históricos;
-- **1.022.910** valores disponibles;
-- cobertura de **99,25 %**.
-
-### Patrimonio
-
-Variable final:
-
-`patrimonio_final`
-
-Se aplica la misma lógica de precedencia.
-
-Resultado:
-
-- **92.640** fallbacks históricos;
-- **1.022.910** valores disponibles;
-- cobertura de **99,25 %**.
-
-### Utilidad neta
-
-Variable final:
-
-`utilidad_neta_final`
-
-La utilidad histórica no se utiliza como fallback debido a diferencias de definición entre fuentes.
-
-Resultado:
-
-- **930.270** valores disponibles;
-- cobertura de **90,26 %**.
-
-## 6.11 Bloque financiero BI vacío
-
-Se definió como bloque financiero básico:
-
-- activos;
-- patrimonio;
-- ingresos por ventas;
-- ingresos totales;
-- utilidad antes de impuestos;
-- impuesto a la renta;
-- utilidad del ejercicio;
-- utilidad neta.
-
-Cuando las ocho variables son simultáneamente cero en `bi_ranking`, la observación se marca mediante:
-
-`bi_8_finanzas_cero`
-
-En el universo elegible v10 existen:
-
-**31.744 observaciones**
-
-con esta condición.
-
-## 6.12 Variables excluidas preventivamente
-
-No se incorporan como predictores de v10:
-
-- `cia_imvalores`;
-- `id_estado_financiero`;
-- `posicion_general`.
-
-La exclusión responde a riesgo de fuga de información, naturaleza técnica del identificador o ausencia de justificación como predictor.
-
-## 6.13 Benchmark histórico
-
-El benchmark del ciclo v1–v9 continúa siendo:
-
-**v8 — HistGradientBoosting regularizado con variables financieras actuales y temporales.**
-
-Esto no implica que v8 sea el benchmark definitivo de v10.
-
-Los futuros modelos v10 deberán compararse entre sí utilizando el nuevo dataset congelado y un protocolo temporal común.
-
-## 6.14 Baseline histórico comparable
-
-Dentro del ciclo v1–v9, el baseline comparable continúa siendo:
-
-**v6 — Logistic Regression con variables temporales.**
-
-## 6.15 TEST
-
-El TEST utilizado en v4–v9 permanece reservado como evidencia histórica de ese ciclo.
-
-Para v10 deberá definirse explícitamente una nueva estrategia temporal de TRAIN / embargo / VALIDATION / TEST antes de entrenar modelos.
-
-El nuevo protocolo no debe inferirse automáticamente de v1–v9 porque el universo cambió.
-
-## 6.16 Métricas prioritarias
-
-Debido al desbalance extremo, las métricas principales continúan siendo:
-
-- PR-AUC;
-- Precision@K;
-- Recall@K;
-- Lift@K.
-
-ROC-AUC se mantiene como métrica complementaria.
-
-Accuracy no se utiliza como criterio principal.
-
-## 6.17 Scores
-
-Los scores se utilizarán para:
-
-- ordenar;
-- priorizar;
-- comparar afinidad relativa.
-
-No deben interpretarse como probabilidades reales calibradas mientras no exista una etapa específica de calibración.
-
----
-
-# 7. Principales decisiones metodológicas acumuladas
-
-1. La unidad de análisis es `empresa-año`.
-2. El horizonte objetivo es de 24 meses.
-3. Las empresas previamente emisoras se excluyen del universo prospectable.
-4. La evaluación debe respetar el orden temporal.
-5. No se utiliza split aleatorio como mecanismo principal de validación.
-6. La disponibilidad temporal de los estados financieros se aproxima mediante una regla normativa conservadora.
-7. La fecha de decisión actual es `01/05/t+1`.
-8. Se utilizan períodos de embargo entre entrenamiento y evaluación.
-9. El nuevo TEST 2022–2023 permanece reservado.
-10. v1–v3 se conservan como ciclo histórico.
-11. v4 en adelante corresponden a la metodología temporal corregida.
-12. Las métricas de ambos ciclos no deben compararse directamente como si provinieran del mismo protocolo.
-13. PR-AUC tiene mayor relevancia que Accuracy para este problema.
-14. Precision@K, Recall@K y Lift@K son métricas centrales.
-15. El threshold 0,50 se utiliza únicamente con fines diagnósticos cuando corresponde.
-16. El problema se formula principalmente como ranking y priorización.
-17. Los scores actuales no representan probabilidades calibradas.
-18. Las variables temporales forman parte de la etapa actual del modelo.
-19. v6 constituye el baseline comparable de la etapa temporal actual.
-20. v8 constituye el benchmark de mejor desempeño observado hasta el momento.
-21. v7 se mantiene como evidencia de sobreajuste.
-22. v9 demuestra que mayor complejidad no garantiza mejor generalización.
-23. La comparación entre alternativas debe utilizar los mismos datos, folds, variables y protocolo siempre que el objetivo sea determinar el efecto del algoritmo.
-24. La selección de un modelo no debe basarse en una sola métrica.
-25. La estabilidad temporal debe analizarse mediante múltiples ventanas.
-26. TEST no debe utilizarse iterativamente para ajustar modelos.
-27. La interpretabilidad y el riesgo de sesgo deberán formar parte de la selección final.
-28. La decisión comercial final debe permanecer bajo revisión humana.
-
----
-
-# 8. Principales aprendizajes acumulados
-
-Hasta el momento se han identificado los siguientes aprendizajes:
-
-- la homologación contable es una etapa crítica antes del modelado;
-- el problema presenta un desbalance extremo;
-- existen pocos eventos positivos en relación con el universo total;
-- la prevalencia cambia entre períodos;
-- la disponibilidad temporal de una variable es tan importante como su contenido;
-- una división temporal puede continuar siendo insuficiente si no se controla la superposición del horizonte objetivo;
-- los períodos de embargo permiten reducir riesgos de contaminación temporal;
-- ROC-AUC debe interpretarse junto con PR-AUC y métricas de ranking;
-- un Recall elevado con threshold 0,50 puede coexistir con miles de falsos positivos;
-- la utilidad comercial depende de la concentración de prospectos en las primeras posiciones;
-- modificar únicamente la regularización de la regresión logística no produjo una mejora material en el primer ciclo;
-- las variables temporales permiten representar trayectoria, pero por sí solas no garantizan una mejora importante en un modelo lineal;
-- un modelo no lineal muy flexible puede sobreajustarse severamente;
-- la regularización de v8 permitió mejorar la generalización respecto de v7;
-- v8 supera a v6 en PR-AUC en los tres folds temporales evaluados;
-- v8 presenta un Lift@50 promedio superior al de v6;
-- una menor variabilidad no implica automáticamente un mejor modelo si el nivel promedio de desempeño es inferior;
-- los resultados de solo tres folds deben interpretarse de forma descriptiva;
-- una red neuronal no necesariamente supera a modelos tabulares en este tipo de problema;
-- el análisis de errores debe acompañar a las métricas agregadas;
-- la selección final deberá considerar desempeño, estabilidad, explicabilidad, riesgo e integración.
-
----
-
-# 9. Riesgos identificados y mitigaciones actuales
-
-| Riesgo | Descripción | Mitigación actual |
-|---|---|---|
-| Leakage temporal | Utilizar información antes de que hubiera podido estar disponible | Regla de disponibilidad `01/05/t+1` y embargos |
-| Superposición de horizontes | Eventos objetivo compartidos entre entrenamiento y evaluación | Años de embargo |
-| Sobreajuste | Modelos complejos pueden memorizar TRAIN | Regularización y backtesting temporal |
-| Desbalance extremo | Muy pocos positivos frente a negativos | `class_weight`, PR-AUC y métricas Top-K |
-| Pocos eventos positivos | Alta sensibilidad de las métricas entre años | Rolling-origin y reporte de variabilidad |
-| Drift temporal | La relación entre variables y target puede cambiar | Evaluación por cohortes |
-| Scores no calibrados | `predict_proba()` no necesariamente representa probabilidad real | Uso como ranking, no como probabilidad |
-| Sesgo sectorial | Determinados sectores pueden estar sobrerrepresentados | Comparaciones con y sin sector; análisis futuro segmentado |
-| Comparaciones injustas | Modelos pueden parecer mejores por cambios de dataset o protocolo | Comparación v6 vs v8 con protocolo idéntico |
-| Complejidad innecesaria | Un modelo más complejo puede no mejorar | Mantener alternativas simples como baseline |
-| Uso prematuro de TEST | Ajustar decisiones observando repetidamente el conjunto final | TEST 2022–2023 reservado |
-| Interpretación causal | Asociaciones predictivas pueden confundirse con causas | Interpretación exclusivamente predictiva |
-| Uso automático | El ranking podría utilizarse sin revisión especializada | Human-in-the-loop |
-
----
-
-# 10. Limitaciones actualmente registradas
-
-Las principales limitaciones son:
-
-1. El dataset corregido contiene únicamente **423 eventos positivos**.
-2. TRAIN 2015–2018 contiene **262 positivos**.
-3. VALIDATION 2020 contiene **34 positivos**.
-4. TEST 2022–2023 contiene **54 positivos** y permanece reservado.
-5. Existe un desbalance extremo.
-6. Las métricas presentan variación importante entre cohortes.
-7. Solo se dispone actualmente de tres folds en el backtest rolling-origin.
-8. La regla de disponibilidad financiera es normativa y no representa la fecha real de presentación de cada empresa.
-9. El conjunto de variables todavía se concentra principalmente en información financiera.
-10. Las tendencias multianuales más amplias todavía pueden fortalecerse.
-11. CatBoost todavía no ha sido evaluado en el ciclo actual.
-12. Random Forest todavía no ha sido evaluado.
-13. La red neuronal TensorFlow/Keras prevista para la etapa final todavía no ha sido implementada.
-14. Los scores no se encuentran calibrados.
-15. El Índice de Afinidad Bursátil definitivo todavía no se ha construido.
-16. La interpretabilidad mediante SHAP todavía no se ha incorporado al benchmark.
-17. La evaluación explícita de sesgos y equidad todavía debe ampliarse.
-18. Las nuevas fuentes identificadas todavía no forman parte del dataset de modelado actual.
-19. El prototipo web operativo todavía está pendiente.
-20. TEST no debe abrirse mientras el ciclo de selección no se encuentre suficientemente estabilizado.
-
----
-
-# 11. Backtest y confianza en los resultados
-
-La evaluación rolling-origin representa un avance frente a depender de una única ventana de validación.
-
-Actualmente se dispone de evaluaciones para:
-
-- 2018;
-- 2019;
-- 2020.
-
-Esto permite observar:
-
-- desempeño medio;
-- mediana;
-- desviación estándar;
-- rango temporal;
-- comportamiento del ranking entre cohortes.
-
-Sin embargo, tres folds continúan siendo una muestra pequeña.
-
-Por esta razón, los resultados actuales permiten hablar de:
-
-- consistencia descriptiva;
-- diferencias observadas;
-- estabilidad relativa;
-
-pero no justifican todavía afirmaciones fuertes de significancia estadística.
-
----
-
-# 12. Comparación actual de alternativas
-
-| Versión | Modelo | Variables temporales | PR-AUC VALIDATION 2020 | ROC-AUC VALIDATION 2020 | Top 50 | Estado |
-|---|---|---|---:|---:|---:|---|
-| v4 | Logistic Regression | No | 0,004570 | 0,920359 | 0 | Histórico metodología corregida |
-| v5 | Logistic Regression sin sector | No | 0,005311 | 0,924389 | 0 | Histórico metodología corregida |
-| v6 | Logistic Regression | Sí | 0,005254 | 0,906290 | 1 | Baseline comparable |
-| v7 | HistGradientBoosting | Sí | 0,004980 | 0,816540 | 1 | Descartado por sobreajuste |
-| v8 | HistGradientBoosting regularizado | Sí | 0,011805 | 0,922378 | 2 | Benchmark actual |
-| v9 | MLP | Sí | 0,005262 | 0,848818 | 0 | Alternativa exploratoria |
-
-### Interpretación
-
-v8 presenta actualmente el mejor equilibrio observado entre:
-
-- PR-AUC;
-- ranking;
-- generalización temporal;
-- complejidad operativa.
-
-v6 continúa siendo importante porque proporciona una referencia lineal más interpretable y utiliza exactamente el mismo protocolo y conjunto de variables.
-
-v9 no mejora a v8 y no justifica, con la evidencia actual, una mayor complejidad.
-
----
-
-# 13. Evidencia de reproducibilidad
-
-El proyecto utiliza:
-
-- Git;
-- GitHub;
-- entorno virtual;
-- `requirements.txt`;
-- `requirements-lock.txt`;
-- `random_state = 42` donde aplica;
-- scripts independientes por etapa;
-- datasets derivados reproducibles localmente;
-- resultados agregados versionados;
-- documentación por experimento;
-- bitácora;
-- backlog;
-- diccionario de datos;
-- inventario de fuentes.
-
-Los datasets originales y derivados de gran tamaño no se versionan en Git.
-
-Los resultados agregados necesarios para sustentar las comparaciones sí pueden versionarse de manera controlada.
-
----
-
-# 14. Evidencias recientes de control de versiones
-
-Los hitos recientes del ciclo temporal corregido incluyen:
-
-| Commit | Evidencia |
-|---|---|
-| `69d29da` | Corrección temporal del target y experimentos v4–v5 |
-| `c44f24e` | Variables temporales y modelo v6 |
-| `1c6555c` | HistGradientBoosting v7 |
-| `d81bbfa` | HistGradientBoosting regularizado v8 |
-| `0565ead` | Backtest temporal rolling-origin de v8 |
-| `1ae9531` | Experimento MLP v9 |
-| `c6fadce` | Backtest temporal rolling-origin de v6 |
-| `99a8ca0` | Comparación automatizada v6 vs v8 |
-
-El commit:
-
-`99a8ca0 — add v6 vs v8 temporal comparison`
-
-incorpora:
-
-- `src/evaluation/compare_v6_v8_backtests.py`;
-- `reports/results/comparison_v6_v8_metadata.json`;
-- `reports/results/comparison_v6_v8_metrics_by_year.csv`;
-- `reports/results/comparison_v6_v8_model_summary.csv`;
-- `reports/results/comparison_v6_v8_ranking_by_year.csv`;
-- `reports/results/comparison_v6_v8_stability_summary.csv`.
-
----
-
-# 15. Resultados versionados del backtest
-
-## v6
-
-Se mantienen versionados:
-
-- `reports/results/backtest_logistic_v6_metrics.csv`
-- `reports/results/backtest_logistic_v6_ranking_metrics.csv`
-- `reports/results/backtest_logistic_v6_summary.csv`
-- `reports/results/backtest_logistic_v6_metadata.json`
-
-## v8
-
-Se mantienen versionados los resultados equivalentes del backtest temporal de v8.
-
-## Comparación
-
-Se mantienen versionados:
-
-- métricas por año;
-- métricas de ranking;
-- estadísticas descriptivas de estabilidad;
-- resumen por modelo;
-- metadata del protocolo.
-
-Esto permite reconstruir la comparación sin depender de valores copiados manualmente en la documentación.
-
----
-
-# 16. Estado del conjunto TEST
-
-Debe mantenerse una distinción explícita entre dos etapas.
-
-## TEST histórico v1
-
-El Baseline v1 utilizó el TEST 2022–2023 de la metodología inicial.
-
-Ese resultado se conserva como evidencia histórica del primer ciclo.
-
-## TEST temporalmente corregido
-
-Desde v4 se reconstruyó el target y se modificó el protocolo temporal.
-
-El nuevo:
-
-`TEST 2022–2023`
-
-contiene:
-
-- 260.436 observaciones;
-- 54 positivos.
-
-Este conjunto **no ha sido utilizado para seleccionar v4, v5, v6, v7, v8 ni v9**.
-
-Permanece reservado.
-
----
-
-
-# 17. Próxima fase
-
-La siguiente fase deberá concentrarse en:
-
-1. mantener congeladas las reglas de universo, identidad y target de v10;
-2. construir el feature set v10 a partir de la base integrada congelada;
-3. clasificar explícitamente las columnas en predictoras, administrativas y de auditoría;
-4. definir reglas de missingness;
-5. construir variables temporales `t-1` y trayectorias multianuales;
-6. definir transformaciones y tratamiento de valores extremos aprendidos exclusivamente sobre TRAIN;
-7. establecer un nuevo protocolo temporal v10 con TRAIN, embargos, VALIDATION y TEST;
-8. entrenar `v10-LR` como baseline de la nueva generación;
-9. evaluar `v10-HGB`;
-10. evaluar Random Forest;
-11. evaluar CatBoost;
-12. implementar la red TensorFlow/Keras comprometida;
-13. comparar modelos bajo un protocolo temporal común;
-14. incorporar interpretabilidad mediante SHAP;
-15. evaluar sesgo y desempeño segmentado;
-16. estudiar calibración cuando exista un modelo suficientemente estable;
-17. construir posteriormente el Índice de Afinidad Bursátil;
-18. desarrollar el prototipo web de apoyo a prospección;
-19. preparar mecanismos de monitoreo y MLOps.
-
----
-
-# 18. Nueva generación de datos v10
-
-La nueva generación de datos ya fue construida y congelada.
-
-Se utiliza la nomenclatura:
-
-**Dataset base v10**
+En octubre de 2026 se construyó una nueva generación del dataset.
 
 Archivo:
 
 `data/processed/v10_base_integrated_2012_2023.csv.gz`
 
-Script reproducible:
+Script:
 
 `scripts/build_v10_base.py`
 
-Documento de congelamiento:
-
-`docs/v10_dataset_freeze.md`
-
-El dataset contiene:
-
-- **1.030.671 observaciones elegibles**;
-- **568 positivos**;
-- **310 RUC positivos únicos**;
-- período **2012–2023**;
-- prevalencia de **0,055110 %**.
-
-La reconstrucción desde las fuentes produjo exactamente el mismo SHA-256:
+SHA-256:
 
 `b44f9ccf309c20a59be436953a0c6e7f9a3dc1f11cc6f2c87e41c1676a3a2a8d`
 
-Los modelos asociados a esta nueva generación utilizarán nomenclaturas como:
+Resultado:
 
-- `v10-LR`;
-- `v10-HGB`;
-- `v10-RF`;
-- `v10-CatBoost`;
-- `v10-NN`.
+- 1.030.671 observaciones elegibles;
+- 568 positivos;
+- 310 RUC positivos únicos;
+- 0 duplicados empresa-año;
+- período 2012–2023;
+- prevalencia aproximada: 0,055110 %.
 
-v8 permanece como benchmark histórico del ciclo anterior.
+### Procedencia
 
-Las métricas de v1–v9 no deberán compararse directamente con las futuras métricas v10 como si provinieran del mismo universo.
+- `AMBAS`: 815.331;
+- `SOLO_BI`: 146.683;
+- `SOLO_HISTORICO`: 68.657.
 
 ---
 
-# 19. Criterio para aceptar mejoras futuras
+## 7.2 Identidad empresarial
 
-Un nuevo modelo no reemplazará al benchmark únicamente por mejorar una métrica aislada.
+Prioridad:
 
-La evaluación deberá considerar conjuntamente:
+1. identificación proveniente de `bi_compania`;
+2. RUC histórico único del mismo expediente;
+3. RUC histórico disponible en la propia observación.
 
-- PR-AUC;
-- Precision@K;
-- Recall@K;
-- Lift@K;
-- estabilidad temporal;
-- variabilidad entre folds;
-- comportamiento frente al desbalance;
-- interpretabilidad;
-- riesgo de sesgo;
-- complejidad;
-- reproducibilidad;
-- facilidad de integración;
-- utilidad para la prospección comercial.
+Se excluyeron:
 
-Cuando se comparen algoritmos para determinar cuál aporta mayor capacidad predictiva, deberán mantenerse constantes, siempre que sea posible:
+- 535 filas;
+- 276 expedientes;
 
-- dataset;
+para los que no fue posible determinar un RUC de forma reproducible.
+
+No se utilizaron:
+
+- fuzzy matching;
+- coincidencias automáticas por nombre.
+
+---
+
+## 7.3 Target v10
+
+Se mantiene:
+
+`TARGET_24M`
+
+con la regla temporal conservadora de fecha de decisión.
+
+La fuente principal de emisores fue validada contra fichas registrales.
+
+Resultado de validación:
+
+- 619 RUC efectivos en ambas fuentes;
+- 619 fechas coincidentes;
+- 0 diferencias de fecha.
+
+Estados considerados efectivos:
+
+- `VIGENTE`;
+- `CANCELADA`.
+
+No se consideran eventos positivos:
+
+- inscripción negada;
+- ente creado;
+- en proceso de inscripción.
+
+---
+
+## 7.4 Integración financiera
+
+### Activos
+
+Variable:
+
+`activos_final`
+
+Cobertura aproximada:
+
+`99,25 %`
+
+### Patrimonio
+
+Variable:
+
+`patrimonio_final`
+
+Cobertura aproximada:
+
+`99,25 %`
+
+### Utilidad neta
+
+Variable:
+
+`utilidad_neta_final`
+
+Cobertura aproximada:
+
+`90,26 %`
+
+La utilidad histórica no se utilizó como fallback cuando existían diferencias de definición entre fuentes.
+
+---
+
+## 7.5 Bloques financieros vacíos
+
+Se definió:
+
+`bi_8_finanzas_cero`
+
+para observaciones en las que ocho variables financieras principales de BI son simultáneamente cero.
+
+Se identificaron:
+
+`31.744 observaciones`
+
+con esta condición.
+
+---
+
+## 7.6 Variables excluidas preventivamente
+
+Se excluyeron del conjunto predictor:
+
+- `cia_imvalores`;
+- `id_estado_financiero`;
+- `posicion_general`.
+
+Las razones incluyeron:
+
+- riesgo de leakage;
+- naturaleza administrativa;
+- falta de justificación predictiva.
+
+---
+
+# 8. Feature set v10
+
+## 8.1 Dataset core
+
+Se construyó:
+
+`data/processed/v10_features_core_2012_2023.csv.gz`
+
+Contiene 22 columnas.
+
+Incluye:
+
+- identificación;
 - target;
+- split;
+- variables financieras actuales;
+- rezagos `t-1`;
+- tipo de compañía;
+- provincia;
+- indicadores de calidad.
+
+---
+
+## 8.2 Dataset financiero
+
+Se construyó:
+
+`data/processed/v10_features_financial_2012_2023.csv.gz`
+
+Número de observaciones:
+
+`1.030.671`
+
+Se añadieron diez variables financieras:
+
+- `fin_ratio_patrimonio_activos`
+- `fin_roa`
+- `fin_margen_neto`
+- `fin_rotacion_activos`
+- `fin_roe`
+- `flag_patrimonio_no_positivo`
+- `fin_crecimiento_activos`
+- `fin_crecimiento_patrimonio`
+- `fin_crecimiento_ventas`
+- `fin_crecimiento_empleados`
+
+El dataset financiero contiene:
+
+`32 columnas`
+
+---
+
+# 9. Protocolo temporal v10
+
+Se congeló la siguiente división:
+
+| Conjunto | Período | Observaciones | Positivos |
+|---|---|---:|---:|
+| TRAIN | 2012–2018 | 470.722 | 407 |
+| EMBARGO 1 | 2019 | 91.934 | 34 |
+| VALIDATION | 2020 | 98.471 | 34 |
+| EMBARGO 2 | 2021 | 109.099 | 39 |
+| TEST | 2022–2023 | 260.445 | 54 |
+
+La separación fue congelada antes de la evaluación final.
+
+---
+
+# 10. Backtesting temporal v10
+
+Se utilizaron cuatro folds.
+
+### Fold 1
+
+TRAIN:
+
+`2012–2013`
+
+EMBARGO:
+
+`2014`
+
+EVALUACIÓN:
+
+`2015`
+
+### Fold 2
+
+TRAIN:
+
+`2012–2014`
+
+EMBARGO:
+
+`2015`
+
+EVALUACIÓN:
+
+`2016`
+
+### Fold 3
+
+TRAIN:
+
+`2012–2015`
+
+EMBARGO:
+
+`2016`
+
+EVALUACIÓN:
+
+`2017`
+
+### Fold 4
+
+TRAIN:
+
+`2012–2016`
+
+EMBARGO:
+
+`2017`
+
+EVALUACIÓN:
+
+`2018`
+
+Estos folds permitieron evaluar estabilidad antes de abrir TEST.
+
+---
+
+# 11. Modelo final v10
+
+## 11.1 Selección
+
+El candidato finalmente seleccionado fue:
+
+`v10_hgb_financial_c3`
+
+Configuración:
+
+`C3_CONSERVATIVE`
+
+Algoritmo:
+
+`HistGradientBoostingClassifier`
+
+### Parámetros
+
+- `learning_rate = 0.03`
+- `max_iter = 250`
+- `max_leaf_nodes = 5`
+- `max_depth = 2`
+- `min_samples_leaf = 200`
+- `l2_regularization = 3`
+- `early_stopping = False`
+- `random_state = 42`
+- `class_weight = balanced`
+- `categorical_features = from_dtype`
+
+---
+
+## 11.2 Variables
+
+El modelo utiliza 25 variables:
+
+1. `activos_final`
+2. `patrimonio_final`
+3. `bi_ingresos_ventas`
+4. `bi_n_empleados`
+5. `activos_final_t1`
+6. `patrimonio_final_t1`
+7. `bi_ingresos_ventas_t1`
+8. `bi_n_empleados_t1`
+9. `fin_ratio_patrimonio_activos`
+10. `fin_roa`
+11. `fin_margen_neto`
+12. `fin_rotacion_activos`
+13. `fin_roe`
+14. `fin_crecimiento_activos`
+15. `fin_crecimiento_patrimonio`
+16. `fin_crecimiento_ventas`
+17. `fin_crecimiento_empleados`
+18. `TIENE_T_MENOS_1`
+19. `flag_activos_negativos`
+20. `flag_ventas_negativas`
+21. `flag_empleados_fijo`
+22. `flag_empleados_salto_temporal`
+23. `flag_empleados_anomalia_total`
+24. `flag_patrimonio_no_positivo`
+25. `tipo_compania`
+
+`provincia`
+
+no forma parte del modelo.
+
+---
+
+## 11.3 Artefacto congelado
+
+Archivo:
+
+`models/v10/v10_hgb_financial_c3_final.joblib`
+
+Contiene:
+
+- modelo;
+- nombre;
+- configuración;
+- features;
+- variables numéricas;
+- booleanas;
+- categóricas;
+- target;
+- período de entrenamiento;
+- período de TEST.
+
+---
+
+# 12. Apertura controlada de TEST v10
+
+El conjunto TEST v10 permaneció cerrado hasta completar:
+
+- definición del dataset;
+- feature set;
+- backtesting;
+- comparación de alternativas;
+- selección del candidato;
+- congelamiento de configuración.
+
+Una vez cerrado el proceso de selección se realizó la evaluación final.
+
+### TEST
+
+Período:
+
+`2022–2023`
+
+Observaciones:
+
+`260.445`
+
+Positivos:
+
+`54`
+
+### Resultados
+
+| Métrica | Resultado |
+|---|---:|
+| PR-AUC | 0.007468801 |
+| ROC-AUC | 0.934603901 |
+
+### Ranking combinado
+
+- Top 50: 0 positivos;
+- Top 100: 0 positivos;
+- Top 200: 1 positivo.
+
+El comportamiento de 2022 fue mejor que el observado en 2023.
+
+### Decisión
+
+No realizar:
+
+- retuning;
+- modificación de variables;
+- ajuste de hiperparámetros;
+- cambio de candidato;
+
+después de observar TEST.
+
+El resultado final se conserva como evaluación fuera de muestra del modelo congelado.
+
+---
+
+# 13. Interpretabilidad
+
+## 13.1 Permutation Importance
+
+Se utilizó como análisis global complementario.
+
+Su objetivo fue observar cuánto cambia el desempeño al alterar cada variable.
+
+---
+
+## 13.2 SHAP y LIME
+
+**Commit:** `2deb583`
+
+Se implementó el análisis:
+
+`src/analysis/analyze_v10_shap_lime.py`
+
+Documento:
+
+`docs/v10_explainability_shap_lime.md`
+
+### SHAP global
+
+Principales variables:
+
+| Rank | Variable | Mean Abs SHAP |
+|---:|---|---:|
+| 1 | activos_final | 0.062030 |
+| 2 | bi_ingresos_ventas | 0.033458 |
+| 3 | patrimonio_final_t1 | 0.016976 |
+| 4 | fin_crecimiento_patrimonio | 0.014514 |
+| 5 | fin_ratio_patrimonio_activos | 0.010584 |
+| 6 | fin_crecimiento_activos | 0.009977 |
+| 7 | patrimonio_final | 0.009283 |
+| 8 | activos_final_t1 | 0.008516 |
+| 9 | fin_roa | 0.008402 |
+| 10 | fin_margen_neto | 0.007309 |
+
+### Decisión
+
+Utilizar:
+
+**SHAP como explicador principal**
+
+y:
+
+**LIME como técnica complementaria**.
+
+SHAP reconstruyó el score de los casos evaluados con precisión numérica.
+
+LIME se mantuvo como aproximación local.
+
+---
+
+# 14. Sesgos y riesgos
+
+**Commit:** `790081b`
+
+Se realizó una evaluación explícita de:
+
+- concentración;
+- tamaño empresarial;
+- disponibilidad de información;
+- tipo de compañía;
+- distribución geográfica;
+- riesgo de interpretación automática.
+
+### Decisión
+
+No utilizar características descriptivas como reglas automáticas de exclusión.
+
+La provincia se mantiene fuera de las variables predictivas.
+
+### Principio
+
+`Modelo → Priorización → Especialista → Decisión`
+
+---
+
+# 15. Estabilidad
+
+**Commit:** `8e20058`
+
+Se documentó el comportamiento temporal del modelo y la necesidad de monitorear:
+
 - variables;
-- folds;
-- años;
-- métricas;
-- reglas de elegibilidad;
-- protocolo temporal.
+- score;
+- ranking;
+- cohortes;
+- desempeño posterior;
+- drift.
+
+### Decisión
+
+La estabilidad se considera parte del criterio de evaluación, no únicamente una métrica secundaria.
 
 ---
 
-# 20. Uso responsable
+# 16. Diseño operacional
 
-El sistema se desarrolla como una herramienta de apoyo a la prospección.
+**Commit:** `7bc937d`
 
-Sus resultados:
+Se definió el diseño del producto Prospect Finder BVQ.
 
-- no constituyen recomendaciones de inversión;
-- no determinan que una empresa deba convertirse en emisor;
-- no determinan aceptación regulatoria;
-- no sustituyen análisis financiero;
-- no sustituyen análisis legal;
-- no sustituyen análisis comercial;
-- no deben interpretarse como probabilidades reales mientras no exista calibración;
-- no deben utilizarse como único criterio de decisión.
+Principales decisiones:
 
-La revisión humana se mantiene como parte del diseño del sistema.
+- una empresa por fila;
+- utilizar score como indicador de priorización;
+- no presentarlo como probabilidad;
+- incorporar filtros;
+- incluir ficha financiera;
+- incluir explicación;
+- incluir comparables;
+- mantener supervisión humana.
 
 ---
 
+# 17. Arquitectura de solución
 
-# 21. Estado actual de la bitácora
+**Commit:** `de2d3c2`
 
-La bitácora se encuentra actualizada hasta:
+Se definió la arquitectura:
 
-- metodología temporal corregida;
-- v4;
-- v5;
-- v6;
-- v7;
-- v8;
-- backtest v8;
-- v9;
-- backtest v6;
-- comparación temporal v6 vs v8;
-- auditoría de nuevas fuentes;
-- validación cruzada del target;
-- integración `bi_ranking` + histórico;
-- auditoría de activos y patrimonio;
-- auditoría de utilidad neta;
-- reglas de identidad empresarial;
-- exclusión de filas sin RUC verificable;
-- congelamiento del dataset base v10 2012–2023;
-- reconstrucción binariamente reproducible del dataset v10.
+`Datos → Modelo → Producto operacional → Base de datos → API → Interfaz`
 
-El benchmark histórico del ciclo v1–v9 es:
+Se estableció separación entre:
 
-**v8 — HistGradientBoosting regularizado**
+- datos;
+- procesamiento;
+- modelo;
+- persistencia;
+- API;
+- frontend.
 
-El baseline comparable histórico es:
+---
 
-**v6 — Logistic Regression con variables temporales**
+# 18. Ranking operacional
 
-El dataset base v10 se encuentra:
+**Commit:** `e37fe23`
 
-**CONGELADO**
+**Mensaje Git:** `feat: add v10 operational ranking builder`
+
+Script:
+
+`src/product/build_operational_ranking_v10.py`
+
+Fecha de decisión:
+
+`2024-05-01`
+
+Información utilizada:
+
+`2023`
+
+### Resultado
+
+Empresas prospectables:
+
+`137.156`
+
+Archivo:
+
+`data/processed/v10_operational_ranking_2024_05_01.csv.gz`
+
+Top 500:
+
+`reports/results/v10/product/v10_operational_top500_2024_05_01.csv`
+
+### Distribución del score
+
+- mínimo: 0.006069;
+- máximo: 0.973694;
+- media: 0.157457;
+- mediana: 0.089750.
+
+### Control de reproducibilidad
+
+El scoring operacional fue comparado contra las observaciones 2023 utilizadas en TEST.
+
+Resultado:
+
+- 137.156 observaciones comparadas;
+- diferencia máxima del score: 0.
+
+### Decisión
+
+El score se utilizará como:
+
+**Índice de Afinidad Bursátil**
+
+en la capa de presentación.
+
+No se interpretará como probabilidad calibrada.
+
+---
+
+# 19. Similitud con emisores históricos
+
+**Commit:** `7bed6da`
+
+Se implementó:
+
+`src/product/build_issuer_similarity_v10.py`
+
+### Universo de referencia
+
+Emisores conocidos hasta:
+
+`2024-05-01`
+
+Total:
+
+`288`
+
+Perfiles con siete variables completas:
+
+`272`
+
+### Variables
+
+1. activos;
+2. patrimonio;
+3. ventas;
+4. empleados;
+5. patrimonio / activos;
+6. ROA;
+7. rotación de activos.
+
+### Metodología
+
+- percentiles anuales;
+- distancia euclidiana;
+- transformación a similitud 0–100;
+- cinco emisores comparables.
+
+### Resultado
+
+Prospectos con similitud:
+
+`131.320`
+
+Prospectos sin información suficiente:
+
+`5.836`
+
+Registros de comparables:
+
+`656.600`
+
+### Archivos
+
+`data/processed/v10_issuer_similarity_summary_2024_05_01.csv.gz`
+
+`data/processed/v10_issuer_similarity_matches_2024_05_01.csv.gz`
+
+### Decisión
+
+Mantener completamente separadas:
+
+- afinidad predictiva;
+- similitud financiera.
+
+No se implementa una fórmula ponderada entre ambas.
+
+---
+
+# 20. Evaluación retrospectiva de similitud
+
+Se analizaron empresas que posteriormente se convirtieron en emisores, sin incorporarlas como referencias futuras.
+
+Número de casos:
+
+`29`
+
+Similitud Top 1 media de ese grupo:
+
+`96,01`
+
+Resto del universo:
+
+`87,19`
+
+### Interpretación
+
+El resultado es exploratorio.
+
+No demuestra capacidad predictiva independiente del motor de similitud.
+
+No se utilizó para ajustar:
+
+- modelo;
+- ranking;
+- metodología;
+- threshold.
+
+---
+
+# 21. Dependencias para backend
+
+**Commit:** `2067948`
+
+**Mensaje Git:** `chore: add FastAPI and PostgreSQL dependencies`
+
+Se incorporaron dependencias para:
+
+- FastAPI;
+- Uvicorn;
+- SQLAlchemy;
+- psycopg;
+- Pydantic;
+- Alembic;
+- dotenv;
+- PostgreSQL.
+
+### Decisión
+
+Separar la aplicación del procesamiento analítico mediante una API.
+
+---
+
+# 22. PostgreSQL y Docker
+
+**Commit:** `a5bba08`
+
+**Mensaje Git:** `feat: add PostgreSQL API infrastructure`
+
+Se incorporó:
+
+`compose.yaml`
+
+Imagen:
+
+`postgres:17-alpine`
+
+Base de desarrollo:
+
+`prospect_finder_bvq`
+
+Se incorporaron:
+
+- configuración;
+- conexión;
+- modelos ORM;
+- cargador operacional.
+
+### Tablas
+
+#### `operational_prospects`
+
+Registros:
+
+`137.156`
+
+#### `issuer_similarity_summary`
+
+Registros:
+
+`137.156`
+
+#### `issuer_similarity_matches`
+
+Registros:
+
+`656.600`
+
+### Total
+
+`930.912 registros`
+
+cargados y validados.
+
+### Decisión
+
+PostgreSQL se utilizará como capa operacional para la aplicación.
+
+Los CSV continuarán siendo artefactos reproducibles del pipeline, pero no serán consultados directamente por el frontend.
+
+---
+
+# 23. FastAPI
+
+**Commit:** `18dc974`
+
+**Mensaje Git:** `feat: add FastAPI health and prospect endpoints`
+
+Se implementó la aplicación:
+
+`src/api/main.py`
+
+y los primeros endpoints.
+
+### Health
+
+`GET /api/health`
+
+Valida:
+
+- disponibilidad del servicio;
+- conexión PostgreSQL.
+
+### Ranking
+
+`GET /api/prospects`
+
+### Detalle
+
+`GET /api/prospects/{expediente_key}`
+
+La ficha de empresa incluye:
+
+- identificación;
+- ranking;
+- score;
+- percentil;
+- indicadores;
+- calidad;
+- comparables.
+
+---
+
+# 24. Catálogos y filtros
+
+**Commit:** `d1c44e4`
+
+**Mensaje Git:** `feat: add catalogs and normalized prospect filters`
+
+Se incorporó:
+
+`GET /api/catalogs`
+
+### Catálogos actuales
+
+Provincias:
+
+`24`
+
+Tipos de compañía:
+
+`9`
+
+### Ejemplos de conteos
+
+Pichincha:
+
+`43.487`
+
+Guayas:
+
+`52.560`
+
+ANÓNIMA:
+
+`65.769`
+
+SOCIEDAD POR ACCIONES SIMPLIFICADA:
+
+`41.638`
+
+RESPONSABILIDAD LIMITADA:
+
+`28.972`
+
+SUCURSAL EXTRANJERA:
+
+`722`
+
+### Normalización
+
+Se incorporó limpieza de espacios internos y finales para evitar duplicidades visuales provenientes de los archivos fuente.
+
+### Filtros actuales
+
+- búsqueda;
+- provincia;
+- tipo de compañía;
+- score mínimo;
+- similitud mínima;
+- disponibilidad de comparables;
+- paginación.
+
+---
+
+# 25. SHAP operacional
+
+**Commit:** `169ba8b`
+
+**Mensaje Git:** `feat: add SHAP explainability API`
+
+Se implementó:
+
+`src/api/services/explainability.py`
+
+Endpoints:
+
+`GET /api/explainability/global`
+
+y:
+
+`GET /api/explainability/prospects/{expediente_key}`
+
+---
+
+## 25.1 Metodología
+
+Se mantiene:
+
+`SHAP PermutationExplainer`
 
 con:
 
-- **1.030.671** observaciones elegibles;
-- **568** positivos;
-- **310** RUC positivos únicos;
-- SHA-256 `b44f9ccf309c20a59be436953a0c6e7f9a3dc1f11cc6f2c87e41c1676a3a2a8d`.
-
-La siguiente etapa es construir el feature set v10 y definir el nuevo protocolo temporal de modelado antes de entrenar cualquier modelo v10.
+- modelo v10 congelado;
+- 25 variables exactas;
+- categorías aprendidas en TRAIN;
+- background de 75 observaciones de TRAIN;
+- `max_evals = 51`.
 
 ---
 
-# 22. Regla de mantenimiento de la bitácora
+## 25.2 Validación operacional
+
+Caso funcional:
+
+score modelo:
+
+`0.9736944399096825`
+
+score del ranking:
+
+`0.9736944399096824`
+
+diferencia:
+
+`1.11 × 10^-16`
+
+### Reconstrucción SHAP
+
+Base:
+
+`0.1783474992099843`
+
+Score reconstruido:
+
+`0.9736944399096834`
+
+Error:
+
+`8.88 × 10^-16`
+
+### Conclusión
+
+La explicación operacional reproduce adecuadamente la predicción presentada al usuario.
+
+---
+
+# 26. Evaluación de TreeExplainer
+
+Se evaluó TreeExplainer con el objetivo de reducir el tiempo de respuesta.
+
+Tiempo observado:
+
+`≈ 0,046 segundos`
+
+Sin embargo, la reconstrucción obtenida fue:
+
+`≈ 0,476484`
+
+frente al score real:
+
+`≈ 0,973694`
+
+Diferencia:
+
+`≈ 0,49721`
+
+### Decisión
+
+Descartar TreeExplainer.
+
+La velocidad no compensa una explicación que no sea fiel al score producido por el modelo.
+
+---
+
+# 27. Optimización de SHAP
+
+La primera ejecución de PermutationExplainer podía presentar tiempos elevados debido al cold start.
+
+Una ejecución inicial llegó aproximadamente a:
+
+`72,66 segundos`
+
+Las siguientes ejecuciones fueron sustancialmente menores.
+
+Se probaron backgrounds reducidos y se comprobó que el principal problema no correspondía al número de observaciones del background.
+
+### Solución
+
+Implementar precalentamiento en el `lifespan` de FastAPI.
+
+Al iniciar la aplicación:
+
+1. se carga el runtime;
+2. se carga el modelo;
+3. se inicializa SHAP;
+4. se ejecuta una explicación operacional de calentamiento.
+
+### Resultado
+
+Después de:
+
+`Application startup complete`
+
+una primera consulta local posterior registró aproximadamente:
+
+`0,254 segundos`
+
+También se verificaron otros casos con tiempos adecuados para el prototipo.
+
+### Decisión
+
+Mantener PermutationExplainer y resolver la latencia mediante warm-up.
+
+---
+
+# 28. Pruebas automáticas API
+
+Se incorporó:
+
+`pytest 9.1.1`
+
+Archivos:
+
+- `tests/api/test_health.py`
+- `tests/api/test_prospects.py`
+- `tests/api/test_catalogs.py`
+- `tests/api/test_explainability.py`
+
+### Cobertura funcional inicial
+
+Se prueban:
+
+- health;
+- conexión;
+- ranking;
+- paginación;
+- búsqueda;
+- filtros;
+- detalle;
+- catálogos;
+- explicabilidad global;
+- explicabilidad local;
+- manejo de empresas inexistentes.
+
+### Resultado individual
+
+Health:
+
+`2 passed`
+
+Prospects:
+
+`5 passed`
+
+Catalogs:
+
+`2 passed`
+
+Explainability:
+
+`3 passed`
+
+### Suite completa
+
+Comando:
+
+`python -m pytest "tests\api" -q`
+
+Resultado:
+
+`12 passed`
+
+Se registraron tres warnings de deprecación provenientes de dependencias de SHAP/Matplotlib.
+
+No constituyen fallos de las pruebas.
+
+---
+
+# 29. Versionamiento de pruebas
+
+**Commit:** `b1b577f`
+
+**Mensaje Git:**
+
+`test: add API integration tests`
+
+El commit incluye:
+
+- actualización de `requirements.txt`;
+- actualización de `requirements-lock.txt`;
+- cuatro archivos de pruebas.
+
+El commit fue publicado correctamente en GitHub:
+
+`169ba8b..b1b577f main -> main`
+
+---
+
+# 30. Preparación del frontend
+
+En octubre de 2026 se instaló:
+
+`Node.js LTS 24.19.0`
+
+y:
+
+`npm 11.17.0`
+
+El entorno queda preparado para comenzar la construcción de la interfaz web.
+
+Esta etapa todavía no se considera implementada.
+
+---
+
+# 31. Actualización documental — octubre de 2026
+
+Después de completar la infraestructura operacional se inició la actualización de la documentación para evitar inconsistencias entre el diseño original y la implementación real.
+
+Se actualizaron:
+
+`docs/entorno_tecnico.md`
+
+`docs/v10_solution_architecture.md`
+
+`docs/v10_operational_product_design.md`
+
+`docs/v10_explainability_shap_lime.md`
+
+y la presente:
+
+`docs/bitacora.md`
+
+### Objetivo
+
+Distinguir claramente entre:
+
+- componentes históricos;
+- componentes implementados;
+- componentes pendientes.
+
+---
+
+# 32. Estado metodológico actual
+
+## 32.1 Unidad
+
+Entrenamiento:
+
+`empresa-año`
+
+Producto:
+
+`empresa`
+
+---
+
+## 32.2 Horizonte
+
+`24 meses`
+
+---
+
+## 32.3 Fecha de decisión
+
+Para ejercicio fiscal `t`:
+
+`01/05/t+1`
+
+---
+
+## 32.4 Elegibilidad
+
+Se excluyen empresas que ya eran emisores antes de la fecha de decisión correspondiente.
+
+---
+
+## 32.5 Dataset
+
+`v10_base_integrated_2012_2023.csv.gz`
+
+Estado:
+
+**CONGELADO**
+
+---
+
+## 32.6 Features
+
+Feature set:
+
+**CONGELADO**
+
+Modelo:
+
+25 variables.
+
+---
+
+## 32.7 Split
+
+TRAIN:
+
+`2012–2018`
+
+VALIDATION:
+
+`2020`
+
+TEST:
+
+`2022–2023`
+
+con embargos 2019 y 2021.
+
+---
+
+## 32.8 Modelo
+
+`v10_hgb_financial_c3`
+
+Estado:
+
+**CONGELADO**
+
+---
+
+## 32.9 TEST
+
+Estado:
+
+**EVALUADO UNA VEZ DESPUÉS DE LA SELECCIÓN**
+
+No se realizó retuning posterior.
+
+---
+
+## 32.10 Producto
+
+Ranking operacional:
+
+**IMPLEMENTADO**
+
+---
+
+## 32.11 Similitud
+
+Motor de emisores comparables:
+
+**IMPLEMENTADO**
+
+---
+
+## 32.12 Explicabilidad
+
+SHAP:
+
+**IMPLEMENTADO EN ANÁLISIS Y API**
+
+LIME:
+
+**COMPLEMENTARIO / ACADÉMICO**
+
+---
+
+## 32.13 Backend
+
+PostgreSQL:
+
+**IMPLEMENTADO**
+
+FastAPI:
+
+**IMPLEMENTADO**
+
+Pruebas:
+
+**12 APROBADAS**
+
+---
+
+## 32.14 Frontend
+
+Estado:
+
+**PENDIENTE**
+
+---
+
+# 33. Principales decisiones acumuladas
+
+1. La unidad analítica de entrenamiento es empresa-año.
+2. El producto muestra una empresa por fila.
+3. El horizonte objetivo es de 24 meses.
+4. Se utiliza una regla temporal conservadora de disponibilidad.
+5. No se utiliza split aleatorio como evaluación principal.
+6. Se utilizan embargos temporales.
+7. Las empresas ya emisoras se excluyen del universo prospectable.
+8. PR-AUC es más informativo que Accuracy para este problema.
+9. Precision@K, Recall@K y Lift@K son centrales para evaluar ranking.
+10. ROC-AUC es complementario.
+11. Un threshold de 0,50 no constituye la lógica operacional del producto.
+12. El problema se formula principalmente como ranking.
+13. El score no representa probabilidad calibrada.
+14. El modelo final es `v10_hgb_financial_c3`.
+15. El modelo permanece congelado después de TEST.
+16. Provincia no forma parte de las variables predictivas.
+17. SHAP es la técnica principal de explicabilidad.
+18. LIME es complementario.
+19. TreeExplainer fue descartado para el modelo actual por falta de fidelidad.
+20. El score y la similitud no se combinan.
+21. Los comparables son una señal exploratoria.
+22. PostgreSQL es la capa de persistencia operacional.
+23. FastAPI es la capa de acceso al producto.
+24. El frontend no deberá acceder directamente al modelo ni a PostgreSQL.
+25. Las decisiones comerciales permanecen bajo supervisión humana.
+26. TEST no se utiliza para retuning.
+27. Los resultados históricos se conservan.
+28. Las nuevas versiones deberán registrarse explícitamente.
+29. Las credenciales reales no deben versionarse.
+30. Los datasets operacionales no deben publicarse en Git.
+
+---
+
+# 34. Principales aprendizajes
+
+Se han identificado los siguientes aprendizajes:
+
+- la homologación contable es crítica;
+- el problema presenta desbalance extremo;
+- los eventos positivos son escasos;
+- la prevalencia cambia temporalmente;
+- la disponibilidad temporal de la información es tan importante como el valor de la variable;
+- los embargos ayudan a reducir contaminación;
+- ROC-AUC por sí sola no representa adecuadamente la utilidad del ranking;
+- los modelos complejos pueden sobreajustarse severamente;
+- una red neuronal no necesariamente supera modelos tabulares;
+- HistGradientBoosting regularizado mostró mejor comportamiento que configuraciones más flexibles;
+- el desempeño cambia entre cohortes;
+- TEST puede ser considerablemente más exigente que VALIDATION;
+- el score debe utilizarse como ranking;
+- la interpretabilidad debe validarse contra el score real;
+- una técnica de explicación rápida no es útil si no reproduce la predicción;
+- los comparables aportan contexto, pero no reemplazan la señal predictiva;
+- la explicación no representa causalidad;
+- la arquitectura desacoplada facilita evolución;
+- la persistencia relacional simplifica la capa de producto;
+- las pruebas automáticas son necesarias antes de construir la interfaz;
+- la supervisión humana es una parte central del diseño.
+
+---
+
+# 35. Riesgos y mitigaciones
+
+| Riesgo | Descripción | Mitigación |
+|---|---|---|
+| Leakage temporal | Uso prematuro de información futura | Fechas de decisión y embargos |
+| Solapamiento de target | Ventanas objetivo compartidas | Períodos de embargo |
+| Sobreajuste | Exceso de ajuste a TRAIN | Regularización y backtesting |
+| Desbalance extremo | Muy pocos positivos | PR-AUC y Top-K |
+| Pocos positivos | Alta variabilidad | Evaluación temporal |
+| Drift | Cambio del comportamiento | Monitoreo futuro |
+| Score no calibrado | Confusión con probabilidad | Presentarlo como afinidad |
+| Concentración | Mayor representación de ciertos perfiles | Auditoría segmentada |
+| Causalidad | Confundir explicación con causa | Comunicación explícita |
+| Uso automático | Tomar ranking como decisión | Human-in-the-loop |
+| Similitud mal interpretada | Confundir cercanía con predicción | Mantener señales separadas |
+| Explicación incorrecta | Mostrar factores que no reconstruyen score | Validación SHAP |
+| Credenciales expuestas | Publicar secretos en Git | Variables de entorno |
+| Datos sensibles | Versionar datos operacionales | Exclusión del repositorio |
+| Obsolescencia | Modelo pierde capacidad temporal | Monitoreo y nueva versión |
+
+---
+
+# 36. Limitaciones actuales
+
+Las principales limitaciones vigentes son:
+
+1. el target continúa siendo extremadamente desbalanceado;
+2. TEST contiene únicamente 54 eventos positivos;
+3. el comportamiento cambia entre años;
+4. la regla de disponibilidad financiera es una aproximación conservadora y no la fecha individual real de presentación;
+5. la mayor parte de las variables son financieras;
+6. el score no está calibrado como probabilidad;
+7. un score alto no garantiza conversión en emisor;
+8. existen factores comerciales y estratégicos no observados por el modelo;
+9. SHAP explica el modelo, no causalidad;
+10. la similitud con emisores no constituye una predicción;
+11. el análisis retrospectivo de similitud no demuestra poder predictivo;
+12. la interfaz web todavía no está implementada;
+13. la autenticación institucional no está implementada;
+14. el monitoreo operacional completo todavía está pendiente;
+15. DVC todavía no está integrado;
+16. MLflow todavía no está integrado;
+17. FastAPI todavía no está contenerizado;
+18. las migraciones Alembic todavía no están configuradas;
+19. la validación funcional con especialistas todavía está pendiente;
+20. el ambiente actual corresponde a desarrollo local.
+
+---
+
+# 37. Reproducibilidad
+
+El proyecto utiliza actualmente:
+
+- Git;
+- GitHub;
+- `.venv`;
+- `requirements.txt`;
+- `requirements-lock.txt`;
+- scripts reproducibles;
+- datasets congelados;
+- protocolos congelados;
+- modelo serializado;
+- documentación metodológica;
+- SHA-256 donde corresponde;
+- `random_state = 42`;
+- Docker;
+- PostgreSQL;
+- pruebas automáticas;
+- metadatos;
+- evidencia de resultados.
+
+Los datos originales y operacionales de gran tamaño no se almacenan directamente en el repositorio.
+
+---
+
+# 38. Infraestructura actual
+
+### Python
+
+Versión utilizada:
+
+`3.13.7`
+
+### PostgreSQL
+
+Imagen:
+
+`postgres:17-alpine`
+
+### Docker
+
+Docker Desktop:
+
+`4.93`
+
+Docker:
+
+`29.8.1`
+
+### Backend
+
+FastAPI:
+
+`0.142.2`
+
+Uvicorn:
+
+`0.54.0`
+
+SQLAlchemy:
+
+`2.1.3`
+
+psycopg:
+
+`3.3.6`
+
+pytest:
+
+`9.1.1`
+
+### Frontend
+
+Node.js:
+
+`24.19.0`
+
+npm:
+
+`11.17.0`
+
+Las versiones completas del entorno se mantienen en:
+
+`requirements-lock.txt`
+
+---
+
+# 39. Estado actual por componente
+
+| Componente | Estado |
+|---|---|
+| Fuentes | Implementado |
+| Integración | Implementada |
+| Dataset v10 | Congelado |
+| Target | Congelado |
+| Feature set | Congelado |
+| Split temporal | Congelado |
+| Backtesting | Completado |
+| Modelos clásicos | Evaluados |
+| MLP | Evaluado |
+| Selección final | Completada |
+| TEST | Completado |
+| Modelo v10 | Congelado |
+| Análisis de errores | Completado |
+| SHAP global | Completado |
+| SHAP local | Completado |
+| LIME | Completado |
+| Sesgos | Analizados |
+| Estabilidad | Analizada |
+| Ranking operacional | Implementado |
+| Índice de Afinidad | Implementado como score operacional |
+| Similitud con emisores | Implementada |
+| PostgreSQL | Implementado |
+| Docker PostgreSQL | Implementado |
+| ORM | Implementado |
+| FastAPI | Implementado |
+| Health API | Implementado |
+| Ranking API | Implementado |
+| Detalle API | Implementado |
+| Catálogos API | Implementado |
+| SHAP API | Implementado |
+| Pruebas automáticas | 12 aprobadas |
+| Node.js/npm | Instalados |
+| Frontend | Pendiente |
+| Docker FastAPI | Pendiente |
+| Alembic | Pendiente de configuración |
+| DVC | Pendiente |
+| MLflow | Pendiente |
+| Monitoreo operacional completo | Pendiente |
+| Validación con especialistas | Pendiente |
+
+---
+
+# 40. Evidencias recientes en Git
+
+| Commit | Evidencia |
+|---|---|
+| `2deb583` | SHAP y LIME |
+| `790081b` | Sesgos y riesgos |
+| `8e20058` | Estabilidad |
+| `7bc937d` | Diseño operacional |
+| `de2d3c2` | Arquitectura |
+| `e37fe23` | Ranking operacional |
+| `7bed6da` | Similitud con emisores |
+| `2067948` | Dependencias FastAPI/PostgreSQL |
+| `a5bba08` | Infraestructura PostgreSQL |
+| `18dc974` | API health y prospectos |
+| `d1c44e4` | Catálogos y filtros |
+| `169ba8b` | SHAP operacional |
+| `b1b577f` | Pruebas API |
+
+---
+
+# 41. Separación investigación-producto
+
+Prospect Finder BVQ distingue dos contextos.
+
+## Investigación
+
+Incluye:
+
+- construcción del target;
+- datasets;
+- features;
+- entrenamiento;
+- comparación;
+- backtesting;
+- TEST;
+- análisis de sesgos;
+- interpretabilidad;
+- estabilidad.
+
+## Producto
+
+Incluye:
+
+- ranking operacional;
+- percentiles;
+- motor de similitud;
+- PostgreSQL;
+- API;
+- SHAP bajo demanda;
+- interfaz web.
+
+La capa de producto consume un modelo congelado.
+
+No modifica automáticamente el modelo.
+
+---
+
+# 42. Estado del TEST
+
+Debe mantenerse una distinción clara.
+
+## TEST histórico v1–v3
+
+Fue utilizado durante el primer ciclo metodológico y se mantiene únicamente como evidencia histórica.
+
+## TEST v4–v9
+
+Perteneció a la metodología temporal corregida anterior y no se utilizó durante la selección de esos modelos.
+
+## TEST v10
+
+El nuevo dataset v10 modificó el universo.
+
+El TEST v10 contiene:
+
+- 260.445 observaciones;
+- 54 positivos.
+
+Fue abierto únicamente después de:
+
+- congelar dataset;
+- congelar features;
+- congelar split;
+- completar backtesting;
+- seleccionar el candidato final;
+- congelar hiperparámetros.
+
+Después de observar TEST:
+
+**no se realizó retuning.**
+
+---
+
+# 43. Próxima fase
+
+La siguiente fase del proyecto se concentra en convertir el backend ya implementado en un prototipo completo.
+
+Las actividades pendientes principales son:
+
+1. construir el frontend web;
+2. integrar el frontend con FastAPI;
+3. validar ranking y ficha de empresa desde navegador;
+4. presentar SHAP en lenguaje de negocio;
+5. presentar emisores comparables;
+6. completar dockerización de FastAPI;
+7. configurar migraciones Alembic;
+8. implementar DVC;
+9. implementar MLflow;
+10. completar mecanismos de monitoreo;
+11. ejecutar pruebas funcionales finales;
+12. realizar validación con al menos dos especialistas BVQ;
+13. documentar resultados de validación;
+14. preparar el informe final;
+15. preparar la presentación final.
+
+---
+
+# 44. Validación con especialistas
+
+La propuesta contempla validación funcional con al menos:
+
+`2 especialistas de la BVQ`
+
+Esta validación todavía no se ha ejecutado.
+
+No deberán inventarse resultados ni participantes.
+
+Cuando se realice deberá registrar:
+
+- fecha;
+- participante;
+- función;
+- escenario evaluado;
+- observaciones;
+- problemas encontrados;
+- utilidad percibida;
+- cambios sugeridos;
+- decisión sobre el prototipo.
+
+---
+
+# 45. Uso responsable
+
+Prospect Finder BVQ es una herramienta de apoyo.
+
+Sus resultados:
+
+- no constituyen recomendación de inversión;
+- no determinan aceptación regulatoria;
+- no garantizan que una empresa emitirá valores;
+- no reemplazan análisis financiero;
+- no reemplazan análisis comercial;
+- no reemplazan análisis legal;
+- no reemplazan análisis regulatorio;
+- no deben utilizarse como único criterio de decisión.
+
+El score expresa:
+
+**prioridad relativa**
+
+y no:
+
+**probabilidad real calibrada**.
+
+La similitud expresa:
+
+**cercanía del perfil financiero**
+
+y no:
+
+**probabilidad de emisión**.
+
+SHAP explica:
+
+**el comportamiento del modelo**
+
+y no:
+
+**una relación causal**.
+
+---
+
+# 46. Estado actual de la bitácora
+
+La bitácora se encuentra actualizada hasta:
+
+- ciclos históricos v1–v3;
+- corrección temporal;
+- modelos v4–v9;
+- backtesting temporal;
+- dataset v10;
+- integración de fuentes;
+- congelamiento del dataset;
+- feature set v10;
+- protocolo temporal v10;
+- backtesting v10;
+- selección del modelo final;
+- apertura controlada de TEST;
+- evaluación final;
+- explicabilidad SHAP/LIME;
+- análisis de sesgos;
+- estabilidad;
+- diseño operacional;
+- arquitectura;
+- ranking operacional;
+- similitud con emisores;
+- PostgreSQL;
+- Docker PostgreSQL;
+- FastAPI;
+- filtros;
+- catálogos;
+- SHAP operacional;
+- optimización de SHAP;
+- pruebas automáticas;
+- actualización de dependencias;
+- preparación del entorno frontend.
+
+Modelo final:
+
+`v10_hgb_financial_c3`
+
+Configuración:
+
+`C3_CONSERVATIVE`
+
+Estado:
+
+**CONGELADO**
+
+Producto operacional:
+
+**IMPLEMENTADO EN BACKEND**
+
+Backend:
+
+**IMPLEMENTADO Y PROBADO**
+
+Pruebas API:
+
+`12 passed`
+
+Frontend:
+
+**SIGUIENTE ETAPA**
+
+---
+
+# 47. Regla de mantenimiento de la bitácora
 
 Esta bitácora deberá actualizarse cuando se produzca:
 
-- un nuevo experimento;
-- un cambio de dataset;
-- una nueva generación de features;
-- una modificación importante del pipeline;
-- una nueva fuente;
-- un cambio metodológico;
-- una decisión de selección de modelo;
-- una evaluación sobre TEST;
-- una nueva evidencia de sesgo;
-- una modificación del protocolo temporal;
-- un resultado que cambie el rumbo del proyecto.
+- nuevo experimento;
+- cambio de dataset;
+- nueva fuente;
+- modificación de target;
+- cambio de features;
+- nueva versión del modelo;
+- evaluación nueva;
+- evidencia nueva de sesgo;
+- cambio de protocolo;
+- componente nuevo de producto;
+- endpoint nuevo;
+- cambio de arquitectura;
+- despliegue;
+- validación con usuarios;
+- cambio que altere el rumbo del proyecto.
 
-Las actividades y experimentos completados no deben eliminarse.
+Los experimentos completados no deben eliminarse.
+
+Los resultados antiguos deben mantenerse identificados como históricos cuando hayan sido reemplazados metodológicamente.
 
 La bitácora complementa el historial de Git:
 

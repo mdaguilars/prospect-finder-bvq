@@ -2,71 +2,80 @@
 
 ## 1. Entorno de desarrollo
 
-El proyecto Prospect Finder BVQ se desarrolla en un entorno local Windows de 64 bits, utilizando herramientas de desarrollo, análisis de datos, aprendizaje automático y control de versiones orientadas a garantizar la trazabilidad y reproducibilidad del trabajo.
+Prospect Finder BVQ se desarrolla en un entorno local Windows de 64 bits utilizando herramientas de ingeniería de datos, aprendizaje automático, desarrollo web, bases de datos, contenerización, pruebas automatizadas y control de versiones.
+
+El entorno está orientado a mantener trazabilidad, reproducibilidad y separación entre las capas de datos, modelado, API y producto.
 
 | Componente | Herramienta | Versión / configuración | Uso |
 |---|---|---|---|
 | Sistema operativo | Windows | 64 bits | Plataforma principal de desarrollo |
-| Lenguaje | Python | 3.13.7 | Lenguaje principal del proyecto |
-| Entorno de desarrollo | Visual Studio Code | 1.136.1 x64 | Desarrollo, edición y ejecución del código |
-| Terminal | PowerShell | 7.6.5 | Ejecución de comandos y administración del entorno |
-| Control de versiones | Git | 2.55.0.windows.3 | Registro y trazabilidad de cambios |
-| Repositorio remoto | GitHub | Repositorio privado | Respaldo y sincronización del código |
-| Rama principal | Git | main | Rama estable del proyecto |
-| Gestor de paquetes | pip | 26.2.1 | Instalación y administración de dependencias |
-| Entorno virtual | Python venv | .venv | Aislamiento de dependencias |
-| Notebooks | Jupyter | 1.1.1 | Análisis y experimentación interactiva |
-| Kernel | ipykernel | 7.3.0 | Ejecución de Python en Jupyter |
-| Interfaz de notebooks | notebook | 7.6.2 | Gestión de notebooks |
+| Lenguaje principal | Python | 3.13.7 | Procesamiento, modelado, análisis y backend |
+| Entorno de desarrollo | Visual Studio Code | 1.136.1 x64 | Desarrollo y edición del código |
+| Terminal | PowerShell | 7.6.5 | Ejecución de comandos |
+| Control de versiones | Git | 2.55.0.windows.3 | Trazabilidad de cambios |
+| Repositorio remoto | GitHub | rama `main` | Respaldo y sincronización del código |
+| Gestor de paquetes Python | pip | 26.2.1 | Administración de dependencias Python |
+| Entorno virtual | Python venv | `.venv` | Aislamiento de dependencias |
+| Node.js | Node.js LTS | 24.19.0 | Entorno para desarrollo del frontend |
+| npm | npm | 11.17.0 | Administración de dependencias frontend |
+| Docker Desktop | Docker Desktop | 4.93.0 | Contenerización y servicios locales |
+| Docker Engine / CLI | Docker | 29.8.1 | Ejecución de contenedores |
+| WSL | Ubuntu sobre WSL2 | WSL 2 | Backend Linux utilizado por Docker Desktop |
+| Base de datos | PostgreSQL | 17 Alpine | Persistencia del producto operacional |
 
 ---
 
-## 2. Librerías principales
+## 2. Librerías principales de Python
 
-El proyecto utiliza librerías para procesamiento de datos, análisis estadístico, modelado, evaluación y visualización.
-
-| Librería | Versión | Uso dentro del proyecto |
-|---|---:|---|
-| pandas | 3.0.5 | Manipulación, limpieza, integración y transformación de datos |
-| NumPy | 2.5.3 | Operaciones numéricas |
-| openpyxl | 3.1.5 | Lectura y escritura de archivos Excel |
-| Matplotlib | 3.11.1 | Generación de gráficos |
-| scikit-learn | 1.9.1 | Preprocesamiento, modelado y métricas |
-| SciPy | 1.18.1 | Funciones científicas utilizadas por dependencias del proyecto |
-| joblib | 1.6.0 | Serialización local de modelos |
-| threadpoolctl | 3.7.0 | Gestión de ejecución de librerías numéricas |
-| Jupyter | 1.1.1 | Ejecución interactiva de análisis |
-
-Las versiones completas del entorno se encuentran registradas en:
+Las versiones exactas instaladas se encuentran registradas en:
 
 - `requirements.txt`
 - `requirements-lock.txt`
 
+Las principales dependencias utilizadas actualmente son:
+
+| Librería | Versión verificada | Uso dentro del proyecto |
+|---|---:|---|
+| pandas | 3.0.5 | Manipulación, integración y transformación de datos |
+| NumPy | 2.5.3 | Operaciones numéricas |
+| openpyxl | 3.1.5 | Lectura y escritura de archivos Excel |
+| Matplotlib | 3.11.1 | Visualización de resultados |
+| scikit-learn | 1.9.1 | Modelado, evaluación y modelo final v10 |
+| SciPy | 1.18.1 | Funciones científicas |
+| joblib | 1.6.0 | Serialización y carga del modelo final |
+| FastAPI | 0.142.2 | API REST del prototipo |
+| Uvicorn | 0.54.0 | Servidor ASGI para FastAPI |
+| SQLAlchemy | 2.1.3 | Capa ORM y acceso a PostgreSQL |
+| psycopg | 3.3.6 | Driver PostgreSQL para Python |
+| psycopg-binary | 3.3.6 | Distribución binaria del driver PostgreSQL |
+| Alembic | 1.20.0 | Soporte para migraciones de base de datos |
+| python-dotenv | 1.2.4 | Variables de configuración del entorno |
+| Pydantic | 2.13.5 | Validación y configuración utilizada por FastAPI |
+| Starlette | 1.7.0 | Componentes ASGI utilizados por FastAPI |
+| pytest | 9.1.1 | Pruebas automáticas |
+| SHAP | versión registrada en `requirements-lock.txt` | Interpretabilidad global y local |
+| LIME | versión registrada en `requirements-lock.txt` | Interpretabilidad local complementaria |
+| Jupyter | 1.1.1 | Experimentación interactiva |
+| ipykernel | 7.3.0 | Kernel Python para notebooks |
+| notebook | 7.6.2 | Ejecución de notebooks |
+
+Las dependencias transitivas completas también se conservan en `requirements-lock.txt`.
+
+No se deben escribir manualmente versiones de librerías no verificadas. El archivo de bloqueo constituye la referencia técnica para reconstruir el entorno Python.
+
 ---
 
-## 3. Entorno virtual
+## 3. Entorno virtual de Python
 
-El proyecto utiliza un entorno virtual denominado `.venv`, creado mediante el módulo `venv` de Python.
+El proyecto utiliza un entorno virtual denominado:
 
-La utilización de un entorno virtual permite:
+`.venv`
 
-- aislar las dependencias del proyecto;
-- evitar conflictos con otras instalaciones de Python;
-- mantener versiones específicas de librerías;
-- facilitar la reproducción del entorno;
-- reducir diferencias entre ejecuciones.
-
-El intérprete utilizado corresponde a:
+El intérprete correspondiente es:
 
 `prospect-finder-bvq\.venv\Scripts\python.exe`
 
-La ejecución del entorno fue validada utilizando Python 3.13.7.
-
----
-
-## 4. Activación del entorno
-
-Desde PowerShell, ubicado en la carpeta raíz del proyecto, el entorno se activa mediante:
+La activación desde PowerShell se realiza mediante:
 
 `.\.venv\Scripts\Activate.ps1`
 
@@ -74,42 +83,37 @@ Después de la activación, el prompt debe mostrar:
 
 `(.venv)`
 
-antes de la ruta del proyecto.
+El entorno virtual permite:
+
+- aislar dependencias;
+- conservar versiones específicas;
+- evitar conflictos con otras instalaciones;
+- ejecutar pruebas en un entorno controlado;
+- mejorar la reproducibilidad.
 
 ---
 
-## 5. Entorno de notebooks
+## 4. Entorno de notebooks
 
-Para análisis exploratorio y validaciones iniciales se utiliza Jupyter integrado con Visual Studio Code.
+Jupyter se mantiene disponible para análisis exploratorio y validaciones.
 
-Se creó el notebook:
+El notebook inicial:
 
 `notebooks/00_validacion_entorno.ipynb`
 
-Este notebook fue utilizado para verificar que el kernel de Jupyter utiliza el intérprete correspondiente al entorno virtual `.venv`.
+fue utilizado para comprobar el funcionamiento del entorno de Python y las principales librerías.
 
-La validación inicial confirmó el funcionamiento de:
-
-- Python;
-- pandas;
-- NumPy;
-- openpyxl;
-- Matplotlib;
-- Jupyter;
-- ipykernel.
-
-El desarrollo posterior del pipeline se realiza principalmente mediante scripts Python independientes para mejorar la reproducibilidad.
+El desarrollo principal del proyecto se realiza actualmente mediante scripts Python versionados, lo cual facilita la reproducción del pipeline y la trazabilidad de cada etapa.
 
 ---
 
-## 6. Estructura del proyecto
+## 5. Estructura actual del proyecto
 
-La estructura principal del repositorio es:
+La estructura técnica principal es:
 
     prospect-finder-bvq/
     │
     ├── config/
-    │   └── scvs_account_mapping.csv
     │
     ├── data/
     │   ├── raw/
@@ -117,346 +121,822 @@ La estructura principal del repositorio es:
     │   └── processed/
     │
     ├── docs/
-    │   ├── baseline_v1.md
-    │   ├── baseline_v2.md
-    │   ├── baseline_v3.md
-    │   ├── entorno_tecnico.md
-    │   ├── informe_resultados_preliminares.md
-    │   ├── inventario_fuentes.md
-    │   └── pipeline_datos_mvp.md
     │
     ├── models/
+    │   └── v10/
     │
     ├── notebooks/
-    │   └── 00_validacion_entorno.ipynb
     │
     ├── reports/
     │   ├── figures/
     │   └── results/
+    │       └── v10/
     │
     ├── src/
+    │   ├── analysis/
+    │   ├── api/
+    │   │   ├── core/
+    │   │   ├── models/
+    │   │   ├── routers/
+    │   │   └── services/
     │   ├── data/
     │   ├── evaluation/
     │   ├── features/
-    │   └── models/
+    │   ├── models/
+    │   └── product/
     │
-    ├── .gitignore
-    ├── README.md
+    ├── tests/
+    │   └── api/
+    │
+    ├── compose.yaml
     ├── requirements.txt
-    └── requirements-lock.txt
+    ├── requirements-lock.txt
+    ├── README.md
+    └── .gitignore
 
 ---
 
-## 7. Organización por etapas
+## 6. Organización de datos
 
-### 7.1 `data/raw`
+### 6.1 `data/raw`
 
-Contiene archivos originales obtenidos desde las fuentes utilizadas en el proyecto.
+Contiene las fuentes originales utilizadas durante el proyecto.
 
 Los archivos originales se conservan sin modificaciones.
 
-Los datos no se almacenan en Git debido a su tamaño y a consideraciones de manejo responsable de información.
+Los datos sensibles o de gran tamaño no se almacenan directamente en Git.
 
----
+### 6.2 `data/interim`
 
-### 7.2 `data/interim`
-
-Contiene datasets intermedios generados durante las etapas de:
+Contiene datasets generados durante etapas intermedias de:
 
 - homologación;
 - limpieza;
 - integración;
-- validación.
+- validación;
+- preparación temporal.
 
-Entre los archivos generados se encuentra:
+### 6.3 `data/processed`
 
-`data/interim/scvs_financials_harmonized_2015_2023.csv.gz`
+Contiene datasets preparados para modelado y producto.
+
+Entre los principales artefactos de la versión v10 se encuentran:
+
+`data/processed/v10_base_integrated_2012_2023.csv.gz`
+
+`data/processed/v10_features_core_2012_2023.csv.gz`
+
+`data/processed/v10_features_financial_2012_2023.csv.gz`
+
+También se generan localmente los datasets operacionales:
+
+`data/processed/v10_operational_ranking_2024_05_01.csv.gz`
+
+`data/processed/v10_issuer_similarity_summary_2024_05_01.csv.gz`
+
+`data/processed/v10_issuer_similarity_matches_2024_05_01.csv.gz`
+
+Los archivos operacionales contienen información empresarial y no se publican como parte del código fuente.
 
 ---
 
-### 7.3 `data/processed`
+## 7. Componentes de código
 
-Contiene datasets preparados para modelado.
-
-Entre los archivos principales se encuentran:
-
-`data/processed/mvp_labeled_2015_2023.csv.gz`
-
-y:
-
-`data/processed/mvp_features_2015_2023.csv.gz`
-
-Estos archivos no se almacenan en Git.
-
----
-
-### 7.4 `src/data`
+### 7.1 `src/data`
 
 Contiene scripts relacionados con:
 
 - lectura de fuentes;
 - homologación;
+- integración;
 - construcción de datasets;
-- validaciones de calidad;
+- validación de calidad;
 - construcción de la variable objetivo.
 
----
+### 7.2 `src/features`
 
-### 7.5 `src/features`
+Contiene los procesos de ingeniería de variables.
 
-Contiene los procesos de ingeniería de variables utilizados para construir el dataset destinado al modelado.
+El dataset financiero v10 incorpora variables financieras actuales, rezagos temporales, tasas de crecimiento y banderas de calidad.
 
----
+### 7.3 `src/models`
 
-### 7.6 `src/models`
+Contiene scripts de experimentación, entrenamiento y evaluación de modelos.
 
-Contiene los scripts de entrenamiento y experimentación de modelos.
+Los experimentos iniciales se mantienen como evidencia histórica, mientras que el modelo seleccionado para v10 corresponde a una etapa posterior del proyecto.
 
-Entre los experimentos desarrollados se encuentran:
+### 7.4 `src/evaluation`
 
-- Baseline v1;
-- Baseline v2;
-- experimento v3 de regularización.
+Contiene procesos de:
 
----
-
-### 7.7 `src/evaluation`
-
-Contiene scripts para:
-
-- generación de gráficos;
-- análisis de errores;
-- matrices de confusión;
-- análisis de ranking;
-- evaluación de falsos positivos y falsos negativos.
-
----
-
-### 7.8 `reports/results`
-
-Contiene resultados agregados de los experimentos, por ejemplo:
-
+- evaluación temporal;
 - métricas;
-- ranking;
-- coeficientes;
-- metadatos;
-- análisis de errores.
+- análisis de ranking;
+- análisis de errores;
+- validaciones del modelo.
 
-Los resultados relevantes para reproducibilidad se versionan explícitamente en Git.
+### 7.5 `src/analysis`
 
----
+Contiene análisis posteriores al cierre del modelo, entre ellos:
 
-### 7.9 `reports/figures`
+- interpretabilidad;
+- SHAP;
+- LIME;
+- sesgos;
+- estabilidad;
+- análisis de riesgos.
 
-Contiene las visualizaciones utilizadas para analizar y comunicar los resultados del modelo.
+La explicabilidad es post-test y no modifica el modelo final congelado.
 
----
+### 7.6 `src/product`
 
-### 7.10 `docs`
-
-Contiene la documentación metodológica, técnica y de trazabilidad del proyecto.
+Contiene procesos para convertir el modelo analítico en componentes utilizables por el prototipo.
 
 Actualmente incluye:
 
-- `pipeline_datos_mvp.md`: describe el flujo completo de preparación de datos, etiquetado, ingeniería de variables y modelado;
-- `inventario_fuentes.md`: documenta las fuentes utilizadas y su función dentro del proyecto;
-- `diccionario_datos.md`: describe variables, tipos, fórmulas, disponibilidad y tratamiento de faltantes;
-- `entorno_tecnico.md`: documenta el entorno de desarrollo, dependencias y estructura técnica;
-- `baseline_v1.md`: documenta el modelo de referencia;
-- `baseline_v2.md`: documenta el experimento de eliminación de `SECTOR_CIIU`;
-- `baseline_v3.md`: documenta el experimento de regularización;
-- `bitacora.md`: registra cronológicamente decisiones, cambios, resultados y aprendizajes;
-- `backlog.md`: mantiene las actividades futuras priorizadas;
-- `informe_resultados_preliminares.md`: consolida los resultados, análisis, limitaciones y próximos pasos de la entrega académica.
+- generación del ranking operativo;
+- construcción del universo prospectable;
+- motor de similitud con emisores históricos.
 
----
-## 8. Reproducibilidad
+### 7.7 `src/api`
 
-La reproducibilidad del proyecto se apoya en los siguientes mecanismos:
+Contiene el backend del prototipo construido con FastAPI.
 
-- entorno virtual `.venv`;
-- archivo `requirements.txt`;
-- archivo `requirements-lock.txt`;
-- control de versiones mediante Git;
-- repositorio remoto privado en GitHub;
-- scripts independientes por etapa;
-- separación entre datos originales, intermedios y procesados;
-- registro de configuraciones de experimentos;
-- almacenamiento de métricas agregadas;
-- documentación metodológica;
-- uso de `random_state = 42` en procesos que requieren control de aleatoriedad.
+Se organiza en:
+
+- `core/`: configuración y conexión a base de datos;
+- `models/`: modelos ORM;
+- `routers/`: endpoints;
+- `services/`: servicios de negocio y explicabilidad.
 
 ---
 
-## 9. Archivos de dependencias
+## 8. Modelo final v10
 
-### `requirements.txt`
+El modelo final seleccionado y congelado es:
 
-Contiene las dependencias necesarias para ejecutar el proyecto.
+`v10_hgb_financial_c3`
 
-### `requirements-lock.txt`
+Configuración:
 
-Contiene el detalle exacto de las versiones instaladas en el entorno utilizado durante el desarrollo.
+`C3_CONSERVATIVE`
 
-El archivo de bloqueo permite reconstruir con mayor precisión el entorno técnico utilizado para los experimentos.
+El artefacto se encuentra en:
 
----
+`models/v10/v10_hgb_financial_c3_final.joblib`
 
-## 10. Modelos serializados
+El algoritmo utilizado es:
 
-Los modelos entrenados pueden generarse localmente en:
+`HistGradientBoostingClassifier`
 
-`models/`
+con configuración:
 
-Por ejemplo:
+- `learning_rate = 0.03`
+- `max_iter = 250`
+- `max_leaf_nodes = 5`
+- `max_depth = 2`
+- `min_samples_leaf = 200`
+- `l2_regularization = 3`
+- `early_stopping = False`
+- `random_state = 42`
+- `class_weight = balanced`
+- tratamiento categórico nativo mediante scikit-learn.
 
-`models/logistic_baseline.joblib`
+El modelo utiliza 25 variables.
 
-Estos archivos no necesitan almacenarse permanentemente en Git mientras puedan reconstruirse mediante:
+El `score_afinidad` generado por el modelo se utiliza como indicador de priorización comercial.
 
-- código versionado;
-- datos correspondientes;
-- configuración registrada;
-- dependencias documentadas.
-
----
-
-## 11. Control de versiones
-
-El proyecto utiliza Git como mecanismo de trazabilidad.
-
-La rama principal es:
-
-`main`
-
-El repositorio remoto se encuentra alojado en GitHub y es privado.
-
-Los commits permiten registrar de manera progresiva:
-
-- cambios en el pipeline;
-- experimentos;
-- resultados;
-- documentación;
-- decisiones metodológicas.
+No debe interpretarse como una probabilidad calibrada de convertirse en emisor.
 
 ---
 
-## 12. Información no versionada
+## 9. División temporal v10
 
-No se almacenan directamente en Git:
-
-- archivos originales de gran tamaño;
-- datasets intermedios;
-- datasets procesados;
-- modelos serializados reconstruibles;
-- información interna sensible de la BVQ.
-
-El repositorio se concentra en:
-
-- código;
-- configuraciones;
-- documentación;
-- resultados agregados;
-- figuras necesarias para reproducibilidad y análisis.
-
----
-
-## 13. Principio de separación de datos y código
-
-El proyecto mantiene una separación explícita entre:
-
-- datos originales;
-- datos transformados;
-- código fuente;
-- modelos;
-- resultados;
-- documentación.
-
-Esta estructura permite reconstruir el proceso de manera ordenada y reduce el riesgo de modificar accidentalmente los datos originales.
-
----
-
-## 14. Flujo técnico general
-
-El flujo implementado es:
-
-1. Carga de datos originales.
-2. Inventario de estructuras.
-3. Homologación de cuentas contables.
-4. Validación contable.
-5. Construcción del dataset empresa-año.
-6. Construcción de `TARGET_24M`.
-7. Ingeniería de variables.
-8. División temporal.
-9. Preprocesamiento.
-10. Entrenamiento.
-11. Evaluación.
-12. Análisis de ranking.
-13. Análisis de errores.
-14. Registro de resultados.
-15. Documentación del experimento.
-
----
-
-## 15. División temporal utilizada
-
-La estructura actual de evaluación es:
+La división temporal congelada actualmente es:
 
 | Conjunto | Período |
 |---|---|
-| TRAIN | 2015–2020 |
-| VALIDATION | 2021 |
+| TRAIN | 2012–2018 |
+| EMBARGO 1 | 2019 |
+| VALIDATION | 2020 |
+| EMBARGO 2 | 2021 |
 | TEST | 2022–2023 |
 
-Esta división busca aproximar el comportamiento de un escenario real en el que el modelo se entrena con información histórica y posteriormente se utiliza sobre períodos futuros.
+Esta división busca reducir riesgo de fuga temporal y representar un escenario de aplicación sobre períodos futuros.
+
+El modelo final fue seleccionado antes de observar los resultados finales de TEST.
+
+Después de la evaluación final de TEST no se realizó reajuste de hiperparámetros.
 
 ---
 
-## 16. Modelo de referencia
+## 10. Ranking operacional
 
-El modelo de referencia actual es una regresión logística implementada mediante scikit-learn.
+El producto operacional utiliza información financiera correspondiente a:
 
-El pipeline integra:
+`ANIO = 2023`
 
-- imputación de datos faltantes;
-- estandarización;
-- codificación categórica;
-- regresión logística;
-- ponderación de clases.
+con fecha de decisión:
 
-El Baseline v1 se mantiene como referencia para comparar las siguientes iteraciones.
+`2024-05-01`
+
+El ranking operacional contiene:
+
+`137.156 empresas`
+
+Cada empresa dispone, según disponibilidad de datos, de:
+
+- ranking;
+- score de afinidad;
+- percentil;
+- identificación;
+- provincia;
+- tipo de compañía;
+- indicadores financieros;
+- calidad de información;
+- similitud con emisores históricos.
+
+La generación operacional reproduce exactamente los scores obtenidos por el modelo congelado para el universo correspondiente.
+
+La salida del producto no expone `TARGET_24M`.
+
+Las empresas que se convirtieron posteriormente en emisores no se excluyen utilizando información futura.
 
 ---
 
-## 17. Consideraciones sobre reproducibilidad de datos
+## 11. Motor de similitud con emisores
 
-Aunque el código y las configuraciones se encuentran versionados, la reproducción completa también requiere acceso a las fuentes originales utilizadas.
+El sistema incorpora un componente adicional de similitud empresarial.
 
-Por esta razón, la documentación del proyecto debe conservar:
+Este componente es independiente del score predictivo.
 
-- identificación de la fuente;
-- nombre de los archivos;
-- período de información;
-- ubicación dentro de la estructura local;
-- proceso de transformación;
-- criterios de exclusión;
-- reglas de homologación.
+No existe una fórmula ponderada que combine:
 
-Las fechas exactas de extracción y las condiciones de uso de las fuentes deberán registrarse cuando hayan sido verificadas.
+- score de afinidad;
+- similitud con emisores.
+
+La similitud utiliza siete variables financieras con cobertura suficiente:
+
+- activos;
+- patrimonio;
+- ingresos por ventas;
+- número de empleados;
+- relación patrimonio / activos;
+- ROA;
+- rotación de activos.
+
+Las variables se transforman a percentiles anuales y posteriormente se calcula distancia euclidiana.
+
+La similitud se expresa en una escala de 0 a 100.
+
+Para cada prospecto pueden presentarse hasta cinco emisores históricos comparables.
+
+El universo de referencia utiliza únicamente emisores conocidos hasta la fecha de decisión correspondiente, evitando utilizar información futura.
 
 ---
 
-## 18. Estado del entorno
+## 12. PostgreSQL
 
-El entorno técnico se encuentra operativo para:
+El producto utiliza PostgreSQL como base de datos operacional.
+
+La instancia local se ejecuta mediante Docker utilizando:
+
+`postgres:17-alpine`
+
+Base de datos de desarrollo:
+
+`prospect_finder_bvq`
+
+La base contiene actualmente tres tablas principales:
+
+### `operational_prospects`
+
+Contiene una fila por empresa del ranking operacional.
+
+Registros cargados:
+
+`137.156`
+
+### `issuer_similarity_summary`
+
+Contiene el resumen de similitud de cada empresa.
+
+Registros cargados:
+
+`137.156`
+
+### `issuer_similarity_matches`
+
+Contiene los emisores históricos comparables de cada prospecto.
+
+Registros cargados:
+
+`656.600`
+
+Total de registros operacionales cargados y validados:
+
+`930.912`
+
+La carga es realizada mediante:
+
+`src/api/load_operational_data.py`
+
+El proceso valida los conteos esperados después de la carga.
+
+---
+
+## 13. Docker
+
+El archivo:
+
+`compose.yaml`
+
+define actualmente el servicio PostgreSQL local.
+
+La imagen utilizada es:
+
+`postgres:17-alpine`
+
+El servicio expone PostgreSQL en:
+
+`localhost:5432`
+
+Docker Desktop utiliza WSL2 como backend Linux.
+
+Las credenciales incluidas actualmente corresponden exclusivamente al ambiente local de desarrollo.
+
+No deben utilizarse como credenciales de producción.
+
+La dockerización completa de la API se considera una etapa posterior del cierre de MLOps.
+
+---
+
+## 14. FastAPI
+
+La API del producto se encuentra en:
+
+`src/api/`
+
+La aplicación principal es:
+
+`src/api/main.py`
+
+El servidor local se inicia mediante:
+
+`python -m uvicorn src.api.main:app --reload`
+
+Dirección local:
+
+`http://127.0.0.1:8000`
+
+Documentación interactiva:
+
+`http://127.0.0.1:8000/docs`
+
+Los principales endpoints implementados son:
+
+### Salud
+
+`GET /api/health`
+
+Verifica:
+
+- disponibilidad de la API;
+- conexión con PostgreSQL;
+- entorno;
+- versión de aplicación.
+
+### Ranking
+
+`GET /api/prospects`
+
+Permite:
+
+- paginación;
+- búsqueda;
+- filtro por provincia;
+- filtro por tipo de compañía;
+- score mínimo;
+- similitud mínima;
+- disponibilidad de comparables.
+
+### Detalle de empresa
+
+`GET /api/prospects/{expediente_key}`
+
+Devuelve:
+
+- identificación;
+- posición en ranking;
+- score;
+- calidad de datos;
+- indicadores financieros;
+- similitud;
+- cinco comparables históricos;
+- información del modelo.
+
+### Catálogos
+
+`GET /api/catalogs`
+
+Devuelve:
+
+- provincias;
+- tipos de compañía;
+- número de empresas por categoría.
+
+Los textos provenientes de las fuentes se normalizan antes de ser entregados a la interfaz.
+
+### Explicabilidad global
+
+`GET /api/explainability/global`
+
+Devuelve la importancia global SHAP calculada durante el análisis post-test.
+
+### Explicabilidad local
+
+`GET /api/explainability/prospects/{expediente_key}`
+
+Genera una explicación SHAP específica para una empresa.
+
+---
+
+## 15. Explicabilidad SHAP operacional
+
+La técnica principal de interpretabilidad es SHAP.
+
+La metodología seleccionada es:
+
+`SHAP PermutationExplainer`
+
+El background utilizado para la explicación se construye exclusivamente con observaciones de TRAIN.
+
+La explicación local utiliza las mismas 25 variables del modelo final.
+
+Para cada empresa se valida:
+
+`score_modelo ≈ base_value + suma(valores_SHAP)`
+
+En pruebas funcionales se obtuvo un error numérico del orden de:
+
+`10^-15`
+
+lo que confirma la reconstrucción del score dentro de tolerancia numérica.
+
+TreeExplainer fue evaluado como alternativa de rendimiento, pero fue descartado porque no reconstruyó correctamente el score del modelo al tratar la variable categórica nativa.
+
+Por esta razón se conserva `PermutationExplainer`.
+
+El runtime SHAP se precalienta durante el inicio de FastAPI para evitar que el primer usuario soporte el costo completo de inicialización.
+
+Después del precalentamiento se verificaron respuestas locales cercanas a fracciones de segundo en el entorno de desarrollo.
+
+La importancia global SHAP continúa utilizando los resultados post-test previamente validados.
+
+LIME se conserva como técnica complementaria de análisis y evidencia metodológica, pero no constituye actualmente el método principal de explicación operacional del frontend.
+
+---
+
+## 16. API y separación de responsabilidades
+
+La arquitectura mantiene separadas las siguientes capas:
+
+    Fuentes de datos
+           │
+           ▼
+    Pipeline de procesamiento
+           │
+           ▼
+    Dataset de características
+           │
+           ▼
+    Modelo v10 congelado
+           │
+           ├──────────────► Explicabilidad
+           │
+           ▼
+    Ranking operacional
+           │
+           ▼
+    PostgreSQL
+           │
+           ▼
+    FastAPI
+           │
+           ▼
+    Interfaz web
+
+Esta separación evita que la interfaz acceda directamente a:
+
+- archivos de entrenamiento;
+- modelos;
+- fuentes originales;
+- bases analíticas.
+
+La API constituye la capa de acceso al producto.
+
+---
+
+## 17. Pruebas automáticas
+
+El proyecto utiliza:
+
+`pytest 9.1.1`
+
+Las pruebas se encuentran en:
+
+`tests/api/`
+
+Actualmente existen pruebas para:
+
+- health check;
+- ranking;
+- filtros;
+- detalle de empresa;
+- comparables;
+- catálogos;
+- SHAP global;
+- integración del servicio de explicabilidad;
+- manejo de errores.
+
+La suite actual fue ejecutada mediante:
+
+`python -m pytest "tests\api" -q`
+
+Resultado validado:
+
+`12 passed`
+
+Las advertencias observadas corresponden a avisos de deprecación internos de SHAP/Matplotlib y no afectan el funcionamiento de las pruebas.
+
+Las pruebas de ranking, detalle y catálogos consultan la base PostgreSQL local cargada.
+
+La prueba del endpoint local SHAP utiliza aislamiento de la ejecución pesada mediante `monkeypatch`, mientras que la reconstrucción SHAP real fue validada mediante pruebas funcionales independientes.
+
+---
+
+## 18. Frontend
+
+El entorno frontend ya se encuentra preparado con:
+
+- Node.js LTS 24.19.0;
+- npm 11.17.0.
+
+La implementación de la interfaz web constituye la siguiente etapa del prototipo.
+
+La interfaz consumirá exclusivamente los endpoints de FastAPI.
+
+No tendrá acceso directo a PostgreSQL ni a los archivos internos de modelado.
+
+---
+
+## 19. Alembic
+
+Alembic 1.20.0 se encuentra instalado como dependencia.
+
+Está previsto utilizarlo para formalizar las migraciones de esquema de PostgreSQL.
+
+La inicialización de migraciones todavía no constituye una etapa cerrada del proyecto.
+
+Por esta razón no debe afirmarse todavía que la base se encuentre administrada mediante migraciones Alembic.
+
+---
+
+## 20. Reproducibilidad
+
+La reproducibilidad se apoya actualmente en:
+
+- `.venv`;
+- `requirements.txt`;
+- `requirements-lock.txt`;
+- Git;
+- GitHub;
+- scripts independientes por etapa;
+- modelo final congelado;
+- datasets identificados;
+- separación temporal congelada;
+- documentación metodológica;
+- pruebas automáticas;
+- PostgreSQL;
+- Docker Compose;
+- `random_state = 42` cuando corresponde;
+- metadatos de resultados;
+- validación de scores operacionales frente al modelo final.
+
+---
+
+## 21. Archivos de dependencias
+
+### `requirements.txt`
+
+Contiene las dependencias instaladas necesarias para reconstruir el entorno Python utilizado actualmente.
+
+### `requirements-lock.txt`
+
+Contiene el conjunto completo de paquetes y versiones instaladas en el ambiente utilizado durante el desarrollo.
+
+Después de incorporar nuevas dependencias, ambos archivos deben actualizarse.
+
+En octubre de 2026 fueron actualizados para incorporar, entre otras dependencias:
+
+- FastAPI;
+- Uvicorn;
+- SQLAlchemy;
+- psycopg;
+- Alembic;
+- python-dotenv;
+- Pydantic;
+- pytest.
+
+---
+
+## 22. Control de versiones
+
+El proyecto utiliza Git.
+
+Rama principal:
+
+`main`
+
+El repositorio remoto se aloja en GitHub.
+
+Los commits registran progresivamente:
+
+- preparación de datos;
+- experimentos;
+- selección de modelo;
+- evaluación final;
+- explicabilidad;
+- análisis de sesgo;
+- estabilidad;
+- ranking operacional;
+- similitud con emisores;
+- arquitectura;
+- PostgreSQL;
+- FastAPI;
+- pruebas automáticas.
+
+El repositorio no debe utilizarse para publicar información empresarial sensible ni datasets operacionales no autorizados.
+
+---
+
+## 23. Información no versionada
+
+Como principio general, no se publican directamente en Git:
+
+- fuentes originales de gran tamaño;
+- datasets sensibles;
+- datasets intermedios que puedan reconstruirse;
+- datasets operacionales con información empresarial;
+- credenciales;
+- archivos `.env`;
+- información interna sensible de la BVQ.
+
+El repositorio prioriza:
+
+- código;
+- configuración no sensible;
+- documentación;
+- resultados agregados;
+- protocolos;
+- pruebas;
+- metadatos;
+- evidencia metodológica.
+
+---
+
+## 24. Seguridad de configuración
+
+Las credenciales de producción no deben almacenarse en el código.
+
+La configuración de FastAPI permite utilizar variables de entorno mediante `python-dotenv`.
+
+Las credenciales existentes en Docker Compose corresponden al entorno local de desarrollo.
+
+Para despliegues posteriores deberá utilizarse configuración externa segura mediante variables de entorno o mecanismos equivalentes.
+
+---
+
+## 25. Flujo técnico general actualizado
+
+El flujo técnico actual es:
+
+1. Obtención de fuentes originales.
+2. Homologación e integración.
+3. Construcción del dataset empresa-año.
+4. Construcción de la variable objetivo.
+5. Ingeniería de variables.
+6. Congelamiento del conjunto de features.
+7. División temporal con períodos de embargo.
+8. Entrenamiento y comparación de modelos.
+9. Backtesting temporal.
+10. Selección del candidato final.
+11. Evaluación final sobre TEST.
+12. Congelamiento del modelo.
+13. Interpretabilidad SHAP y LIME.
+14. Análisis de sesgo y riesgos.
+15. Análisis de estabilidad.
+16. Construcción del ranking operacional.
+17. Construcción del motor de similitud con emisores.
+18. Persistencia operacional en PostgreSQL.
+19. Exposición de servicios mediante FastAPI.
+20. Explicabilidad operacional bajo demanda.
+21. Pruebas automáticas.
+22. Construcción de interfaz web.
+23. Formalización MLOps.
+24. Validación funcional con especialistas.
+
+---
+
+## 26. Estado técnico actual
+
+El entorno se encuentra operativo para:
 
 - procesamiento de datos;
 - construcción de datasets;
 - ingeniería de variables;
-- entrenamiento de modelos;
-- evaluación;
-- generación de gráficos;
-- análisis de errores;
-- experimentación con nuevos algoritmos.
+- entrenamiento;
+- evaluación temporal;
+- modelo final congelado;
+- generación de ranking;
+- comparación con emisores históricos;
+- interpretabilidad global;
+- interpretabilidad local;
+- almacenamiento en PostgreSQL;
+- exposición mediante API REST;
+- consultas filtradas;
+- pruebas automáticas;
+- ejecución mediante Docker para PostgreSQL.
 
-La configuración actual constituye la base reproducible para continuar con las siguientes fases del proyecto Prospect Finder BVQ.
+La API contiene actualmente los componentes necesarios para que el frontend consuma:
+
+- ranking;
+- búsqueda;
+- filtros;
+- detalle empresarial;
+- indicadores financieros;
+- comparables históricos;
+- catálogos;
+- explicabilidad.
+
+---
+
+## 27. Componentes pendientes
+
+Los principales componentes técnicos que todavía deben completarse son:
+
+- interfaz web;
+- dockerización completa de FastAPI;
+- migraciones Alembic;
+- integración formal de DVC;
+- integración formal de MLflow;
+- pruebas funcionales finales del producto;
+- validación con al menos dos especialistas de la BVQ;
+- documentación final de despliegue y operación.
+
+Estos elementos deben registrarse únicamente cuando hayan sido efectivamente implementados y validados.
+
+---
+
+## 28. Principio de trazabilidad
+
+Cada resultado presentado por Prospect Finder BVQ debe poder relacionarse con:
+
+- la fuente de datos utilizada;
+- el año de información;
+- las variables empleadas;
+- el modelo congelado;
+- la configuración del modelo;
+- la fecha de decisión;
+- el ranking producido;
+- los comparables utilizados;
+- la explicación SHAP correspondiente.
+
+Este principio permite diferenciar claramente entre:
+
+- datos observados;
+- indicadores calculados;
+- resultados del modelo;
+- explicaciones del modelo;
+- criterios comerciales posteriores.
+
+---
+
+## 29. Estado de reproducibilidad
+
+A la fecha de esta documentación se encuentran implementados los siguientes mecanismos:
+
+- entorno Python aislado;
+- dependencias congeladas;
+- repositorio Git;
+- modelo final identificado;
+- separación temporal documentada;
+- pipeline reproducible;
+- scripts de construcción operacional;
+- PostgreSQL en Docker;
+- API versionada;
+- pruebas automáticas;
+- documentación técnica;
+- explicabilidad reproducible.
+
+La incorporación de DVC, MLflow, migraciones Alembic y contenedor de FastAPI completará la capa de MLOps prevista para el proyecto.
