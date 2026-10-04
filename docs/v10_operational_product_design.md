@@ -135,7 +135,7 @@ El modelo produce técnicamente el campo:
 
 con valores entre 0 y 1.
 
-En la interfaz comercial se utilizará preferentemente el nombre:
+En la interfaz comercial se utiliza el nombre:
 
 **Índice de Afinidad Bursátil**
 
@@ -183,74 +183,73 @@ Los principales campos disponibles son:
 
 ### 9. Clasificación visual de prioridad
 
-La interfaz podrá traducir el ranking a categorías visuales para facilitar su lectura.
+La primera versión funcional no incorpora todavía categorías discretas como:
 
-Por ejemplo:
+- Muy alta;
+- Alta;
+- Media;
+- Baja.
 
-| Categoría | Interpretación |
-|---|---|
-| Muy alta | Segmento superior del ranking |
-| Alta | Empresas con prioridad relativa elevada |
-| Media | Empresas con prioridad intermedia |
-| Baja | Empresas con menor prioridad relativa |
+Actualmente la interfaz presenta directamente:
 
-Estas categorías deberán calcularse sobre percentiles del ranking.
+- posición del ranking;
+- Índice de Afinidad Bursátil;
+- percentil.
 
-No deberán interpretarse como probabilidades.
+Una futura clasificación visual deberá calcularse sobre percentiles del ranking.
 
-La clasificación visual pertenece a la capa de presentación y no modifica el resultado del modelo.
+No deberá interpretarse como probabilidad.
+
+La clasificación visual pertenecería únicamente a la capa de presentación y no modificaría el resultado del modelo.
 
 ---
 
 ### 10. Pantalla principal
 
-La pantalla principal deberá proporcionar una visión ejecutiva del universo prospectable.
+La pantalla principal se encuentra implementada y proporciona una visión ejecutiva del universo prospectable.
 
-Podrá incluir indicadores como:
+Actualmente muestra:
 
-- empresas analizadas;
-- empresas de prioridad muy alta;
-- empresas de prioridad alta;
-- empresas con comparables disponibles;
-- empresas con información suficiente;
-- fecha de corte de los datos;
-- versión del modelo.
+- universo prospectable;
+- mayor afinidad visible;
+- número de provincias;
+- número de tipos de compañía;
+- fecha de decisión;
+- versión y configuración del modelo;
+- ranking de empresas.
 
-El elemento central será la tabla de ranking.
+El elemento central es la tabla de ranking.
 
 ---
 
 ### 11. Tabla principal
 
-La tabla deberá permitir revisar rápidamente las empresas priorizadas.
+La tabla implementada permite revisar rápidamente las empresas priorizadas.
 
-Se propone mostrar inicialmente:
+Actualmente muestra:
 
 | Campo | Visualización |
 |---|---|
 | Ranking | Número |
 | Empresa | Razón social |
-| RUC | Texto |
-| Afinidad | Indicador / score |
-| Percentil | Porcentaje relativo |
 | Provincia | Texto |
 | Tipo | Texto |
-| Activos | Moneda |
-| Ventas | Moneda |
-| Similitud con emisores | Escala 0–100 |
+| Afinidad | Score |
+| Percentil | Porcentaje relativo |
+| Similitud con emisor | Escala 0–100 |
 | Calidad | Indicador visual |
 
-No es necesario mostrar todos los indicadores financieros directamente en esta tabla.
+El RUC y los principales indicadores financieros se muestran en la ficha individual.
 
-La información detallada se visualizará dentro de la ficha de empresa.
+Esta decisión reduce la densidad de información de la tabla y mantiene el detalle en un segundo nivel.
 
 ---
 
 ### 12. Paginación
 
-La API ya soporta paginación del ranking.
+La API soporta paginación y la interfaz ya consume el ranking por páginas.
 
-La interfaz deberá consumir el ranking por páginas en lugar de cargar las 137.156 empresas simultáneamente.
+La vista actual utiliza 25 empresas por página y no carga simultáneamente las 137.156 empresas.
 
 Esto mejora:
 
@@ -263,12 +262,13 @@ Esto mejora:
 
 ### 13. Búsqueda
 
-La búsqueda implementada permite localizar empresas dentro del universo.
+La búsqueda se encuentra implementada en la interfaz.
 
-La interfaz deberá permitir búsqueda principalmente mediante:
+Permite localizar empresas mediante:
 
 - razón social;
-- RUC.
+- RUC;
+- expediente.
 
 La búsqueda:
 
@@ -282,7 +282,7 @@ Solamente reduce el conjunto visible.
 
 ### 14. Filtros implementados
 
-La API dispone actualmente de filtros por:
+La API dispone de filtros por:
 
 - provincia;
 - tipo de compañía;
@@ -292,7 +292,15 @@ La API dispone actualmente de filtros por:
 
 También permite búsqueda y paginación.
 
-Estos filtros serán la base de la primera versión de la interfaz.
+La primera versión funcional de la interfaz expone directamente:
+
+- búsqueda;
+- provincia;
+- tipo de compañía;
+- limpieza de filtros;
+- paginación.
+
+Los filtros por score mínimo, similitud mínima y disponibilidad de comparables permanecen disponibles en la API y podrán incorporarse posteriormente a la interfaz sin modificar el modelo.
 
 ---
 
@@ -314,7 +322,7 @@ y:
 
 Los catálogos incluyen además la cantidad de empresas por categoría.
 
-La interfaz deberá utilizar estos catálogos en lugar de mantener listas estáticas.
+La interfaz consume estos catálogos dinámicamente en lugar de mantener listas estáticas.
 
 ---
 
@@ -340,7 +348,9 @@ Su incorporación no deberá modificar el score original.
 
 ### 17. Filtros rápidos de interfaz
 
-La aplicación podrá ofrecer accesos rápidos como:
+Los accesos rápidos todavía no forman parte de la primera versión funcional.
+
+En una evolución posterior podrán incorporarse opciones como:
 
 **Mayor afinidad**
 
@@ -358,50 +368,58 @@ Empresas para las cuales existe información suficiente para calcular similitud.
 
 Empresas con mayor disponibilidad de información.
 
-Estos accesos representan combinaciones de filtros.
+Estos accesos representarían combinaciones de filtros.
 
-No constituyen nuevas reglas del modelo.
+No constituirían nuevas reglas del modelo.
 
 ---
 
 ### 18. Ficha de empresa
 
-Al seleccionar una empresa, el usuario accederá a una ficha individual.
+Al seleccionar una empresa, la interfaz abre una ficha individual en un panel lateral.
 
-La API ya permite recuperar esta información mediante:
+La información se recupera mediante:
 
 `GET /api/prospects/{expediente_key}`
 
-La ficha deberá organizarse en secciones.
+La ficha se organiza en bloques de:
+
+- identificación;
+- priorización;
+- perfil financiero;
+- explicación;
+- emisores comparables;
+- advertencias de interpretación.
 
 ---
 
 ### 19. Identificación
 
-La primera sección debe incluir:
+La ficha muestra de forma inmediata:
 
 - razón social;
 - RUC;
-- expediente;
 - provincia;
 - tipo de compañía;
-- año de información;
 - posición en el ranking.
 
-La identificación debe ser visible inmediatamente al ingresar a la empresa.
+El expediente permanece disponible en los datos del servicio y se utiliza como identificador para recuperar el detalle.
+
+El año operativo y la fecha de decisión forman parte del contexto del producto.
 
 ---
 
 ### 20. Afinidad bursátil
 
-La ficha deberá mostrar claramente:
+La ficha muestra claramente:
 
 - posición del ranking;
 - Índice de Afinidad Bursátil;
-- percentil;
-- versión del modelo.
+- percentil.
 
-Debe incluir una aclaración breve:
+La interfaz mantiene además visible el contexto de versión y configuración del modelo.
+
+Debe conservar una aclaración breve:
 
 > El Índice de Afinidad Bursátil es un indicador de priorización relativa y no una probabilidad de emisión.
 
@@ -409,18 +427,16 @@ Debe incluir una aclaración breve:
 
 ### 21. Información financiera
 
-La ficha podrá presentar:
+La primera versión funcional presenta como perfil financiero principal:
 
 - activos;
 - patrimonio;
 - ingresos por ventas;
-- empleados;
-- activos del período anterior;
-- patrimonio del período anterior;
-- ventas del período anterior;
-- empleados del período anterior.
+- empleados.
 
-Los valores monetarios deberán presentarse con formato legible.
+El backend conserva además variables históricas e indicadores adicionales que podrán incorporarse en futuras mejoras de interfaz.
+
+Los valores monetarios se presentan con formato abreviado y legible.
 
 Por ejemplo:
 
@@ -432,7 +448,7 @@ en lugar de mostrar números extensos sin formato.
 
 ### 22. Indicadores financieros
 
-La ficha deberá permitir mostrar:
+La API entrega además:
 
 - patrimonio / activos;
 - ROA;
@@ -444,15 +460,15 @@ La ficha deberá permitir mostrar:
 - crecimiento de ventas;
 - crecimiento de empleados.
 
-Estos indicadores sirven como contexto empresarial.
+La primera versión de la interfaz no muestra todos estos indicadores simultáneamente para evitar sobrecargar la ficha.
 
-No todos deben mostrarse simultáneamente si esto perjudica la claridad visual.
+Podrán incorporarse posteriormente como detalle expandido o sección analítica sin alterar el score.
 
 ---
 
 ### 23. Calidad de información
 
-La calidad de datos deberá mantenerse visible.
+La calidad de datos se mantiene visible mediante un indicador resumido.
 
 El sistema contiene diferentes indicadores relacionados con:
 
@@ -474,14 +490,16 @@ Una empresa no debe ser eliminada automáticamente del ranking únicamente por p
 
 El sistema implementa explicabilidad mediante SHAP.
 
-La sección de usuario podrá denominarse:
+En la ficha el usuario puede solicitar el análisis mediante la acción:
 
-**¿Qué factores influyen en la afinidad de esta empresa?**
+**Analizar factores**
 
-La explicación debe mostrar cuáles variables:
+La explicación muestra qué variables:
 
-- aumentan el score;
-- reducen el score.
+- aumentan la afinidad;
+- reducen la afinidad.
+
+La explicación se genera bajo demanda y no se calcula automáticamente para todas las empresas del ranking.
 
 ---
 
@@ -519,32 +537,30 @@ Esto permite conservar trazabilidad entre:
 
 ### 27. Presentación de SHAP al usuario
 
-La interfaz no necesita presentar inicialmente todos los valores técnicos.
+La interfaz presenta una selección de los factores con mayor contribución local.
 
-Puede mostrar, por ejemplo:
+Cada factor muestra:
 
-**Factores que elevan la afinidad**
+- nombre comprensible;
+- magnitud de la contribución SHAP;
+- dirección del efecto sobre la afinidad.
 
-- nivel de activos;
-- volumen de ventas;
-- patrimonio;
-- crecimiento patrimonial.
+Actualmente no se presenta todavía el valor original de cada variable junto al factor.
 
-**Factores que reducen la afinidad**
+Esto puede incorporarse como mejora de experiencia, por ejemplo mostrando simultáneamente:
 
-- reducción de activos;
-- crecimiento negativo;
-- determinados indicadores financieros.
+- `Margen neto: 8,4 %`;
+- contribución SHAP correspondiente.
 
-Sin embargo, estos textos deben construirse utilizando las contribuciones reales de la empresa consultada.
+Los factores mostrados se construyen siempre con la explicación real de la empresa consultada.
 
-No se deben generar explicaciones genéricas que no correspondan al resultado SHAP.
+No se utilizan explicaciones genéricas que no correspondan al resultado SHAP.
 
 ---
 
 ### 28. Sentido de las contribuciones
 
-La interfaz deberá diferenciar visualmente:
+La interfaz diferencia visualmente:
 
 - contribución positiva;
 - contribución negativa.
@@ -761,9 +777,9 @@ No constituye demostración de capacidad predictiva y no fue utilizado para ajus
 
 ### 41. API del producto
 
-FastAPI constituye la única capa de acceso para el frontend.
+FastAPI constituye la única capa de acceso para el frontend React.
 
-La interfaz no deberá consultar directamente:
+La interfaz no consulta directamente:
 
 - PostgreSQL;
 - CSV;
@@ -771,9 +787,9 @@ La interfaz no deberá consultar directamente:
 - datasets de entrenamiento;
 - datasets de TEST.
 
-El flujo será:
+El flujo implementado es:
 
-`Frontend → FastAPI → Servicios / PostgreSQL / Modelo`
+`React → FastAPI → Servicios / PostgreSQL / Modelo`
 
 ---
 
@@ -867,46 +883,67 @@ Esto permite construir filtros dinámicos.
 
 permite recuperar las variables con mayor importancia global SHAP.
 
-La interfaz podrá utilizar esta información dentro de una sección:
+La API permite utilizar esta información en una futura sección:
 
 **Cómo analiza el modelo**
 
-Esta vista deberá mantenerse separada de la explicación individual de una empresa.
+La primera vista funcional todavía no expone la explicación global como módulo independiente.
+
+Cuando se incorpore, deberá mantenerse separada de la explicación individual de una empresa.
 
 ---
 
 ### 47. Rendimiento de explicabilidad
 
-El cálculo SHAP presenta un costo inicial de carga.
+El cálculo SHAP presenta un costo inicial superior al de las consultas posteriores.
 
-Para reducirlo, el backend realiza precalentamiento durante el inicio de FastAPI.
+La implementación reutiliza el runtime de explicabilidad una vez inicializado para evitar reconstrucciones innecesarias en cada solicitud.
 
-Después de completar el inicio de la aplicación, las consultas locales SHAP se atienden con tiempos adecuados para el prototipo.
+Las consultas posteriores se verificaron con tiempos adecuados para el prototipo en el entorno local.
 
-La interfaz deberá mostrar un indicador de carga mientras se obtiene la explicación.
+La interfaz muestra un estado de carga mientras obtiene la explicación bajo demanda.
+
+La prioridad metodológica es mantener fidelidad con el score del modelo congelado.
 
 ---
 
 ### 48. Diseño general de interfaz
 
-La interfaz debe ser:
+La interfaz implementada sigue un enfoque:
 
 - profesional;
-- ejecutiva;
-- sobria;
-- clara;
-- orientada a negocio;
+- ejecutivo;
+- sobrio;
+- claro;
+- orientado a negocio;
 - fácil de explorar.
 
-Debe evitar una apariencia excesivamente técnica.
+La primera versión utiliza React y TypeScript sobre Vite.
 
-El especialista debe poder comprender la información sin conocimientos de ciencia de datos.
+Versiones verificadas:
+
+- Node.js `24.19.0`;
+- npm `11.17.0`;
+- React `19.3.0`;
+- React DOM `19.3.0`;
+- TypeScript `6.0.3`;
+- Vite `8.3.2`;
+- Lucide React `1.52.0`;
+- React Router DOM `7.18.4`;
+- Recharts `3.10.1`;
+- Oxlint `1.86.0`.
+
+React Router DOM y Recharts están disponibles para evolución posterior. La primera vista funcional no depende todavía de navegación compleja ni de gráficos construidos con Recharts.
+
+La interfaz evita una apariencia excesivamente técnica.
+
+El especialista puede comprender la información sin conocimientos de ciencia de datos.
 
 ---
 
 ### 49. Jerarquía visual
 
-La pantalla debe priorizar:
+La primera versión prioriza:
 
 1. empresa;
 2. ranking;
@@ -917,26 +954,30 @@ La pantalla debe priorizar:
 7. calidad de datos;
 8. información técnica.
 
-Los elementos técnicos deben quedar en un segundo nivel.
+Los elementos técnicos se mantienen en un segundo nivel.
 
 ---
 
-### 50. Módulos principales
+### 50. Componentes principales implementados
 
-La primera versión funcional de la interfaz deberá contemplar:
+La primera versión funcional contiene:
 
-| Módulo | Función |
+| Componente | Función |
 |---|---|
-| Inicio | Visión general del universo |
+| Resumen | Visión general del universo |
 | Ranking | Priorización de empresas |
-| Filtros | Exploración del universo |
+| Búsqueda | Localización de empresas |
+| Filtros | Exploración por provincia y tipo |
+| Paginación | Navegación del universo |
 | Empresa | Ficha individual |
-| Afinidad | Score y percentil |
-| Explicabilidad | Factores SHAP |
-| Emisores comparables | Cinco perfiles históricos similares |
-| Calidad | Alertas y disponibilidad |
-| Modelo | Información de v10 |
-| Riesgos | Limitaciones de interpretación |
+| Afinidad | Score, percentil y posición |
+| Explicabilidad | Factores SHAP bajo demanda |
+| Emisores comparables | Hasta cinco perfiles históricos similares |
+| Calidad | Indicador resumido de disponibilidad |
+| Modelo | Versión y configuración v10 |
+| Advertencias | Limitaciones de interpretación |
+
+La primera entrega prioriza una vista integrada antes de separar estas funciones en múltiples páginas.
 
 ---
 
@@ -961,9 +1002,9 @@ No debe mostrarse como funcionalidad terminada hasta completar su implementació
 
 ### 52. Flujo principal del usuario
 
-El flujo esperado es:
+El flujo implementado es:
 
-`Inicio → Ranking → Filtros → Empresa → Afinidad → Explicación → Comparables → Análisis → Decisión`
+`Resumen → Ranking → Búsqueda/Filtros → Empresa → Afinidad → Explicación → Comparables → Análisis → Decisión`
 
 El objetivo es permitir pasar progresivamente:
 
@@ -1030,7 +1071,7 @@ Provincia no es una variable predictiva del modelo.
 
 Los datos operacionales corresponden al corte establecido.
 
-La interfaz deberá indicar claramente:
+La interfaz mantiene visible el contexto temporal mediante:
 
 - año de información;
 - fecha de decisión.
@@ -1084,24 +1125,35 @@ o una versión posterior.
 | Modelo v10 | Implementado |
 | Ranking operacional | Implementado |
 | Universo prospectable | Implementado |
-| Percentiles | Implementado |
-| Calidad de datos | Implementado |
-| Similitud con emisores | Implementado |
-| Cinco comparables | Implementado |
+| Percentiles | Implementados |
+| Calidad de datos | Implementada |
+| Similitud con emisores | Implementada |
+| Cinco comparables | Implementados |
 | PostgreSQL | Implementado |
 | FastAPI | Implementado |
-| Búsqueda | Implementada |
-| Paginación | Implementada |
-| Filtro por provincia | Implementado |
-| Filtro por tipo | Implementado |
-| Filtro por score | Implementado |
-| Filtro por similitud | Implementado |
-| Filtro por comparables | Implementado |
+| Búsqueda API | Implementada |
+| Paginación API | Implementada |
+| Filtro API por provincia | Implementado |
+| Filtro API por tipo | Implementado |
+| Filtro API por score | Implementado |
+| Filtro API por similitud | Implementado |
+| Filtro API por comparables | Implementado |
 | Catálogos | Implementados |
-| SHAP global | Implementado |
+| SHAP global API | Implementado |
 | SHAP individual | Implementado |
-| Pruebas automáticas | Implementadas |
-| Interfaz web | Pendiente |
+| Pruebas automáticas backend | 12 aprobadas |
+| Frontend React | Implementado |
+| Integración React–FastAPI | Implementada |
+| Ranking web | Implementado |
+| Búsqueda web | Implementada |
+| Filtros web por provincia y tipo | Implementados |
+| Paginación web | Implementada |
+| Ficha empresarial web | Implementada |
+| Comparables web | Implementados |
+| SHAP web | Implementado |
+| Build frontend | Correcto |
+| Lint frontend | 0 warnings / 0 errors |
+| Pruebas automatizadas frontend | Pendientes |
 | Autenticación institucional | Pendiente |
 | Monitoreo operacional completo | Pendiente |
 | Validación con especialistas | Pendiente |
@@ -1116,7 +1168,7 @@ Estado actual:
 
 `12 pruebas aprobadas`
 
-Las pruebas cubren componentes relacionados con:
+Las pruebas cubren:
 
 - salud de la API;
 - ranking;
@@ -1126,9 +1178,39 @@ Las pruebas cubren componentes relacionados con:
 - explicabilidad;
 - manejo de errores.
 
-Estas pruebas son técnicas.
+El frontend fue validado mediante:
 
-No sustituyen la validación funcional con usuarios.
+`npm --prefix frontend run build`
+
+con build correcto y:
+
+`1898 modules transformed`
+
+También mediante:
+
+`npm --prefix frontend run lint`
+
+con:
+
+`0 warnings`
+
+y:
+
+`0 errors`.
+
+Adicionalmente se ejecutaron verificaciones manuales desde navegador sobre:
+
+- ranking;
+- búsqueda;
+- filtros;
+- paginación;
+- ficha;
+- comparables;
+- SHAP positivo y negativo.
+
+Las pruebas automatizadas específicas del frontend todavía están pendientes.
+
+Estas validaciones técnicas no sustituyen la validación funcional con especialistas.
 
 ---
 
@@ -1157,23 +1239,35 @@ Los resultados deberán registrarse como evidencia del proyecto.
 
 ### 62. Seguridad
 
-El producto debe mantener:
+El producto mantiene:
 
 - separación entre frontend y base de datos;
-- acceso a través de API;
+- acceso a través de FastAPI;
 - configuración mediante variables de entorno;
 - ausencia de credenciales reales en Git;
 - mínima exposición de datos;
-- separación entre datasets de entrenamiento y producto;
-- control de acceso en una futura implementación institucional.
+- separación entre datasets de entrenamiento y producto.
+
+Debe añadirse control de acceso si la solución avanza hacia una implementación institucional.
 
 Las credenciales incluidas actualmente en Docker corresponden exclusivamente al entorno local de desarrollo.
+
+La configuración frontend puede utilizar:
+
+`VITE_API_URL`
+
+Las variables con prefijo `VITE_*` son visibles para el navegador y no deben contener:
+
+- contraseñas;
+- tokens privados;
+- credenciales de base de datos;
+- secretos institucionales.
 
 ---
 
 ### 63. Trazabilidad visible
 
-La interfaz deberá permitir identificar como mínimo:
+La interfaz permite identificar directamente o mediante la ficha:
 
 - versión del modelo;
 - configuración;
@@ -1184,13 +1278,13 @@ La interfaz deberá permitir identificar como mínimo:
 - calidad;
 - comparables.
 
-La trazabilidad técnica completa permanecerá disponible en la documentación y backend.
+La trazabilidad técnica completa permanece disponible en la documentación y backend.
 
 ---
 
 ### 64. Advertencias de interpretación
 
-La interfaz deberá dejar claro que:
+La interfaz y la documentación deben mantener claro que:
 
 **El score no es una probabilidad.**
 
@@ -1230,20 +1324,30 @@ Para el usuario se priorizarán expresiones como:
 
 ---
 
-### 66. Resultado esperado
+### 66. Resultado actual y cierre esperado
 
-Prospect Finder BVQ permitirá que un especialista pase de:
+Prospect Finder BVQ ya permite que un especialista explore:
 
 `137.156 empresas`
 
-a un conjunto progresivamente más relevante utilizando:
+y reduzca progresivamente el universo de análisis utilizando:
 
-`Ranking + Filtros + Información financiera + Explicabilidad + Comparables`
+`Ranking + Búsqueda + Filtros + Información financiera + Explicabilidad + Comparables`
 
-El flujo esperado será:
+El flujo funcional es:
 
 `Explorar → Filtrar → Priorizar → Comprender → Comparar → Analizar → Decidir`
+
+Para completar el cierre del producto permanecen principalmente:
+
+- pruebas automatizadas específicas del frontend;
+- pruebas funcionales finales estructuradas;
+- validación con al menos dos especialistas de la BVQ;
+- componentes pendientes de MLOps;
+- monitoreo operacional;
+- documentación e informe final.
 
 La finalidad del sistema es mejorar la capacidad de prospección y reducir el esfuerzo requerido para analizar manualmente un universo empresarial amplio.
 
 Prospect Finder BVQ permanece como herramienta de apoyo analítico y comercial, no como sistema automatizado de decisión.
+
