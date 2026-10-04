@@ -3,7 +3,7 @@
 
 ### 1. Objetivo
 
-El presente documento registra el análisis de explicabilidad realizado sobre el modelo final v10 de Prospect Finder BVQ y su posterior incorporación como componente operacional del prototipo.
+El presente documento registra el análisis de explicabilidad realizado sobre el modelo final v10 de Prospect Finder BVQ y su incorporación como componente operacional del prototipo, tanto en la API como en la interfaz web.
 
 El análisis tiene dos propósitos diferenciados:
 
@@ -35,7 +35,7 @@ Configuración:
 
 `C3_CONSERVATIVE`
 
-La incorporación posterior de SHAP a la API tampoco modifica el modelo.
+La incorporación posterior de SHAP a la API y al frontend tampoco modifica el modelo.
 
 ---
 
@@ -69,7 +69,7 @@ y no como:
 
 **probabilidad calibrada de convertirse en emisor**.
 
-En el producto este resultado podrá presentarse comercialmente como:
+En el producto este resultado se presenta comercialmente como:
 
 **Índice de Afinidad Bursátil**.
 
@@ -509,9 +509,9 @@ Las diferencias entre ambas técnicas no constituyen necesariamente una contradi
 
 # 14. Incorporación de SHAP al producto
 
-Después de completar el análisis metodológico, SHAP fue incorporado al backend de Prospect Finder BVQ.
+Después de completar el análisis metodológico, SHAP fue incorporado al backend de Prospect Finder BVQ y posteriormente integrado a la interfaz web.
 
-La implementación operacional se encuentra en:
+La implementación operacional del explicador se encuentra en:
 
 `src/api/services/explainability.py`
 
@@ -528,6 +528,12 @@ La API expone dos servicios de explicabilidad.
 La primera utiliza los resultados globales previamente validados.
 
 La segunda genera una explicación SHAP bajo demanda para la empresa seleccionada.
+
+La interfaz React consume el endpoint individual cuando el usuario solicita:
+
+**Analizar factores**
+
+De esta manera, SHAP no se calcula para todas las empresas del ranking, sino únicamente para el prospecto que el especialista desea analizar.
 
 ---
 
@@ -877,13 +883,15 @@ Esto evita almacenar explicaciones potencialmente desactualizadas si posteriorme
 
 # 32. Presentación en frontend
 
-La interfaz deberá traducir las contribuciones técnicas a lenguaje orientado al usuario.
+La explicabilidad SHAP se encuentra integrada en la interfaz React de Prospect Finder BVQ.
 
-Puede utilizar una sección denominada:
+Dentro de la ficha individual, el usuario puede ejecutar la acción:
 
-**Factores que influyen en la afinidad**
+**Analizar factores**
 
-dividida en:
+La interfaz presenta una sección orientada a negocio con los principales factores de la empresa consultada.
+
+Las contribuciones se separan visualmente en:
 
 **Factores que aumentan la afinidad**
 
@@ -891,26 +899,42 @@ y:
 
 **Factores que reducen la afinidad**
 
-La interfaz no debe generar explicaciones genéricas.
+Cada resultado mostrado deriva de las contribuciones SHAP reales devueltas por la API.
 
-Cada mensaje deberá derivarse de las contribuciones SHAP reales de la empresa consultada.
+La interfaz no genera explicaciones genéricas ni atribuye causalidad a las variables.
+
+La explicación se solicita bajo demanda para evitar ejecutar SHAP innecesariamente durante la exploración del ranking.
 
 ---
 
-# 33. Información que podrá mostrar la interfaz
+# 33. Información presentada por la interfaz
 
-Para cada factor se podrá presentar:
+Para cada factor la API dispone de información como:
 
 | Campo técnico | Presentación de negocio |
 |---|---|
-| feature | Indicador financiero |
-| feature_value | Valor observado |
-| shap_value positivo | Aumenta afinidad |
-| shap_value negativo | Reduce afinidad |
-| abs_shap | Relevancia relativa |
-| ranking local | Orden visual |
+| `feature` | Indicador financiero |
+| `value` | Valor observado |
+| `shap_value` positivo | Aumenta afinidad |
+| `shap_value` negativo | Reduce afinidad |
+| `abs_shap_value` | Relevancia relativa |
+| `direction` | Sentido del efecto |
 
-El valor técnico SHAP puede mantenerse disponible para auditoría sin necesidad de ocupar el primer nivel visual de la interfaz.
+La primera versión funcional muestra actualmente:
+
+- nombre comprensible del factor;
+- valor de contribución SHAP;
+- indicación de si aumenta o reduce la afinidad.
+
+El valor original de la variable ya forma parte del contrato de datos, pero todavía no se muestra junto a cada factor en la primera versión de la interfaz.
+
+Una mejora posterior podrá presentar, por ejemplo:
+
+`Margen neto: 8,4 %`
+
+junto con su contribución SHAP.
+
+Esta mejora corresponde únicamente a presentación y no modifica el modelo ni la explicación calculada.
 
 ---
 
@@ -922,15 +946,20 @@ Un resultado técnico como:
 
 puede presentarse como:
 
-> El nivel de activos de la empresa aumenta su afinidad dentro del modelo.
+> El nivel de activos aumenta la afinidad asignada por el modelo para esta empresa.
 
-Un resultado:
+Un resultado como:
 
 `fin_crecimiento_activos → SHAP negativo`
 
 puede presentarse como:
 
-> La evolución de los activos reduce parcialmente la afinidad calculada.
+> La evolución de los activos reduce parcialmente la afinidad asignada por el modelo.
+
+En la interfaz actual se utiliza una formulación aún más directa mediante:
+
+- **Aumenta afinidad**;
+- **Reduce afinidad**.
 
 Estas expresiones describen comportamiento del modelo.
 
@@ -940,11 +969,19 @@ No deben presentarse como relaciones causales.
 
 # 35. Explicabilidad global en interfaz
 
-El producto podrá disponer de una sección:
+El endpoint:
+
+`GET /api/explainability/global`
+
+se encuentra implementado y disponible.
+
+La primera versión funcional del frontend todavía no presenta la importancia global SHAP como una vista independiente.
+
+En una evolución posterior podrá incorporarse una sección como:
 
 **¿Qué considera principalmente el modelo?**
 
-Esta sección podrá utilizar la importancia global SHAP para mostrar que el modelo considera principalmente dimensiones relacionadas con:
+Esta sección podrá mostrar dimensiones relacionadas con:
 
 - escala;
 - ventas;
@@ -953,9 +990,9 @@ Esta sección podrá utilizar la importancia global SHAP para mostrar que el mod
 - estructura patrimonial;
 - rentabilidad.
 
-Esta información representa el comportamiento global.
+La información global debe permanecer separada de la explicación particular de una empresa.
 
-No sustituye la explicación particular de una empresa.
+La ausencia de esta vista independiente no afecta la explicabilidad individual ya disponible en el prototipo.
 
 ---
 
@@ -1021,7 +1058,7 @@ La provincia no forma parte del modelo v10.
 
 ---
 
-# 39. Pruebas de API
+# 39. Pruebas técnicas y validación en interfaz
 
 La explicabilidad forma parte de la suite automática de FastAPI.
 
@@ -1041,16 +1078,55 @@ El endpoint local utiliza aislamiento mediante `monkeypatch` en la prueba corres
 
 La fidelidad real de SHAP se valida mediante pruebas funcionales independientes.
 
+### Validación frontend
+
+La integración con la interfaz fue verificada desde navegador utilizando empresas reales del ranking operacional.
+
+Se comprobó que la ficha puede presentar correctamente:
+
+- factores con contribución positiva;
+- factores con contribución negativa;
+- score y ranking de la empresa;
+- comparables junto con la explicación.
+
+También se validó técnicamente el frontend mediante:
+
+`npm --prefix frontend run build`
+
+Resultado:
+
+- build correcto;
+- `1898 modules transformed`.
+
+Y mediante:
+
+`npm --prefix frontend run lint`
+
+Resultado:
+
+`0 warnings`
+
+`0 errors`
+
+Las pruebas automatizadas específicas del frontend permanecen pendientes.
+
 ---
 
-# 40. Separación entre pruebas técnicas y evidencia metodológica
+# 40. Separación entre pruebas técnicas, funcionales y evidencia metodológica
 
-Las pruebas automáticas verifican:
+Las pruebas automáticas de API verifican:
 
 - contratos;
 - respuestas;
 - integración;
 - errores.
+
+Las validaciones técnicas del frontend verifican:
+
+- compilación;
+- calidad estática;
+- consumo correcto de la API;
+- representación visual del resultado.
 
 La validación metodológica verifica:
 
@@ -1059,7 +1135,14 @@ La validación metodológica verifica:
 - referencia de TRAIN;
 - consistencia de variables.
 
-Ambos tipos de prueba son necesarios y responden a objetivos distintos.
+La validación con especialistas de la BVQ verificará posteriormente:
+
+- comprensión;
+- utilidad;
+- claridad;
+- aplicabilidad comercial.
+
+Estos niveles de prueba son complementarios y responden a objetivos distintos.
 
 ---
 
@@ -1109,6 +1192,23 @@ Esta implementación utiliza:
 - validación del score;
 - validación de reconstrucción SHAP.
 
+La integración frontend se encuentra principalmente en:
+
+`frontend/src/services/api.ts`
+
+`frontend/src/types/explainability.ts`
+
+`frontend/src/App.tsx`
+
+El frontend consume la explicación mediante FastAPI y no accede directamente:
+
+- al modelo;
+- al dataset de entrenamiento;
+- a TEST;
+- al archivo Joblib.
+
+Esto mantiene separadas las capas de explicación, servicio y presentación.
+
 ---
 
 # 43. Decisiones descartadas
@@ -1147,12 +1247,14 @@ El análisis completo permite concluir que:
 6. LIME permanece como técnica complementaria académica;
 7. `PermutationExplainer` permite reconstruir adecuadamente el score del modelo;
 8. TreeExplainer fue descartado al no reproducir correctamente el score;
-9. SHAP se encuentra integrado al backend del prototipo;
-10. la inicialización anticipada permite disponer de tiempos adecuados para interacción;
+9. SHAP se encuentra integrado al backend y al frontend del prototipo;
+10. la explicación individual se genera bajo demanda para la empresa seleccionada;
 11. la explicación individual se valida contra el score operacional;
-12. el modelo permanece congelado;
-13. la explicabilidad no modifica ranking ni predicciones;
-14. la decisión comercial permanece bajo supervisión humana.
+12. la interfaz distingue factores que aumentan y reducen afinidad;
+13. la importancia global permanece disponible mediante API y podrá incorporarse posteriormente como vista independiente;
+14. el modelo permanece congelado;
+15. la explicabilidad no modifica ranking ni predicciones;
+16. la decisión comercial permanece bajo supervisión humana.
 
 ---
 
@@ -1172,9 +1274,14 @@ El análisis completo permite concluir que:
 | Validación reconstrucción SHAP | Implementada |
 | API SHAP global | Implementada |
 | API SHAP local | Implementada |
-| Precalentamiento | Implementado |
 | Pruebas API | Implementadas |
-| Presentación frontend | Pendiente |
+| Frontend React | Implementado |
+| SHAP individual en frontend | Implementado |
+| Factores positivos en frontend | Implementados |
+| Factores negativos en frontend | Implementados |
+| SHAP global como vista web independiente | Pendiente / opcional |
+| Valor original junto al factor SHAP | Pendiente de mejora visual |
+| Pruebas automatizadas frontend | Pendientes |
 | Validación con especialistas | Pendiente |
 
 ---
