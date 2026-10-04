@@ -137,7 +137,7 @@ El estado actual es:
 
 ### Frontend
 
-**SIGUIENTE ETAPA DE DESARROLLO**
+**IMPLEMENTADO Y VALIDADO TÉCNICAMENTE**
 
 ---
 
@@ -299,7 +299,7 @@ El resultado evidencia que el modelo conserva capacidad de ordenamiento general,
 | B15 | Alta | Incorporar interpretabilidad | Completado |
 | B16 | Media | Formalizar diccionario de datos | Completado inicialmente |
 | B17 | Media | Evaluar red neuronal MLP | Completado |
-| B18 | Alta | Desarrollar prototipo web funcional | En desarrollo |
+| B18 | Alta | Desarrollar prototipo web funcional | Completado inicialmente |
 | B19 | Media | Implementar monitoreo de drift | Pendiente |
 | B20 | Media | Evaluar TensorFlow/Keras | En análisis |
 | B21 | Alta | Evaluar sesgo y desempeño segmentado | Completado |
@@ -312,13 +312,13 @@ El resultado evidencia que el modelo conserva capacidad de ordenamiento general,
 | B28 | Alta | Implementar API FastAPI | Completado |
 | B29 | Alta | Implementar SHAP operacional | Completado |
 | B30 | Alta | Implementar pruebas automáticas API | Completado |
-| B31 | Alta | Construir frontend web | En desarrollo |
+| B31 | Alta | Construir frontend web | Completado |
 | B32 | Media | Dockerizar FastAPI | Pendiente |
 | B33 | Media | Implementar migraciones Alembic | Pendiente |
 | B34 | Alta | Incorporar DVC | Pendiente |
 | B35 | Alta | Incorporar MLflow | Pendiente |
 | B36 | Alta | Validar con al menos dos especialistas BVQ | Pendiente |
-| B37 | Alta | Ejecutar pruebas funcionales finales | Pendiente |
+| B37 | Alta | Ejecutar pruebas funcionales finales | En desarrollo |
 | B38 | Alta | Preparar documentación e informe final | En desarrollo |
 | B39 | Alta | Preparar presentación final | Pendiente |
 | B40 | Baja | Autenticación institucional | Pendiente |
@@ -744,37 +744,56 @@ No seleccionar MLP como modelo final.
 
 **Prioridad:** Alta
 
-**Estado:** En desarrollo
+**Estado:** Completado inicialmente
 
-La infraestructura necesaria para la interfaz ya está disponible:
+El prototipo web ya dispone de un flujo funcional integrado:
 
-- PostgreSQL;
-- FastAPI;
-- endpoints;
-- filtros;
-- ranking;
-- comparables;
-- SHAP;
-- Node.js;
-- npm.
+`PostgreSQL → FastAPI → React → usuario`
 
-La etapa pendiente corresponde principalmente al:
+y:
 
-**frontend web**
+`modelo congelado → SHAP → FastAPI → React → usuario`
 
-### Componentes requeridos
+### Componentes implementados
 
-- resumen;
+- resumen ejecutivo;
 - ranking;
 - búsqueda;
 - filtros;
+- paginación;
 - ficha de empresa;
 - indicadores financieros;
 - Índice de Afinidad Bursátil;
-- explicabilidad;
+- percentil;
+- explicabilidad SHAP bajo demanda;
 - emisores comparables;
 - calidad de datos;
 - información del modelo.
+
+### Validación realizada
+
+Desde navegador se verificó:
+
+- carga de `137.156` empresas;
+- `24` provincias;
+- `9` tipos de compañía;
+- ranking y paginación;
+- filtros;
+- ficha financiera;
+- comparables;
+- factores SHAP positivos y negativos.
+
+### Criterio de cierre
+
+La funcionalidad principal del prototipo está implementada.
+
+Se mantiene como `Completado inicialmente` porque todavía faltan:
+
+- pruebas funcionales finales estructuradas;
+- pruebas automatizadas específicas del frontend;
+- validación real con al menos dos especialistas de la BVQ.
+
+Estas actividades se controlan por separado y no implican reabrir el desarrollo básico del frontend.
 
 ---
 
@@ -1206,25 +1225,41 @@ No sustituyen la validación funcional con especialistas.
 
 **Prioridad:** Alta
 
-**Estado:** En desarrollo
+**Estado:** Completado
 
-Entorno disponible:
+**Commit principal:**
 
-- Node.js LTS `24.19.0`;
-- npm `11.17.0`.
+`20fb2e4`
 
-### Objetivo
+**Mensaje Git:**
 
-Construir una aplicación web que consuma exclusivamente FastAPI.
+`feat: add Prospect Finder frontend`
 
-### Primera versión requerida
+### Tecnologías verificadas
+
+- Node.js `24.19.0`;
+- npm `11.17.0`;
+- React `19.3.0`;
+- React DOM `19.3.0`;
+- TypeScript `6.0.3`;
+- Vite `8.3.2`;
+- Lucide React `1.52.0`;
+- React Router DOM `7.18.4`;
+- Recharts `3.10.1`;
+- Oxlint `1.86.0`.
+
+React Router DOM y Recharts están instalados para evolución posterior. La primera vista funcional no depende todavía de navegación compleja ni de gráficos construidos con Recharts.
+
+### Funcionalidad implementada
 
 #### Inicio
 
 - total de empresas;
-- fecha de información;
-- versión del modelo;
-- indicadores generales.
+- fecha de decisión;
+- versión/configuración del modelo;
+- indicadores generales;
+- total de provincias;
+- total de tipos de compañía.
 
 #### Ranking
 
@@ -1235,8 +1270,6 @@ Construir una aplicación web que consuma exclusivamente FastAPI.
 - percentil;
 - provincia;
 - tipo;
-- activos;
-- ventas;
 - similitud;
 - calidad.
 
@@ -1244,28 +1277,56 @@ Construir una aplicación web que consuma exclusivamente FastAPI.
 
 - búsqueda;
 - provincia;
-- tipo;
-- score;
-- similitud;
-- comparables.
+- tipo de compañía.
+
+La API también mantiene disponibles filtros por:
+
+- score mínimo;
+- similitud mínima;
+- disponibilidad de comparables.
 
 #### Ficha
 
 - identificación;
-- indicadores;
+- indicadores financieros;
 - score;
 - percentil;
+- ranking;
 - SHAP;
 - comparables;
 - calidad.
 
+### Validación técnica
+
+Build:
+
+`npm --prefix frontend run build`
+
+Resultado:
+
+`1898 modules transformed`
+
+sin errores.
+
+Lint:
+
+`npm --prefix frontend run lint`
+
+Resultado:
+
+`0 warnings`
+
+`0 errors`
+
 ### Criterio de aceptación
 
-El usuario debe poder ejecutar el flujo:
+Se verificó desde navegador el flujo:
 
 `Ranking → Filtrar → Empresa → Explicación → Comparables`
 
-desde navegador.
+La actividad de construcción del frontend se considera completada.
+
+Las pruebas finales y la validación con especialistas permanecen como actividades independientes.
 
 ---
 
@@ -1415,9 +1476,23 @@ No se deben inventar resultados de validación.
 
 **Prioridad:** Alta
 
-**Estado:** Pendiente
+**Estado:** En desarrollo
 
-Después de integrar el frontend se deberán ejecutar escenarios completos.
+La integración del frontend ya fue completada y se ejecutaron validaciones manuales iniciales desde navegador.
+
+Se verificó:
+
+- carga del ranking;
+- paginación;
+- filtros;
+- apertura de ficha;
+- indicadores financieros;
+- comparables;
+- explicación SHAP;
+- representación de factores positivos;
+- representación de factores negativos.
+
+Todavía debe formalizarse una matriz final de escenarios y resultados antes de cerrar esta actividad.
 
 Ejemplos:
 
@@ -1544,17 +1619,17 @@ Esta actividad no es requisito para probar la lógica funcional del prototipo ac
 
 La secuencia recomendada desde el estado actual es:
 
-1. B31 — construir frontend;
-2. integrar frontend con FastAPI;
-3. ejecutar B37 — pruebas funcionales;
-4. completar B36 — validación con al menos dos especialistas;
-5. B32 — dockerizar FastAPI;
-6. B33 — configurar Alembic;
-7. B34 — incorporar DVC;
-8. B35 — incorporar MLflow;
-9. B19 — implementar evidencia inicial de monitoreo;
-10. cerrar B38 — informe final;
-11. completar B39 — presentación final.
+1. completar B37 — pruebas funcionales finales;
+2. completar B36 — validación con al menos dos especialistas;
+3. B32 — dockerizar FastAPI;
+4. B33 — configurar Alembic;
+5. B34 — incorporar DVC;
+6. B35 — incorporar MLflow;
+7. B19 — implementar evidencia inicial de monitoreo;
+8. cerrar B38 — informe final;
+9. completar B39 — presentación final.
+
+B31 ya se encuentra completado.
 
 B20 deberá resolverse según el requerimiento académico específico, sin modificar el modelo v10.
 
@@ -1672,19 +1747,19 @@ Evidencia:
 
 Estado:
 
-**Avanzado / prácticamente cumplido**
+**Cumplido en el prototipo funcional**
 
 Evidencia:
 
 - arquitectura;
 - PostgreSQL;
 - FastAPI;
-- separación de capas.
+- frontend React;
+- contratos TypeScript;
+- separación de capas;
+- integración frontend–FastAPI.
 
-Pendiente:
-
-- frontend;
-- cierre de despliegue.
+El cierre de despliegue y contenerización completa se mantiene dentro de la capa de MLOps y operación.
 
 ## Objetivo 3 — Modelos
 
@@ -1717,13 +1792,18 @@ Incluye:
 
 Estado:
 
-**En desarrollo**
+**Avanzado / pendiente de validación final**
 
 Backend implementado.
 
-Frontend pendiente.
+Frontend implementado.
 
-Validación con especialistas pendiente.
+Ranking, filtros, ficha financiera, comparables y SHAP fueron validados técnicamente desde navegador.
+
+Pendiente:
+
+- pruebas funcionales finales estructuradas;
+- validación real con al menos dos especialistas de la BVQ.
 
 ## Objetivo 6 — Reproducibilidad y MLOps
 
@@ -1767,6 +1847,9 @@ Pendiente:
 | `d1c44e4` | Catálogos y filtros |
 | `169ba8b` | SHAP operacional |
 | `b1b577f` | Pruebas automáticas |
+| `c0dac5a` | Actualización documental de arquitectura y estado |
+| `20fb2e4` | Frontend React funcional |
+| `5fdd292` | Documentación actualizada con estado del frontend |
 
 ---
 
@@ -1815,18 +1898,30 @@ Prospect Finder BVQ cuenta actualmente con:
 - SHAP global;
 - SHAP individual;
 - precalentamiento del explicador;
-- 12 pruebas automáticas aprobadas;
-- Node.js y npm preparados para frontend.
+- 12 pruebas automáticas del backend aprobadas;
+- Node.js y npm;
+- frontend React funcional;
+- integración React–FastAPI;
+- ranking web;
+- filtros web;
+- ficha empresarial;
+- comparables web;
+- explicabilidad SHAP en interfaz;
+- build del frontend correcto;
+- lint del frontend con `0 warnings` y `0 errors`.
 
 La prioridad inmediata es:
 
-**construir la interfaz web de Prospect Finder BVQ.**
+**cerrar las pruebas funcionales y preparar la validación con especialistas de la BVQ.**
 
 Después deberán completarse:
 
-- pruebas funcionales;
 - validación con especialistas;
-- MLOps;
+- dockerización completa de FastAPI;
+- Alembic;
+- DVC;
+- MLflow;
+- monitoreo;
 - documentación final;
 - presentación final.
 
