@@ -697,13 +697,15 @@ lo cual confirma la reconstrucción del score dentro de tolerancia numérica.
 
 ## 26. Rendimiento SHAP
 
-La inicialización inicial de PermutationExplainer puede requerir varios segundos.
+La inicialización de `PermutationExplainer` puede requerir más tiempo que las consultas posteriores.
 
-Para evitar que este costo recaiga sobre el primer usuario, FastAPI realiza un precalentamiento de SHAP durante el arranque.
+La implementación operacional reutiliza el runtime de explicabilidad una vez inicializado, evitando reconstruir innecesariamente el modelo y el explicador en cada solicitud.
 
-Una vez inicializado el runtime, las explicaciones locales fueron verificadas en el entorno de desarrollo con tiempos de respuesta inferiores a aproximadamente dos segundos y, en pruebas posteriores, cercanos a fracciones de segundo.
+En el entorno de desarrollo se verificaron consultas locales posteriores con tiempos adecuados para el prototipo, incluyendo respuestas cercanas a fracciones de segundo en ejecuciones ya inicializadas.
 
-El tiempo exacto dependerá del equipo y del entorno de ejecución.
+El tiempo exacto depende del equipo, del estado del proceso y del entorno de ejecución.
+
+La prioridad de esta capa es mantener fidelidad con el score del modelo congelado y no sacrificar consistencia metodológica únicamente por velocidad.
 
 ---
 
@@ -743,7 +745,7 @@ FastAPI constituye la capa de servicios entre:
 - modelo;
 - servicios analíticos;
 - explicabilidad;
-- futura interfaz web.
+- interfaz web React.
 
 La aplicación principal se encuentra en:
 
@@ -879,75 +881,107 @@ La normalización no modifica las variables con las que se entrenó o ejecuta el
 
 ## 34. Interfaz web
 
-La interfaz será consumida desde navegador.
+La interfaz web se encuentra implementada y es consumida desde navegador.
 
-El frontend todavía se encuentra pendiente de implementación.
+Tecnologías verificadas:
 
-El entorno para su desarrollo ya dispone de:
+- Node.js `24.19.0`;
+- npm `11.17.0`;
+- React `19.3.0`;
+- React DOM `19.3.0`;
+- TypeScript `6.0.3`;
+- Vite `8.3.2`;
+- Lucide React `1.52.0`;
+- React Router DOM `7.18.4`;
+- Recharts `3.10.1`;
+- Oxlint `1.86.0`.
 
-- Node.js LTS 24.19.0;
-- npm 11.17.0.
+La primera versión funcional se implementó como una vista principal orientada a prospección comercial.
 
-La interfaz se comunicará únicamente con FastAPI.
+La interfaz se comunica únicamente con FastAPI.
 
-No tendrá acceso directo a:
+No tiene acceso directo a:
 
 - PostgreSQL;
 - archivos CSV;
 - modelo Joblib;
 - datasets de entrenamiento.
 
+La URL base de la API se obtiene desde:
+
+`VITE_API_URL`
+
+cuando se configura explícitamente.
+
+En desarrollo local, la aplicación utiliza como valor por defecto:
+
+`http://127.0.0.1:8000/api`
+
+Las variables `VITE_*` forman parte del código expuesto al navegador y, por tanto, no deben contener secretos.
+
 ---
 
-## 35. Módulos previstos de interfaz
+## 35. Componentes actuales de la interfaz
 
-El prototipo deberá presentar al menos:
+La primera versión funcional presenta:
 
-| Módulo | Función |
+| Componente | Función |
 |---|---|
-| Resumen | Indicadores generales |
-| Ranking | Priorización de empresas |
-| Filtros | Segmentación |
-| Empresa | Ficha detallada |
-| Explicabilidad | Factores asociados con el score |
-| Emisores comparables | Perfiles históricos similares |
-| Calidad | Cobertura y disponibilidad |
-| Modelo | Versión y configuración |
-| Riesgos | Limitaciones principales |
+| Resumen | Universo prospectable, mayor afinidad visible, provincias y tipos de compañía |
+| Ranking | Priorización ordenada de empresas |
+| Búsqueda | Consulta por nombre, RUC o expediente |
+| Filtros | Segmentación por provincia y tipo de compañía |
+| Paginación | Navegación controlada sobre el universo |
+| Empresa | Ficha detallada del prospecto seleccionado |
+| Indicadores | Activos, patrimonio, ventas y empleados |
+| Índice de Afinidad | Score operacional presentado como señal de prioridad |
+| Percentil y ranking | Posición relativa de la empresa |
+| Explicabilidad | Factores SHAP que aumentan o reducen afinidad |
+| Emisores comparables | Cinco perfiles históricos similares cuando existe información suficiente |
+| Calidad | Disponibilidad de información del prospecto |
+| Modelo | Versión y configuración utilizadas |
 
-El monitoreo puede incorporarse como módulo adicional durante el cierre de MLOps.
+El monitoreo podrá incorporarse como módulo adicional durante el cierre de MLOps.
+
+React Router DOM y Recharts están instalados para evolución posterior, pero la primera vista funcional no depende todavía de navegación compleja ni de gráficos construidos con Recharts.
 
 ---
 
 ## 36. Flujo de usuario
 
-El flujo esperado es:
+El flujo implementado es:
 
-    Inicio
-      ↓
-    Ranking
-      ↓
-    Filtros
-      ↓
+    Inicio / resumen
+          ↓
+       Ranking
+          ↓
+    Búsqueda / filtros
+          ↓
     Selección de empresa
-      ↓
-    Indicadores
-      ↓
-    Explicación
-      ↓
+          ↓
+    Ficha e indicadores
+          ↓
+    Analizar factores
+          ↓
+    Explicación SHAP
+          ↓
     Emisores comparables
-      ↓
-    Análisis
-      ↓
+          ↓
+       Análisis
+          ↓
     Decisión del especialista
+
+La explicación SHAP se solicita bajo demanda y no se calcula automáticamente al abrir todas las empresas.
 
 La decisión final no es automatizada.
 
 ---
 
-## 37. Pruebas automáticas
+## 37. Pruebas y validación técnica
 
-La API dispone actualmente de pruebas mediante:
+### Backend
+
+La API dispone de pruebas mediante:
 
 `pytest`
 
@@ -970,13 +1004,50 @@ Se validan:
 
 Ejecución:
 
-`python -m pytest "tests\api" -q`
+`python -m pytest "testspi" -q`
 
 Resultado actual:
 
 `12 passed`
 
 Las advertencias registradas corresponden a deprecaciones internas de dependencias de SHAP/Matplotlib y no afectan las pruebas.
+
+### Frontend
+
+Build:
+
+`npm --prefix frontend run build`
+
+Resultado:
+
+- compilación TypeScript correcta;
+- build Vite correcto;
+- `1898 modules transformed`;
+- sin errores.
+
+Lint:
+
+`npm --prefix frontend run lint`
+
+Resultado:
+
+`0 warnings`
+
+`0 errors`
+
+También se verificó manualmente desde navegador:
+
+- carga del ranking;
+- paginación;
+- búsqueda y filtros;
+- apertura de ficha;
+- indicadores financieros;
+- emisores comparables;
+- SHAP bajo demanda;
+- factores positivos;
+- factores negativos.
+
+Las pruebas automatizadas específicas del frontend permanecen pendientes.
 
 ---
 
@@ -992,13 +1063,17 @@ levanta actualmente PostgreSQL.
 
 La API todavía no ha sido contenerizada.
 
+El frontend se ejecuta actualmente mediante Vite en el entorno local y tampoco forma parte todavía del `compose.yaml`.
+
 Por tanto:
 
 | Componente | Estado Docker |
 |---|---|
 | PostgreSQL | Implementado |
 | FastAPI | Pendiente |
-| Frontend | Pendiente |
+| Frontend | Pendiente de contenerización |
+
+La ausencia de contenedor para frontend no impide el funcionamiento del prototipo local.
 
 ---
 
@@ -1011,8 +1086,19 @@ La arquitectura considera:
 - protección de credenciales;
 - variables de entorno;
 - no publicación de datasets sensibles;
-- API como capa de acceso;
-- separación entre entrenamiento y consumo operacional.
+- API como única capa de acceso desde frontend;
+- separación entre entrenamiento y consumo operacional;
+- ausencia de acceso directo del navegador a PostgreSQL;
+- ausencia de acceso directo del navegador al modelo serializado.
+
+Las credenciales reales no deben versionarse.
+
+Las variables frontend con prefijo `VITE_*` son públicas para el navegador y no deben utilizarse para almacenar:
+
+- contraseñas;
+- tokens privados;
+- claves de base de datos;
+- secretos institucionales.
 
 La autenticación y autorización de usuarios constituye una etapa posterior del prototipo y deberá formalizarse si la solución avanza hacia un entorno institucional productivo.
 
@@ -1169,11 +1255,15 @@ Actualmente están implementados parcialmente los componentes de reproducibilida
 
 - Git;
 - GitHub;
-- requirements;
+- `requirements.txt`;
+- `requirements-lock.txt`;
+- `frontend/package.json`;
+- `frontend/package-lock.json`;
 - modelo congelado;
 - scripts reproducibles;
 - Docker para PostgreSQL;
-- pruebas automáticas;
+- pruebas automáticas del backend;
+- build y lint del frontend;
 - documentación;
 - metadatos.
 
@@ -1221,7 +1311,16 @@ Continúan pendientes:
 | Explicabilidad API | Implementado |
 | Pruebas automáticas API | Implementado |
 | Docker PostgreSQL | Implementado |
-| Frontend web | Pendiente |
+| Frontend web | Implementado |
+| Integración frontend–FastAPI | Implementado |
+| Ranking web | Implementado |
+| Filtros web | Implementado |
+| Ficha empresarial web | Implementado |
+| Comparables web | Implementado |
+| SHAP web | Implementado |
+| Build frontend | Implementado |
+| Lint frontend | Implementado |
+| Pruebas automatizadas frontend | Pendiente |
 | Docker FastAPI | Pendiente |
 | Alembic operativo | Pendiente |
 | DVC | Pendiente |
@@ -1256,22 +1355,32 @@ La arquitectura implementada actualmente es:
                 ↓
              FastAPI
                 ↓
-          Interfaz web
-           [pendiente]
+        Frontend React
                 ↓
-        Especialista BVQ
+         Especialista BVQ
+
+Para las explicaciones locales, FastAPI consulta el modelo congelado y la capa SHAP bajo demanda.
+
+El frontend no modifica ni reentrena el modelo.
 
 ---
 
 ## 47. Desacoplamiento
 
-La interfaz web no dependerá de la implementación interna del modelo.
+La interfaz web no depende de la implementación interna del modelo.
 
-La comunicación será:
+La comunicación implementada es:
 
-`Interfaz → API → Servicios → Datos / Modelo`
+`React → FastAPI → Servicios → Datos / Modelo`
 
-Esto permite que una futura versión del modelo pueda sustituir v10 sin reconstruir completamente la aplicación.
+Los contratos del frontend se representan mediante tipos TypeScript para:
+
+- prospectos;
+- catálogos;
+- detalle;
+- explicabilidad.
+
+Esto permite que una futura versión del modelo pueda sustituir v10 sin reconstruir completamente la aplicación, siempre que la API mantenga o versione de forma controlada sus contratos.
 
 ---
 
@@ -1336,7 +1445,7 @@ Pruebas API:
 
 Interfaz web:
 
-`Pendiente`
+`Implementada y validada técnicamente`
 
 Docker FastAPI:
 
@@ -1360,14 +1469,24 @@ Validación con especialistas:
 
 ---
 
-## 50. Resultado esperado final
+## 50. Resultado actual y cierre esperado
 
-La arquitectura permitirá disponer de un prototipo funcional que integre:
+La arquitectura ya dispone de un prototipo funcional que integra:
 
-`Datos + IA + Ranking + Similitud + Explicabilidad + PostgreSQL + API + Interfaz + Supervisión humana`
+`Datos + IA + Ranking + Similitud + Explicabilidad + PostgreSQL + API + Interfaz React + Supervisión humana`
 
-El especialista podrá seguir un flujo de trabajo:
+El especialista puede seguir el flujo:
 
 `Explorar → Filtrar → Priorizar → Comprender → Comparar → Analizar → Decidir`
 
-Prospect Finder BVQ permanecerá como una herramienta de apoyo analítico y comercial, no como un sistema automatizado de decisión.
+Para cerrar la arquitectura del proyecto permanecen principalmente:
+
+- pruebas automatizadas del frontend;
+- dockerización de FastAPI;
+- migraciones Alembic;
+- DVC;
+- MLflow;
+- monitoreo operacional;
+- validación formal con especialistas.
+
+Prospect Finder BVQ permanece como una herramienta de apoyo analítico y comercial, no como un sistema automatizado de decisión.
