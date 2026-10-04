@@ -4,7 +4,7 @@
 
 Prospect Finder BVQ se desarrolla en un entorno local Windows de 64 bits utilizando herramientas de ingeniería de datos, aprendizaje automático, desarrollo web, bases de datos, contenerización, pruebas automatizadas y control de versiones.
 
-El entorno está orientado a mantener trazabilidad, reproducibilidad y separación entre las capas de datos, modelado, API y producto.
+El entorno está orientado a mantener trazabilidad, reproducibilidad y separación entre las capas de datos, modelado, producto analítico, persistencia, API e interfaz web.
 
 | Componente | Herramienta | Versión / configuración | Uso |
 |---|---|---|---|
@@ -16,8 +16,13 @@ El entorno está orientado a mantener trazabilidad, reproducibilidad y separaci�
 | Repositorio remoto | GitHub | rama `main` | Respaldo y sincronización del código |
 | Gestor de paquetes Python | pip | 26.2.1 | Administración de dependencias Python |
 | Entorno virtual | Python venv | `.venv` | Aislamiento de dependencias |
-| Node.js | Node.js LTS | 24.19.0 | Entorno para desarrollo del frontend |
+| Node.js | Node.js | 24.19.0 | Entorno de ejecución del frontend |
 | npm | npm | 11.17.0 | Administración de dependencias frontend |
+| React | React | 19.3.0 | Construcción de la interfaz web |
+| React DOM | React DOM | 19.3.0 | Renderizado del frontend |
+| Vite | Vite | 8.3.2 | Desarrollo y construcción del frontend |
+| TypeScript | TypeScript | 6.0.3 | Tipado estático del frontend |
+| Oxlint | Oxlint | 1.86.0 | Validación estática del código frontend |
 | Docker Desktop | Docker Desktop | 4.93.0 | Contenerización y servicios locales |
 | Docker Engine / CLI | Docker | 29.8.1 | Ejecución de contenedores |
 | WSL | Ubuntu sobre WSL2 | WSL 2 | Backend Linux utilizado por Docker Desktop |
@@ -61,11 +66,43 @@ Las principales dependencias utilizadas actualmente son:
 
 Las dependencias transitivas completas también se conservan en `requirements-lock.txt`.
 
-No se deben escribir manualmente versiones de librerías no verificadas. El archivo de bloqueo constituye la referencia técnica para reconstruir el entorno Python.
+No se deben escribir manualmente versiones de librerías Python no verificadas. El archivo de bloqueo constituye la referencia técnica para reconstruir el entorno.
 
 ---
 
-## 3. Entorno virtual de Python
+## 3. Dependencias principales del frontend
+
+El frontend dispone de su propio control de dependencias mediante:
+
+- `frontend/package.json`
+- `frontend/package-lock.json`
+
+Las versiones efectivamente instaladas y verificadas son:
+
+| Librería / herramienta | Versión instalada | Uso |
+|---|---:|---|
+| React | 19.3.0 | Construcción de componentes y estado de la interfaz |
+| React DOM | 19.3.0 | Renderizado del frontend |
+| Lucide React | 1.52.0 | Iconografía de la aplicación |
+| React Router DOM | 7.18.4 | Soporte para navegación y crecimiento posterior de rutas |
+| Recharts | 3.10.1 | Soporte para visualizaciones gráficas posteriores |
+| TypeScript | 6.0.3 | Tipado estático |
+| Vite | 8.3.2 | Servidor de desarrollo y build |
+| @vitejs/plugin-react | 6.1.1 | Integración de React con Vite |
+| Oxlint | 1.86.0 | Validación estática del código |
+| @types/node | 24.19.1 | Tipos TypeScript para Node.js |
+| @types/react | 19.3.0 | Tipos TypeScript para React |
+| @types/react-dom | 19.3.0 | Tipos TypeScript para React DOM |
+
+`Lucide React` se utiliza actualmente en la interfaz.
+
+`React Router DOM` y `Recharts` se encuentran instalados y disponibles para la evolución del prototipo, aunque la primera versión funcional de la pantalla opera actualmente como una vista principal tipo SPA y no requiere todavía navegación compleja ni gráficos construidos con Recharts.
+
+El archivo `package-lock.json` constituye la referencia para reproducir las versiones exactas instaladas del frontend.
+
+---
+
+## 4. Entorno virtual de Python
 
 El proyecto utiliza un entorno virtual denominado:
 
@@ -93,7 +130,7 @@ El entorno virtual permite:
 
 ---
 
-## 4. Entorno de notebooks
+## 5. Entorno de notebooks
 
 Jupyter se mantiene disponible para análisis exploratorio y validaciones.
 
@@ -107,7 +144,7 @@ El desarrollo principal del proyecto se realiza actualmente mediante scripts Pyt
 
 ---
 
-## 5. Estructura actual del proyecto
+## 6. Estructura actual del proyecto
 
 La estructura técnica principal es:
 
@@ -121,6 +158,30 @@ La estructura técnica principal es:
     │   └── processed/
     │
     ├── docs/
+    │
+    ├── frontend/
+    │   ├── public/
+    │   ├── src/
+    │   │   ├── assets/
+    │   │   ├── components/
+    │   │   ├── pages/
+    │   │   ├── services/
+    │   │   │   └── api.ts
+    │   │   ├── types/
+    │   │   │   ├── catalog.ts
+    │   │   │   ├── explainability.ts
+    │   │   │   └── prospect.ts
+    │   │   ├── App.css
+    │   │   ├── App.tsx
+    │   │   ├── index.css
+    │   │   └── main.tsx
+    │   ├── index.html
+    │   ├── package.json
+    │   ├── package-lock.json
+    │   ├── tsconfig.app.json
+    │   ├── tsconfig.json
+    │   ├── tsconfig.node.json
+    │   └── vite.config.ts
     │
     ├── models/
     │   └── v10/
@@ -154,11 +215,15 @@ La estructura técnica principal es:
     ├── README.md
     └── .gitignore
 
+Las carpetas `frontend/src/components/` y `frontend/src/pages/` se encuentran preparadas para la modularización progresiva de la interfaz.
+
+La primera versión funcional se mantiene principalmente en `App.tsx` mientras se valida la experiencia de usuario antes de dividir la interfaz en componentes adicionales.
+
 ---
 
-## 6. Organización de datos
+## 7. Organización de datos
 
-### 6.1 `data/raw`
+### 7.1 `data/raw`
 
 Contiene las fuentes originales utilizadas durante el proyecto.
 
@@ -166,7 +231,7 @@ Los archivos originales se conservan sin modificaciones.
 
 Los datos sensibles o de gran tamaño no se almacenan directamente en Git.
 
-### 6.2 `data/interim`
+### 7.2 `data/interim`
 
 Contiene datasets generados durante etapas intermedias de:
 
@@ -176,7 +241,7 @@ Contiene datasets generados durante etapas intermedias de:
 - validación;
 - preparación temporal.
 
-### 6.3 `data/processed`
+### 7.3 `data/processed`
 
 Contiene datasets preparados para modelado y producto.
 
@@ -200,9 +265,9 @@ Los archivos operacionales contienen información empresarial y no se publican c
 
 ---
 
-## 7. Componentes de código
+## 8. Componentes de código Python
 
-### 7.1 `src/data`
+### 8.1 `src/data`
 
 Contiene scripts relacionados con:
 
@@ -213,19 +278,19 @@ Contiene scripts relacionados con:
 - validación de calidad;
 - construcción de la variable objetivo.
 
-### 7.2 `src/features`
+### 8.2 `src/features`
 
 Contiene los procesos de ingeniería de variables.
 
 El dataset financiero v10 incorpora variables financieras actuales, rezagos temporales, tasas de crecimiento y banderas de calidad.
 
-### 7.3 `src/models`
+### 8.3 `src/models`
 
 Contiene scripts de experimentación, entrenamiento y evaluación de modelos.
 
 Los experimentos iniciales se mantienen como evidencia histórica, mientras que el modelo seleccionado para v10 corresponde a una etapa posterior del proyecto.
 
-### 7.4 `src/evaluation`
+### 8.4 `src/evaluation`
 
 Contiene procesos de:
 
@@ -235,7 +300,7 @@ Contiene procesos de:
 - análisis de errores;
 - validaciones del modelo.
 
-### 7.5 `src/analysis`
+### 8.5 `src/analysis`
 
 Contiene análisis posteriores al cierre del modelo, entre ellos:
 
@@ -248,7 +313,7 @@ Contiene análisis posteriores al cierre del modelo, entre ellos:
 
 La explicabilidad es post-test y no modifica el modelo final congelado.
 
-### 7.6 `src/product`
+### 8.6 `src/product`
 
 Contiene procesos para convertir el modelo analítico en componentes utilizables por el prototipo.
 
@@ -258,7 +323,7 @@ Actualmente incluye:
 - construcción del universo prospectable;
 - motor de similitud con emisores históricos.
 
-### 7.7 `src/api`
+### 8.7 `src/api`
 
 Contiene el backend del prototipo construido con FastAPI.
 
@@ -271,7 +336,89 @@ Se organiza en:
 
 ---
 
-## 8. Modelo final v10
+## 9. Componentes del frontend
+
+La interfaz web se encuentra en:
+
+`frontend/`
+
+El frontend utiliza React, TypeScript y Vite.
+
+### 9.1 `frontend/src/App.tsx`
+
+Contiene actualmente la vista principal funcional del prototipo.
+
+La interfaz implementada permite:
+
+- visualizar el ranking operativo;
+- consultar el universo total de empresas;
+- visualizar el número de provincias y tipos de compañía;
+- buscar empresas por nombre, RUC o expediente;
+- filtrar por provincia;
+- filtrar por tipo de compañía;
+- navegar por páginas del ranking;
+- seleccionar una empresa;
+- consultar su ficha empresarial;
+- visualizar su Índice de Afinidad Bursátil;
+- visualizar su percentil;
+- visualizar su posición en el ranking;
+- consultar indicadores financieros;
+- visualizar emisores históricos comparables;
+- solicitar una explicación SHAP bajo demanda;
+- diferenciar factores que aumentan o reducen la afinidad.
+
+### 9.2 `frontend/src/services/api.ts`
+
+Centraliza la comunicación entre React y FastAPI.
+
+Actualmente expone funciones para:
+
+- consultar prospectos;
+- consultar el detalle de una empresa;
+- obtener catálogos;
+- obtener importancia SHAP global;
+- obtener explicabilidad SHAP individual.
+
+La URL base predeterminada de desarrollo es:
+
+`http://127.0.0.1:8000/api`
+
+Puede modificarse mediante:
+
+`VITE_API_URL`
+
+### 9.3 `frontend/src/types`
+
+Define contratos TypeScript para las respuestas del backend.
+
+Actualmente incluye:
+
+- `prospect.ts`
+- `catalog.ts`
+- `explainability.ts`
+
+Esta separación reduce el riesgo de inconsistencias entre el contrato de FastAPI y la interfaz.
+
+### 9.4 Diseño visual
+
+La primera versión funcional utiliza una interfaz orientada a gestión comercial y análisis financiero.
+
+Incluye:
+
+- navegación lateral;
+- indicadores principales;
+- ranking tabular;
+- filtros;
+- panel lateral de detalle;
+- jerarquía visual para priorización;
+- representación diferenciada de impactos SHAP positivos y negativos;
+- visualización independiente de comparables históricos.
+
+El diseño evita presentar el sistema como una aplicación puramente técnica de inteligencia artificial.
+
+---
+
+## 10. Modelo final v10
 
 El modelo final seleccionado y congelado es:
 
@@ -308,9 +455,15 @@ El `score_afinidad` generado por el modelo se utiliza como indicador de prioriza
 
 No debe interpretarse como una probabilidad calibrada de convertirse en emisor.
 
+En la interfaz este indicador se presenta como:
+
+`Índice de Afinidad Bursátil`
+
+La denominación busca facilitar su interpretación comercial sin alterar su naturaleza metodológica.
+
 ---
 
-## 9. División temporal v10
+## 11. División temporal v10
 
 La división temporal congelada actualmente es:
 
@@ -330,7 +483,7 @@ Después de la evaluación final de TEST no se realizó reajuste de hiperparáme
 
 ---
 
-## 10. Ranking operacional
+## 12. Ranking operacional
 
 El producto operacional utiliza información financiera correspondiente a:
 
@@ -364,7 +517,7 @@ Las empresas que se convirtieron posteriormente en emisores no se excluyen utili
 
 ---
 
-## 11. Motor de similitud con emisores
+## 13. Motor de similitud con emisores
 
 El sistema incorpora un componente adicional de similitud empresarial.
 
@@ -393,9 +546,11 @@ Para cada prospecto pueden presentarse hasta cinco emisores históricos comparab
 
 El universo de referencia utiliza únicamente emisores conocidos hasta la fecha de decisión correspondiente, evitando utilizar información futura.
 
+En la interfaz la similitud se presenta como información complementaria y nunca como sustituto del score de priorización.
+
 ---
 
-## 12. PostgreSQL
+## 14. PostgreSQL
 
 El producto utiliza PostgreSQL como base de datos operacional.
 
@@ -407,7 +562,7 @@ Base de datos de desarrollo:
 
 `prospect_finder_bvq`
 
-La base contiene actualmente tres tablas principales:
+La base contiene actualmente tres tablas principales.
 
 ### `operational_prospects`
 
@@ -445,7 +600,7 @@ El proceso valida los conteos esperados después de la carga.
 
 ---
 
-## 13. Docker
+## 15. Docker
 
 El archivo:
 
@@ -467,11 +622,15 @@ Las credenciales incluidas actualmente corresponden exclusivamente al ambiente l
 
 No deben utilizarse como credenciales de producción.
 
-La dockerización completa de la API se considera una etapa posterior del cierre de MLOps.
+La dockerización completa de FastAPI se considera una etapa posterior del cierre de MLOps.
+
+El servicio PostgreSQL puede iniciarse mediante:
+
+`docker compose up -d postgres`
 
 ---
 
-## 14. FastAPI
+## 16. FastAPI
 
 La API del producto se encuentra en:
 
@@ -520,6 +679,8 @@ Permite:
 - similitud mínima;
 - disponibilidad de comparables.
 
+El orden predeterminado sigue el ranking operativo ascendente.
+
 ### Detalle de empresa
 
 `GET /api/prospects/{expediente_key}`
@@ -559,9 +720,11 @@ Devuelve la importancia global SHAP calculada durante el análisis post-test.
 
 Genera una explicación SHAP específica para una empresa.
 
+La explicación se calcula bajo demanda.
+
 ---
 
-## 15. Explicabilidad SHAP operacional
+## 17. Explicabilidad SHAP operacional
 
 La técnica principal de interpretabilidad es SHAP.
 
@@ -587,17 +750,25 @@ TreeExplainer fue evaluado como alternativa de rendimiento, pero fue descartado 
 
 Por esta razón se conserva `PermutationExplainer`.
 
-El runtime SHAP se precalienta durante el inicio de FastAPI para evitar que el primer usuario soporte el costo completo de inicialización.
-
-Después del precalentamiento se verificaron respuestas locales cercanas a fracciones de segundo en el entorno de desarrollo.
+El runtime SHAP se inicializa y reutiliza para reducir el costo de solicitudes posteriores.
 
 La importancia global SHAP continúa utilizando los resultados post-test previamente validados.
 
 LIME se conserva como técnica complementaria de análisis y evidencia metodológica, pero no constituye actualmente el método principal de explicación operacional del frontend.
 
+En la interfaz cada factor se clasifica como:
+
+- aumenta afinidad;
+- reduce afinidad;
+- sin impacto.
+
+El signo del valor SHAP indica la dirección del impacto sobre el score respecto al valor base.
+
+Esta explicación no implica causalidad.
+
 ---
 
-## 16. API y separación de responsabilidades
+## 18. API y separación de responsabilidades
 
 La arquitectura mantiene separadas las siguientes capas:
 
@@ -612,10 +783,12 @@ La arquitectura mantiene separadas las siguientes capas:
            ▼
     Modelo v10 congelado
            │
-           ├──────────────► Explicabilidad
+           ├──────────────► Explicabilidad SHAP
            │
            ▼
     Ranking operacional
+           │
+           ├──────────────► Similitud con emisores
            │
            ▼
     PostgreSQL
@@ -624,20 +797,24 @@ La arquitectura mantiene separadas las siguientes capas:
     FastAPI
            │
            ▼
-    Interfaz web
+    React + TypeScript
+           │
+           ▼
+    Interfaz Prospect Finder BVQ
 
 Esta separación evita que la interfaz acceda directamente a:
 
 - archivos de entrenamiento;
 - modelos;
 - fuentes originales;
-- bases analíticas.
+- bases analíticas;
+- PostgreSQL.
 
-La API constituye la capa de acceso al producto.
+La API constituye la única capa de acceso utilizada actualmente por el frontend para consultar información del producto.
 
 ---
 
-## 17. Pruebas automáticas
+## 19. Pruebas automáticas del backend
 
 El proyecto utiliza:
 
@@ -675,22 +852,118 @@ La prueba del endpoint local SHAP utiliza aislamiento de la ejecución pesada me
 
 ---
 
-## 18. Frontend
+## 20. Validación técnica del frontend
 
-El entorno frontend ya se encuentra preparado con:
+El frontend puede iniciarse desde la raíz del repositorio mediante:
 
-- Node.js LTS 24.19.0;
-- npm 11.17.0.
+`npm --prefix frontend run dev`
 
-La implementación de la interfaz web constituye la siguiente etapa del prototipo.
+Dirección local:
 
-La interfaz consumirá exclusivamente los endpoints de FastAPI.
+`http://localhost:5173/`
 
-No tendrá acceso directo a PostgreSQL ni a los archivos internos de modelado.
+La construcción para producción se valida mediante:
+
+`npm --prefix frontend run build`
+
+La compilación validada utilizando Vite 8.3.2 produjo:
+
+`1898 modules transformed`
+
+y finalizó correctamente sin errores de TypeScript ni de construcción.
+
+La validación estática se ejecuta mediante:
+
+`npm --prefix frontend run lint`
+
+Resultado validado:
+
+`0 warnings`
+
+`0 errors`
+
+La interfaz fue probada funcionalmente contra la API y PostgreSQL locales.
+
+Se verificó:
+
+- carga del ranking;
+- presentación de las 137.156 empresas;
+- carga de 24 provincias;
+- carga de 9 tipos de compañía;
+- filtros;
+- paginación;
+- apertura de ficha empresarial;
+- información financiera;
+- comparables históricos;
+- explicación SHAP bajo demanda;
+- factores positivos;
+- factores negativos.
+
+Estas verificaciones corresponden a pruebas funcionales de desarrollo.
+
+No sustituyen todavía la validación formal con especialistas de la BVQ.
 
 ---
 
-## 19. Alembic
+## 21. Funcionamiento actual del frontend
+
+La pantalla principal presenta cuatro áreas funcionales.
+
+### 21.1 Resumen ejecutivo
+
+Presenta:
+
+- universo prospectable;
+- mayor índice de afinidad visible;
+- número de provincias;
+- número de tipos de compañía;
+- fecha de decisión.
+
+### 21.2 Ranking operativo
+
+Presenta:
+
+- posición;
+- empresa;
+- provincia;
+- tipo de compañía;
+- Índice de Afinidad Bursátil;
+- percentil;
+- similitud con emisor;
+- calidad de datos.
+
+### 21.3 Ficha individual
+
+Al seleccionar una empresa se presenta un panel lateral con:
+
+- nombre;
+- RUC;
+- provincia;
+- ranking;
+- Índice de Afinidad Bursátil;
+- percentil;
+- activos;
+- patrimonio;
+- ingresos por ventas;
+- número de empleados;
+- emisores comparables.
+
+### 21.4 Explicabilidad
+
+La explicación SHAP se solicita expresamente mediante la acción:
+
+`Analizar factores`
+
+La interfaz muestra los factores de mayor impacto y diferencia visualmente entre:
+
+- factores que aumentan afinidad;
+- factores que reducen afinidad.
+
+El sistema mantiene visible la advertencia de que el Índice de Afinidad Bursátil es una herramienta de priorización y no una probabilidad calibrada.
+
+---
+
+## 22. Alembic
 
 Alembic 1.20.0 se encuentra instalado como dependencia.
 
@@ -702,13 +975,15 @@ Por esta razón no debe afirmarse todavía que la base se encuentre administrada
 
 ---
 
-## 20. Reproducibilidad
+## 23. Reproducibilidad
 
 La reproducibilidad se apoya actualmente en:
 
 - `.venv`;
 - `requirements.txt`;
 - `requirements-lock.txt`;
+- `frontend/package.json`;
+- `frontend/package-lock.json`;
 - Git;
 - GitHub;
 - scripts independientes por etapa;
@@ -719,38 +994,77 @@ La reproducibilidad se apoya actualmente en:
 - pruebas automáticas;
 - PostgreSQL;
 - Docker Compose;
+- React y TypeScript;
+- build reproducible mediante Vite;
 - `random_state = 42` cuando corresponde;
 - metadatos de resultados;
 - validación de scores operacionales frente al modelo final.
 
 ---
 
-## 21. Archivos de dependencias
+## 24. Archivos de dependencias
 
-### `requirements.txt`
+### Python
 
-Contiene las dependencias instaladas necesarias para reconstruir el entorno Python utilizado actualmente.
+`requirements.txt`
 
-### `requirements-lock.txt`
+Contiene las dependencias necesarias para reconstruir el entorno Python utilizado actualmente.
 
-Contiene el conjunto completo de paquetes y versiones instaladas en el ambiente utilizado durante el desarrollo.
+`requirements-lock.txt`
 
-Después de incorporar nuevas dependencias, ambos archivos deben actualizarse.
+Contiene el conjunto completo de paquetes y versiones instaladas en el ambiente Python utilizado durante el desarrollo.
 
-En octubre de 2026 fueron actualizados para incorporar, entre otras dependencias:
+Después de incorporar nuevas dependencias Python, ambos archivos deben actualizarse.
 
-- FastAPI;
-- Uvicorn;
-- SQLAlchemy;
-- psycopg;
-- Alembic;
-- python-dotenv;
-- Pydantic;
-- pytest.
+### Frontend
+
+`frontend/package.json`
+
+Define las dependencias y scripts del frontend.
+
+`frontend/package-lock.json`
+
+Conserva las versiones exactas resueltas por npm y permite reconstruir el entorno JavaScript de manera consistente.
+
+La instalación reproducible del frontend debe apoyarse en el archivo de bloqueo.
 
 ---
 
-## 22. Control de versiones
+## 25. Scripts npm disponibles
+
+Los scripts actualmente definidos son:
+
+### Desarrollo
+
+`npm --prefix frontend run dev`
+
+Inicia el servidor de desarrollo Vite.
+
+### Construcción
+
+`npm --prefix frontend run build`
+
+Ejecuta:
+
+`tsc -b && vite build`
+
+Por tanto, valida primero TypeScript y posteriormente genera el build de producción.
+
+### Lint
+
+`npm --prefix frontend run lint`
+
+Ejecuta Oxlint.
+
+### Preview
+
+`npm --prefix frontend run preview`
+
+Permite visualizar localmente el build de producción generado.
+
+---
+
+## 26. Control de versiones
 
 El proyecto utiliza Git.
 
@@ -774,13 +1088,24 @@ Los commits registran progresivamente:
 - arquitectura;
 - PostgreSQL;
 - FastAPI;
-- pruebas automáticas.
+- pruebas automáticas;
+- frontend React;
+- integración del frontend con FastAPI;
+- interfaz de ranking;
+- detalle empresarial;
+- explicabilidad SHAP en interfaz.
+
+La primera versión funcional del frontend fue incorporada al repositorio mediante el commit:
+
+`20fb2e4 feat: add Prospect Finder frontend`
+
+y sincronizada con la rama remota `main`.
 
 El repositorio no debe utilizarse para publicar información empresarial sensible ni datasets operacionales no autorizados.
 
 ---
 
-## 23. Información no versionada
+## 27. Información no versionada
 
 Como principio general, no se publican directamente en Git:
 
@@ -803,9 +1128,17 @@ El repositorio prioriza:
 - metadatos;
 - evidencia metodológica.
 
+El directorio:
+
+`frontend/node_modules/`
+
+no se versiona.
+
+Los artefactos generados durante el build del frontend tampoco deben utilizarse como sustituto del código fuente versionado.
+
 ---
 
-## 24. Seguridad de configuración
+## 28. Seguridad de configuración
 
 Las credenciales de producción no deben almacenarse en el código.
 
@@ -815,9 +1148,17 @@ Las credenciales existentes en Docker Compose corresponden al entorno local de d
 
 Para despliegues posteriores deberá utilizarse configuración externa segura mediante variables de entorno o mecanismos equivalentes.
 
+El frontend dispone de la variable:
+
+`VITE_API_URL`
+
+para definir la dirección de la API sin modificar directamente el código fuente.
+
+No deben almacenarse credenciales ni secretos dentro de variables `VITE_*`, ya que su contenido puede quedar expuesto al navegador.
+
 ---
 
-## 25. Flujo técnico general actualizado
+## 29. Flujo técnico general actualizado
 
 El flujo técnico actual es:
 
@@ -841,14 +1182,18 @@ El flujo técnico actual es:
 18. Persistencia operacional en PostgreSQL.
 19. Exposición de servicios mediante FastAPI.
 20. Explicabilidad operacional bajo demanda.
-21. Pruebas automáticas.
-22. Construcción de interfaz web.
-23. Formalización MLOps.
-24. Validación funcional con especialistas.
+21. Pruebas automáticas del backend.
+22. Construcción del frontend React.
+23. Integración frontend–FastAPI.
+24. Validación de build y lint.
+25. Validación funcional preliminar de la interfaz.
+26. Formalización MLOps.
+27. Validación funcional con especialistas.
+28. Documentación final de operación y despliegue.
 
 ---
 
-## 26. Estado técnico actual
+## 30. Estado técnico actual
 
 El entorno se encuentra operativo para:
 
@@ -866,9 +1211,22 @@ El entorno se encuentra operativo para:
 - exposición mediante API REST;
 - consultas filtradas;
 - pruebas automáticas;
-- ejecución mediante Docker para PostgreSQL.
+- ejecución de PostgreSQL mediante Docker;
+- frontend React;
+- comunicación React–FastAPI;
+- ranking interactivo;
+- búsqueda de empresas;
+- filtros;
+- paginación;
+- detalle empresarial;
+- visualización de indicadores financieros;
+- visualización de emisores comparables;
+- explicabilidad SHAP bajo demanda;
+- representación de factores positivos y negativos;
+- build de producción;
+- lint del frontend.
 
-La API contiene actualmente los componentes necesarios para que el frontend consuma:
+El frontend consume actualmente:
 
 - ranking;
 - búsqueda;
@@ -879,26 +1237,70 @@ La API contiene actualmente los componentes necesarios para que el frontend cons
 - catálogos;
 - explicabilidad.
 
+El prototipo ya permite recorrer funcionalmente el flujo:
+
+`PostgreSQL → FastAPI → React → usuario`
+
+y:
+
+`modelo congelado → SHAP → FastAPI → React → usuario`
+
 ---
 
-## 27. Componentes pendientes
+## 31. Estado de la interfaz web
+
+La interfaz web ya se encuentra implementada en una primera versión funcional.
+
+No debe considerarse todavía una versión productiva definitiva.
+
+La versión actual permite demostrar los componentes principales exigidos para el prototipo:
+
+- ranking de prospectos;
+- indicadores de priorización;
+- búsqueda;
+- filtros;
+- detalle de empresa;
+- indicadores financieros;
+- emisores históricos comparables;
+- factores explicativos.
+
+Quedan disponibles mejoras posteriores de experiencia de usuario, entre ellas:
+
+- modularización adicional de componentes;
+- uso de rutas específicas cuando resulte necesario;
+- visualizaciones analíticas adicionales;
+- utilización de Recharts donde aporte valor;
+- presentación más explicativa de los valores originales asociados a cada factor SHAP;
+- estados de carga más elaborados;
+- manejo visual más explícito de errores;
+- pruebas automatizadas específicas del frontend.
+
+Estas mejoras no afectan el funcionamiento básico actualmente validado.
+
+---
+
+## 32. Componentes pendientes
 
 Los principales componentes técnicos que todavía deben completarse son:
 
-- interfaz web;
 - dockerización completa de FastAPI;
-- migraciones Alembic;
+- migraciones formales con Alembic;
 - integración formal de DVC;
 - integración formal de MLflow;
+- pruebas automatizadas específicas del frontend;
 - pruebas funcionales finales del producto;
-- validación con al menos dos especialistas de la BVQ;
-- documentación final de despliegue y operación.
+- validación real con al menos dos especialistas de la BVQ;
+- registro estructurado de los resultados de dicha validación;
+- documentación final de despliegue;
+- documentación final de operación.
 
-Estos elementos deben registrarse únicamente cuando hayan sido efectivamente implementados y validados.
+La interfaz web ya no se considera un componente pendiente.
+
+Las mejoras visuales y de experiencia de usuario pueden continuar de manera incremental, pero la primera versión funcional del frontend ya se encuentra implementada y validada técnicamente.
 
 ---
 
-## 28. Principio de trazabilidad
+## 33. Principio de trazabilidad
 
 Cada resultado presentado por Prospect Finder BVQ debe poder relacionarse con:
 
@@ -920,14 +1322,100 @@ Este principio permite diferenciar claramente entre:
 - explicaciones del modelo;
 - criterios comerciales posteriores.
 
+La interfaz no debe ocultar esta separación conceptual.
+
 ---
 
-## 29. Estado de reproducibilidad
+## 34. Principios de presentación del score
+
+El `score_afinidad` no constituye una probabilidad calibrada.
+
+Por este motivo la interfaz evita términos como:
+
+- probabilidad de emisión;
+- probabilidad de convertirse en emisor;
+- certeza de emisión.
+
+La interfaz utiliza la denominación:
+
+`Índice de Afinidad Bursátil`
+
+y lo presenta como un indicador de priorización.
+
+El percentil y la posición en el ranking sirven como elementos adicionales de interpretación.
+
+La decisión comercial final debe continuar bajo supervisión humana.
+
+---
+
+## 35. Principios de presentación de similitud
+
+La similitud con emisores históricos es independiente del Índice de Afinidad Bursátil.
+
+La interfaz no suma ni pondera ambos indicadores.
+
+La similitud cumple una función explicativa y de referencia comercial.
+
+Su objetivo es permitir responder preguntas como:
+
+- ¿a qué emisores históricos se parece esta empresa?;
+- ¿qué empresas ya participantes del mercado presentan perfiles financieros similares?;
+- ¿existen comparables suficientes para contextualizar al prospecto?
+
+No debe interpretarse como evidencia causal ni como validación directa de que una empresa llegará a convertirse en emisor.
+
+---
+
+## 36. Principios de explicabilidad
+
+SHAP permite explicar cómo determinadas variables influyen en el score producido por el modelo.
+
+Un valor SHAP positivo significa que una variable aumenta el score respecto al valor base utilizado por el explicador.
+
+Un valor SHAP negativo significa que una variable reduce el score respecto al valor base.
+
+La explicación SHAP:
+
+- describe el comportamiento del modelo;
+- no demuestra causalidad;
+- no sustituye análisis financiero;
+- no sustituye revisión comercial;
+- no modifica el modelo;
+- no reentrena el modelo.
+
+La explicación operacional se calcula utilizando el modelo final congelado v10.
+
+---
+
+## 37. Validación funcional realizada
+
+Durante la construcción del frontend se verificó manualmente el funcionamiento del flujo integral utilizando empresas reales del ranking operacional.
+
+Se validó una empresa ubicada en la primera posición del ranking y una empresa ubicada en una posición posterior.
+
+La prueba confirmó que la interfaz puede representar:
+
+- factores SHAP que aumentan afinidad;
+- factores SHAP que reducen afinidad;
+- ranking;
+- percentil;
+- indicadores financieros;
+- similitud;
+- comparables históricos.
+
+Esta validación corresponde a control técnico del desarrollo.
+
+No debe confundirse con la validación formal de usabilidad y utilidad del prototipo por parte de especialistas de la BVQ.
+
+---
+
+## 38. Estado de reproducibilidad
 
 A la fecha de esta documentación se encuentran implementados los siguientes mecanismos:
 
 - entorno Python aislado;
-- dependencias congeladas;
+- dependencias Python congeladas;
+- dependencias frontend bloqueadas mediante `package-lock.json`;
 - repositorio Git;
 - modelo final identificado;
 - separación temporal documentada;
@@ -935,8 +1423,34 @@ A la fecha de esta documentación se encuentran implementados los siguientes mec
 - scripts de construcción operacional;
 - PostgreSQL en Docker;
 - API versionada;
-- pruebas automáticas;
+- pruebas automáticas del backend;
+- frontend versionado;
+- build reproducible;
+- lint del frontend;
 - documentación técnica;
 - explicabilidad reproducible.
 
 La incorporación de DVC, MLflow, migraciones Alembic y contenedor de FastAPI completará la capa de MLOps prevista para el proyecto.
+
+---
+
+## 39. Estado global del prototipo
+
+Prospect Finder BVQ dispone actualmente de un flujo técnico funcional compuesto por:
+
+1. datos históricos;
+2. pipeline de preparación;
+3. modelo predictivo v10 congelado;
+4. ranking operacional;
+5. motor independiente de similitud;
+6. PostgreSQL;
+7. FastAPI;
+8. explicabilidad SHAP;
+9. frontend React;
+10. pruebas automatizadas del backend;
+11. validaciones técnicas del frontend;
+12. control de versiones mediante Git y GitHub.
+
+La solución permite actualmente identificar y priorizar empresas, consultar información financiera, revisar emisores históricos comparables y explicar individualmente los principales factores que influyen sobre el Índice de Afinidad Bursátil.
+
+Las etapas restantes se concentran principalmente en MLOps, pruebas finales, validación con especialistas y documentación de despliegue.

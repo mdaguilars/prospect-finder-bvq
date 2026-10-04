@@ -1887,19 +1887,98 @@ El commit fue publicado correctamente en GitHub:
 
 ---
 
-# 30. Preparación del frontend
+# 30. Frontend React funcional — 4 de octubre de 2026
 
-En octubre de 2026 se instaló:
+**Commit:** `20fb2e4`
 
-`Node.js LTS 24.19.0`
+**Mensaje Git:** `feat: add Prospect Finder frontend`
+
+Se construyó y versionó la primera versión funcional de la interfaz web de Prospect Finder BVQ utilizando React, TypeScript y Vite.
+
+### Tecnologías verificadas
+
+- Node.js `24.19.0`;
+- npm `11.17.0`;
+- React `19.3.0`;
+- React DOM `19.3.0`;
+- TypeScript `6.0.3`;
+- Vite `8.3.2`;
+- Lucide React `1.52.0`;
+- React Router DOM `7.18.4`;
+- Recharts `3.10.1`;
+- Oxlint `1.86.0`.
+
+React Router DOM y Recharts se encuentran instalados para la evolución del prototipo. La primera vista funcional todavía no depende de navegación compleja ni de gráficos construidos con Recharts.
+
+### Funcionalidad implementada
+
+La interfaz permite:
+
+- visualizar el universo operacional;
+- consultar el ranking de prospectos;
+- buscar por nombre, RUC o expediente;
+- filtrar por provincia;
+- filtrar por tipo de compañía;
+- navegar por páginas;
+- abrir la ficha individual de una empresa;
+- visualizar el Índice de Afinidad Bursátil;
+- visualizar percentil y ranking;
+- consultar indicadores financieros;
+- visualizar emisores históricos comparables;
+- solicitar una explicación SHAP bajo demanda;
+- distinguir factores que aumentan o reducen afinidad.
+
+### Validación técnica
+
+Build:
+
+`npm --prefix frontend run build`
+
+Resultado:
+
+- compilación TypeScript correcta;
+- build Vite correcto;
+- `1898 modules transformed`.
+
+Lint:
+
+`npm --prefix frontend run lint`
+
+Resultado:
+
+`0 warnings`
+
+`0 errors`
+
+### Validación funcional
+
+Se verificó desde navegador:
+
+- carga de `137.156` empresas;
+- carga de `24` provincias;
+- carga de `9` tipos de compañía;
+- ranking;
+- filtros;
+- paginación;
+- ficha financiera;
+- comparables;
+- explicación SHAP;
+- factores positivos;
+- factores negativos.
+
+La validación realizada corresponde a control técnico del desarrollo y no sustituye la validación formal con especialistas de la BVQ.
+
+### Decisión
+
+Mantener la separación:
+
+`PostgreSQL → FastAPI → React → usuario`
 
 y:
 
-`npm 11.17.0`
+`modelo congelado → SHAP → FastAPI → React → usuario`.
 
-El entorno queda preparado para comenzar la construcción de la interfaz web.
-
-Esta etapa todavía no se considera implementada.
+El frontend no accede directamente al modelo ni a PostgreSQL.
 
 ---
 
@@ -2073,6 +2152,22 @@ Pruebas:
 
 Estado:
 
+**IMPLEMENTADO Y VALIDADO TÉCNICAMENTE**
+
+Build:
+
+**CORRECTO**
+
+Lint:
+
+**0 WARNINGS / 0 ERRORS**
+
+Integración con FastAPI:
+
+**FUNCIONAL**
+
+Validación con especialistas:
+
 **PENDIENTE**
 
 ---
@@ -2177,15 +2272,17 @@ Las principales limitaciones vigentes son:
 9. SHAP explica el modelo, no causalidad;
 10. la similitud con emisores no constituye una predicción;
 11. el análisis retrospectivo de similitud no demuestra poder predictivo;
-12. la interfaz web todavía no está implementada;
-13. la autenticación institucional no está implementada;
-14. el monitoreo operacional completo todavía está pendiente;
-15. DVC todavía no está integrado;
-16. MLflow todavía no está integrado;
-17. FastAPI todavía no está contenerizado;
-18. las migraciones Alembic todavía no están configuradas;
-19. la validación funcional con especialistas todavía está pendiente;
-20. el ambiente actual corresponde a desarrollo local.
+12. la autenticación institucional no está implementada;
+13. no existen todavía pruebas automatizadas específicas del frontend;
+14. la interfaz todavía puede modularizarse y mejorar su experiencia de usuario;
+15. el monitoreo operacional completo todavía está pendiente;
+16. DVC todavía no está integrado;
+17. MLflow todavía no está integrado;
+18. FastAPI todavía no está contenerizado;
+19. las migraciones Alembic todavía no están configuradas;
+20. la validación funcional con especialistas todavía está pendiente;
+21. el ambiente actual corresponde a desarrollo local;
+22. no existe todavía un despliegue productivo institucional.
 
 ---
 
@@ -2198,6 +2295,8 @@ El proyecto utiliza actualmente:
 - `.venv`;
 - `requirements.txt`;
 - `requirements-lock.txt`;
+- `frontend/package.json`;
+- `frontend/package-lock.json`;
 - scripts reproducibles;
 - datasets congelados;
 - protocolos congelados;
@@ -2208,6 +2307,8 @@ El proyecto utiliza actualmente:
 - Docker;
 - PostgreSQL;
 - pruebas automáticas;
+- build reproducible del frontend;
+- lint del frontend;
 - metadatos;
 - evidencia de resultados.
 
@@ -2271,9 +2372,45 @@ npm:
 
 `11.17.0`
 
-Las versiones completas del entorno se mantienen en:
+React:
+
+`19.3.0`
+
+React DOM:
+
+`19.3.0`
+
+TypeScript:
+
+`6.0.3`
+
+Vite:
+
+`8.3.2`
+
+Lucide React:
+
+`1.52.0`
+
+React Router DOM:
+
+`7.18.4`
+
+Recharts:
+
+`3.10.1`
+
+Oxlint:
+
+`1.86.0`
+
+Las versiones Python se mantienen en:
 
 `requirements-lock.txt`
+
+Las versiones frontend se mantienen en:
+
+`frontend/package-lock.json`
 
 ---
 
@@ -2313,7 +2450,16 @@ Las versiones completas del entorno se mantienen en:
 | SHAP API | Implementado |
 | Pruebas automáticas | 12 aprobadas |
 | Node.js/npm | Instalados |
-| Frontend | Pendiente |
+| Frontend React | Implementado |
+| Integración frontend–FastAPI | Implementada |
+| Ranking web | Implementado |
+| Filtros web | Implementados |
+| Ficha empresarial web | Implementada |
+| Comparables web | Implementados |
+| SHAP web | Implementado |
+| Build frontend | Correcto |
+| Lint frontend | 0 warnings / 0 errors |
+| Pruebas automatizadas frontend | Pendientes |
 | Docker FastAPI | Pendiente |
 | Alembic | Pendiente de configuración |
 | DVC | Pendiente |
@@ -2340,6 +2486,8 @@ Las versiones completas del entorno se mantienen en:
 | `d1c44e4` | Catálogos y filtros |
 | `169ba8b` | SHAP operacional |
 | `b1b577f` | Pruebas API |
+| `c0dac5a` | Actualización documental de arquitectura y estado |
+| `20fb2e4` | Frontend React funcional |
 
 ---
 
@@ -2418,25 +2566,26 @@ Después de observar TEST:
 
 # 43. Próxima fase
 
-La siguiente fase del proyecto se concentra en convertir el backend ya implementado en un prototipo completo.
+La siguiente fase se concentra en cerrar la capa de MLOps, fortalecer las pruebas del producto y ejecutar la validación formal.
 
 Las actividades pendientes principales son:
 
-1. construir el frontend web;
-2. integrar el frontend con FastAPI;
-3. validar ranking y ficha de empresa desde navegador;
-4. presentar SHAP en lenguaje de negocio;
-5. presentar emisores comparables;
-6. completar dockerización de FastAPI;
-7. configurar migraciones Alembic;
-8. implementar DVC;
-9. implementar MLflow;
-10. completar mecanismos de monitoreo;
-11. ejecutar pruebas funcionales finales;
-12. realizar validación con al menos dos especialistas BVQ;
-13. documentar resultados de validación;
-14. preparar el informe final;
-15. preparar la presentación final.
+1. modularizar progresivamente el frontend donde aporte mantenibilidad;
+2. mejorar la presentación de los valores originales asociados a los factores SHAP;
+3. incorporar pruebas automatizadas específicas del frontend;
+4. completar dockerización de FastAPI;
+5. configurar migraciones Alembic;
+6. implementar DVC;
+7. implementar MLflow;
+8. completar mecanismos de monitoreo;
+9. ejecutar pruebas funcionales finales del producto;
+10. realizar validación con al menos dos especialistas BVQ;
+11. documentar resultados de validación;
+12. revisar si la rúbrica exige explícitamente una implementación adicional con TensorFlow/Keras;
+13. preparar el informe final;
+14. preparar la presentación final.
+
+La construcción básica del frontend, su integración con FastAPI y la validación inicial desde navegador ya no forman parte de los pendientes.
 
 ---
 
@@ -2538,7 +2687,19 @@ La bitácora se encuentra actualizada hasta:
 - optimización de SHAP;
 - pruebas automáticas;
 - actualización de dependencias;
-- preparación del entorno frontend.
+- React;
+- TypeScript;
+- Vite;
+- integración frontend–FastAPI;
+- ranking web;
+- filtros web;
+- ficha empresarial;
+- comparables web;
+- explicación SHAP en interfaz;
+- validación de factores positivos y negativos;
+- build del frontend;
+- lint del frontend;
+- versionamiento del frontend.
 
 Modelo final:
 
@@ -2554,7 +2715,7 @@ Estado:
 
 Producto operacional:
 
-**IMPLEMENTADO EN BACKEND**
+**IMPLEMENTADO EN BACKEND Y FRONTEND**
 
 Backend:
 
@@ -2566,7 +2727,15 @@ Pruebas API:
 
 Frontend:
 
-**SIGUIENTE ETAPA**
+**IMPLEMENTADO Y VALIDADO TÉCNICAMENTE**
+
+Commit frontend:
+
+`20fb2e4`
+
+Pendientes principales:
+
+**MLOps, pruebas frontend, validación con especialistas y cierre documental.**
 
 ---
 
