@@ -20,6 +20,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.api.core.config import settings
+from src.api.routers.catalogs import router as catalogs_router
 from src.api.routers.health import router as health_router
 from src.api.routers.prospects import router as prospects_router
 
@@ -55,6 +56,12 @@ app.include_router(
 
 app.include_router(
     prospects_router,
+    prefix=settings.api_prefix,
+)
+
+
+app.include_router(
+    catalogs_router,
     prefix=settings.api_prefix,
 )
 

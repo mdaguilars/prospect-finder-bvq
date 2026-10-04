@@ -42,14 +42,35 @@ def clean_text(
     value: str | None,
 ) -> str | None:
     """
-    Elimina espacios innecesarios al inicio y al final
-    de valores de texto provenientes de las fuentes.
+    Normaliza textos devueltos por la API:
+
+    - elimina espacios al inicio y al final;
+    - reemplaza múltiples espacios internos por uno solo.
     """
 
     if value is None:
         return None
 
-    return value.strip()
+    return " ".join(
+        value.split()
+    )
+
+
+def normalized_text(column):
+    """
+    Normaliza valores de texto directamente en PostgreSQL:
+
+    - elimina espacios al inicio;
+    - elimina espacios al final;
+    - reemplaza múltiples espacios internos por uno solo.
+    """
+
+    return func.regexp_replace(
+        func.trim(column),
+        "[[:space:]]+",
+        " ",
+        "g",
+    )
 
 
 @router.get("")
@@ -118,10 +139,14 @@ def get_prospects(
     filters = []
 
     if search:
-        search_clean = search.strip()
+        search_clean = clean_text(
+            search
+        )
 
         if search_clean:
-            search_pattern = f"%{search_clean}%"
+            search_pattern = (
+                f"%{search_clean}%"
+            )
 
             search_filters = [
                 OperationalProspect.nombre.ilike(
@@ -149,26 +174,30 @@ def get_prospects(
             )
 
     if provincia:
-        provincia_clean = provincia.strip()
-
-        filters.append(
-            func.trim(
-                OperationalProspect.provincia
-            )
-            == provincia_clean
+        provincia_clean = clean_text(
+            provincia
         )
+
+        if provincia_clean:
+            filters.append(
+                normalized_text(
+                    OperationalProspect.provincia
+                )
+                == provincia_clean
+            )
 
     if tipo_compania:
-        tipo_compania_clean = (
-            tipo_compania.strip()
+        tipo_compania_clean = clean_text(
+            tipo_compania
         )
 
-        filters.append(
-            func.trim(
-                OperationalProspect.tipo_compania
+        if tipo_compania_clean:
+            filters.append(
+                normalized_text(
+                    OperationalProspect.tipo_compania
+                )
+                == tipo_compania_clean
             )
-            == tipo_compania_clean
-        )
 
     if min_score is not None:
         filters.append(
