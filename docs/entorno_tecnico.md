@@ -163,6 +163,8 @@ La estructura técnica principal es:
     │   └── processed/
     │
     ├── docs/
+    │   ├── v10_functional_test_matrix.md
+    │   └── ...
     │
     ├── frontend/
     │   ├── public/
@@ -760,6 +762,16 @@ Por esta razón se conserva `PermutationExplainer`.
 
 El runtime SHAP se inicializa y reutiliza para reducir el costo de solicitudes posteriores.
 
+Durante la ejecución funcional del 4 de octubre de 2026 se verificó además el precalentamiento de SHAP al iniciar FastAPI. El log de arranque mostró:
+
+`Inicializando explicabilidad SHAP...`
+
+`Precalentando SHAP con expediente 1...`
+
+`SHAP inicializado correctamente.`
+
+Por tanto, el entorno funcional validado inicia el runtime de explicabilidad y ejecuta un calentamiento antes de atender las consultas del usuario.
+
 La importancia global SHAP continúa utilizando los resultados post-test previamente validados.
 
 LIME se conserva como técnica complementaria de análisis y evidencia metodológica, pero no constituye actualmente el método principal de explicación operacional del frontend.
@@ -948,26 +960,46 @@ Resultado validado:
 
 ### 20.4 Validación funcional del flujo integrado
 
-La interfaz fue probada funcionalmente contra la API y PostgreSQL locales.
+La interfaz fue probada funcionalmente contra la API, PostgreSQL y el servicio real de explicabilidad SHAP.
 
-Se verificó:
+Documento de evidencia:
 
-- carga del ranking;
-- presentación de las 137.156 empresas;
-- carga de 24 provincias;
-- carga de 9 tipos de compañía;
-- filtros;
-- paginación;
-- apertura de ficha empresarial;
-- información financiera;
-- comparables históricos;
-- explicación SHAP bajo demanda;
-- factores positivos;
-- factores negativos.
+`docs/v10_functional_test_matrix.md`
 
-Estas verificaciones corresponden a pruebas funcionales de desarrollo.
+Se ejecutaron diez escenarios:
 
-No sustituyen todavía la validación formal con especialistas de la BVQ.
+1. carga inicial del ranking;
+2. búsqueda de empresa;
+3. filtro por provincia;
+4. filtro por tipo de compañía;
+5. paginación;
+6. ficha empresarial;
+7. explicabilidad SHAP;
+8. emisores históricos comparables;
+9. empresa sin similitud suficiente;
+10. expediente inexistente.
+
+### Resultado final
+
+`10 de 10 pruebas funcionales aprobadas`
+
+Entre las evidencias verificadas se encuentran:
+
+- universo prospectable de `137.156` empresas;
+- `24` provincias;
+- `9` tipos de compañía;
+- filtro Pichincha con `43.487` resultados;
+- filtro Responsabilidad Limitada con `28.972` resultados;
+- navegación a `Página 2 de 5.487`;
+- ficha de `CUYABENOPETRO S.A.`;
+- factores SHAP positivos y negativos;
+- cinco emisores históricos comparables;
+- manejo de `INFORMACION_INSUFICIENTE` sin crear comparables artificiales;
+- respuesta `404` controlada para un expediente inexistente.
+
+Las pruebas funcionales finales quedaron cerradas técnicamente.
+
+No sustituyen la validación formal con al menos dos especialistas de la BVQ.
 
 ---
 
@@ -1063,6 +1095,7 @@ La reproducibilidad se apoya actualmente en:
 - React y TypeScript;
 - build reproducible mediante Vite;
 - pruebas automatizadas del frontend mediante Vitest y Testing Library;
+- matriz de pruebas funcionales finales;
 - `random_state = 42` cuando corresponde;
 - metadatos de resultados;
 - validación de scores operacionales frente al modelo final.
@@ -1177,7 +1210,13 @@ La primera versión funcional del frontend fue incorporada al repositorio median
 
 `20fb2e4 feat: add Prospect Finder frontend`
 
-y sincronizada con la rama remota `main`.
+Las pruebas automatizadas específicas del frontend fueron incorporadas mediante:
+
+`7a50bf6 test: add frontend automated tests`
+
+Ambos cambios fueron sincronizados con la rama remota `main`.
+
+La matriz de pruebas funcionales finales se encuentra preparada para incorporarse en el siguiente commit documental.
 
 El repositorio no debe utilizarse para publicar información empresarial sensible ni datasets operacionales no autorizados.
 
@@ -1265,9 +1304,9 @@ El flujo técnico actual es:
 23. Integración frontend–FastAPI.
 24. Incorporación de pruebas automatizadas del frontend.
 25. Validación de pruebas, build y lint.
-26. Validación funcional preliminar de la interfaz.
-27. Formalización MLOps.
-28. Validación funcional con especialistas.
+26. Ejecución de pruebas funcionales finales del producto.
+27. Validación con al menos dos especialistas de la BVQ.
+28. Formalización MLOps.
 29. Documentación final de operación y despliegue.
 
 ---
@@ -1304,7 +1343,8 @@ El entorno se encuentra operativo para:
 - representación de factores positivos y negativos;
 - build de producción;
 - lint del frontend;
-- pruebas automatizadas del frontend.
+- pruebas automatizadas del frontend;
+- pruebas funcionales finales con `10 de 10` escenarios aprobados.
 
 El frontend consume actualmente:
 
@@ -1356,6 +1396,14 @@ Quedan disponibles mejoras posteriores de experiencia de usuario, entre ellas:
 
 Las pruebas automatizadas específicas del frontend ya se encuentran implementadas y validadas con Vitest y Testing Library.
 
+Las pruebas funcionales finales del producto también se encuentran cerradas con:
+
+`10 de 10 pruebas aprobadas`
+
+según:
+
+`docs/v10_functional_test_matrix.md`
+
 Estas mejoras no afectan el funcionamiento básico actualmente validado.
 
 ---
@@ -1364,13 +1412,13 @@ Estas mejoras no afectan el funcionamiento básico actualmente validado.
 
 Los principales componentes técnicos que todavía deben completarse son:
 
+- validación real con al menos dos especialistas de la BVQ;
+- registro estructurado de los resultados de dicha validación;
 - dockerización completa de FastAPI;
 - migraciones formales con Alembic;
 - integración formal de DVC;
 - integración formal de MLflow;
-- pruebas funcionales finales del producto;
-- validación real con al menos dos especialistas de la BVQ;
-- registro estructurado de los resultados de dicha validación;
+- monitoreo operacional;
 - documentación final de despliegue;
 - documentación final de operación.
 
@@ -1467,25 +1515,59 @@ La explicación operacional se calcula utilizando el modelo final congelado v10.
 
 ---
 
-## 37. Validación funcional realizada
+## 37. Validación funcional final realizada
 
-Durante la construcción del frontend se verificó manualmente el funcionamiento del flujo integral utilizando empresas reales del ranking operacional.
+Se ejecutó una matriz estructurada de pruebas funcionales sobre el prototipo integrado.
 
-Se validó una empresa ubicada en la primera posición del ranking y una empresa ubicada en una posición posterior.
+Documento:
 
-La prueba confirmó que la interfaz puede representar:
+`docs/v10_functional_test_matrix.md`
 
-- factores SHAP que aumentan afinidad;
-- factores SHAP que reducen afinidad;
-- ranking;
-- percentil;
+El flujo validado fue:
+
+`PostgreSQL → FastAPI → React → usuario`
+
+y, para explicabilidad:
+
+`modelo v10 congelado → SHAP → FastAPI → React → usuario`
+
+### Escenarios
+
+- PF-01 — Carga inicial del ranking: **APROBADA**
+- PF-02 — Búsqueda de empresa: **APROBADA**
+- PF-03 — Filtro por provincia: **APROBADA**
+- PF-04 — Filtro por tipo de compañía: **APROBADA**
+- PF-05 — Paginación: **APROBADA**
+- PF-06 — Ficha empresarial: **APROBADA**
+- PF-07 — Explicabilidad SHAP: **APROBADA**
+- PF-08 — Emisores históricos comparables: **APROBADA**
+- PF-09 — Empresa sin similitud suficiente: **APROBADA**
+- PF-10 — Expediente inexistente: **APROBADA**
+
+### Resultado
+
+`10 de 10 pruebas funcionales aprobadas`
+
+No se identificaron errores bloqueantes en los flujos principales evaluados.
+
+Las pruebas verificaron, entre otros aspectos:
+
+- carga del universo operacional;
+- búsqueda;
+- filtros;
+- paginación;
+- ficha empresarial;
 - indicadores financieros;
-- similitud;
-- comparables históricos.
+- Índice de Afinidad Bursátil;
+- ranking y percentil;
+- SHAP con factores positivos y negativos;
+- comparables históricos;
+- comportamiento sin información suficiente para similitud;
+- manejo controlado de un expediente inexistente.
 
-Esta validación corresponde a control técnico del desarrollo.
+Esta validación corresponde al cierre técnico de las pruebas funcionales del producto.
 
-No debe confundirse con la validación formal de usabilidad y utilidad del prototipo por parte de especialistas de la BVQ.
+No debe confundirse con la validación formal de utilidad y usabilidad que todavía debe realizarse con al menos dos especialistas de la BVQ.
 
 ---
 
@@ -1505,6 +1587,7 @@ A la fecha de esta documentación se encuentran implementados los siguientes mec
 - API versionada;
 - pruebas automáticas del backend;
 - pruebas automatizadas del frontend;
+- matriz de pruebas funcionales finales;
 - frontend versionado;
 - build reproducible;
 - lint del frontend;
@@ -1530,9 +1613,10 @@ Prospect Finder BVQ dispone actualmente de un flujo técnico funcional compuesto
 9. frontend React;
 10. pruebas automatizadas del backend;
 11. pruebas automatizadas del frontend;
-12. validaciones técnicas del frontend;
-13. control de versiones mediante Git y GitHub.
+12. pruebas funcionales finales con `10 de 10` escenarios aprobados;
+13. validaciones técnicas del frontend;
+14. control de versiones mediante Git y GitHub.
 
 La solución permite actualmente identificar y priorizar empresas, consultar información financiera, revisar emisores históricos comparables y explicar individualmente los principales factores que influyen sobre el Índice de Afinidad Bursátil.
 
-Las etapas restantes se concentran principalmente en MLOps, pruebas finales, validación con especialistas y documentación de despliegue.
+Las etapas restantes se concentran principalmente en validación con especialistas, MLOps y documentación de despliegue.

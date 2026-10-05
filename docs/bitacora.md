@@ -1786,13 +1786,27 @@ Esto permite conservar:
 - el background;
 - el explicador SHAP;
 
-después de su primera inicialización dentro del proceso de la API.
+dentro del proceso de la API.
 
-La implementación actual no debe documentarse como un precalentamiento obligatorio ejecutado en el `lifespan` de FastAPI mientras dicho comportamiento no se encuentre explícitamente implementado y verificado en el código vigente.
+Durante la ejecución funcional del 4 de octubre de 2026 se verificó además que FastAPI realiza un precalentamiento de SHAP al iniciar la aplicación.
+
+El log de arranque mostró:
+
+`Inicializando explicabilidad SHAP...`
+
+`Precalentando SHAP con expediente 1...`
+
+`SHAP inicializado correctamente.`
+
+Por tanto, el entorno funcional validado inicializa el runtime de explicabilidad y ejecuta un calentamiento antes de atender las consultas del usuario.
 
 ### Resultado observado
 
-Con el runtime ya inicializado se registraron consultas locales de aproximadamente:
+Durante pruebas de desarrollo, una primera ejecución en frío llegó a registrar aproximadamente:
+
+`72,66 segundos`
+
+Con el runtime inicializado se registraron posteriormente consultas locales de aproximadamente:
 
 `0,254 segundos`
 
@@ -1800,9 +1814,7 @@ También se verificaron otros casos con tiempos adecuados para el prototipo.
 
 ### Decisión
 
-Mantener PermutationExplainer por su fidelidad con el score del modelo y reutilizar el runtime inicializado para reducir el costo de solicitudes posteriores.
-
-Un warm-up explícito al iniciar FastAPI puede evaluarse posteriormente si el escenario de despliegue lo requiere.
+Mantener PermutationExplainer por su fidelidad con el score del modelo, conservar la reutilización del runtime y mantener el precalentamiento verificado durante el arranque de FastAPI.
 
 ---
 
@@ -1992,6 +2004,10 @@ El frontend no accede directamente al modelo ni a PostgreSQL.
 
 ## 30.1 Pruebas automatizadas del frontend — 4 de octubre de 2026
 
+**Commit:** `7a50bf6`
+
+**Mensaje Git:** `test: add frontend automated tests`
+
 Se incorporó una suite automatizada específica para la interfaz React.
 
 ### Herramientas
@@ -2096,6 +2112,183 @@ Resultado:
 Mantener pruebas automatizadas del frontend como parte de la validación técnica del producto.
 
 La suite deberá ampliarse cuando se incorporen nuevas vistas, componentes o flujos relevantes.
+
+---
+
+## 30.2 Pruebas funcionales finales — 4 de octubre de 2026
+
+Se ejecutó una matriz estructurada de pruebas funcionales sobre el prototipo integrado.
+
+Documento:
+
+`docs/v10_functional_test_matrix.md`
+
+### Flujo validado
+
+`PostgreSQL → FastAPI → React → usuario`
+
+y, para explicabilidad:
+
+`modelo v10 congelado → SHAP → FastAPI → React → usuario`
+
+### Escenarios ejecutados
+
+#### PF-01 — Carga inicial del ranking
+
+**APROBADA**
+
+Se verificó:
+
+- universo prospectable: `137.156`;
+- mayor afinidad visible: `0.974`;
+- `24` provincias;
+- `9` tipos de compañía;
+- fecha de decisión `01 mayo 2024`;
+- ranking visible desde la posición `#1`.
+
+#### PF-02 — Búsqueda de empresa
+
+**APROBADA**
+
+Se buscó `CUYABENOPETRO` y la interfaz devolvió correctamente `CUYABENOPETRO S.A.`.
+
+#### PF-03 — Filtro por provincia
+
+**APROBADA**
+
+Se seleccionó `PICHINCHA` y se obtuvieron `43.487` resultados, manteniendo la posición global del ranking.
+
+#### PF-04 — Filtro por tipo de compañía
+
+**APROBADA**
+
+Se seleccionó `RESPONSABILIDAD LIMITADA` y se obtuvieron `28.972` resultados.
+
+#### PF-05 — Paginación
+
+**APROBADA**
+
+Se verificó la navegación a `Página 2 de 5.487`, manteniendo la numeración global del ranking.
+
+#### PF-06 — Ficha empresarial
+
+**APROBADA**
+
+Se abrió `CUYABENOPETRO S.A.` y se verificaron:
+
+- ranking `#1`;
+- Índice de Afinidad Bursátil `0.974`;
+- percentil `100,0 %`;
+- activos;
+- patrimonio;
+- ventas;
+- empleados;
+- emisores comparables.
+
+#### PF-07 — Explicabilidad SHAP
+
+**APROBADA**
+
+Para verificar factores en ambas direcciones se utilizó:
+
+`ACEITES TROPICALES SOCIEDAD ANONIMA ATSA`
+
+RUC:
+
+`1790013731001`
+
+Ranking:
+
+`#16.302`
+
+Se observaron factores que aumentan afinidad y factores que reducen afinidad.
+
+Entre los factores que aumentaron afinidad se observaron:
+
+- Activos;
+- Patrimonio del año anterior;
+- Patrimonio.
+
+Entre los factores que redujeron afinidad se observaron:
+
+- Ingresos por ventas;
+- Crecimiento de patrimonio;
+- Crecimiento de activos.
+
+La interfaz distinguió correctamente ambos sentidos de contribución.
+
+#### PF-08 — Emisores históricos comparables
+
+**APROBADA**
+
+Para `ACEITES TROPICALES SOCIEDAD ANONIMA ATSA` se visualizaron cinco comparables históricos con sus porcentajes de similitud.
+
+La señal de similitud permaneció separada del Índice de Afinidad Bursátil.
+
+#### PF-09 — Empresa sin similitud suficiente
+
+**APROBADA**
+
+Se utilizó:
+
+`EXPORTQUILSA & PRODUCTORES ASOCIADOS S.A.`
+
+RUC:
+
+`992708093001`
+
+Ranking:
+
+`#21`
+
+La API reportó:
+
+`INFORMACION_INSUFICIENTE`
+
+y la interfaz mostró:
+
+`No existen comparables históricos suficientes para esta empresa.`
+
+No se generaron comparables artificiales y el resto de la ficha permaneció disponible.
+
+#### PF-10 — Expediente inexistente
+
+**APROBADA**
+
+Se consultó:
+
+`GET /api/prospects/999999999999`
+
+La API respondió:
+
+`404`
+
+con:
+
+`{"detail":"No se encontró una empresa con el expediente solicitado."}`
+
+El error se manejó de forma controlada.
+
+### Resultado general
+
+`10 de 10 pruebas funcionales aprobadas`
+
+No se identificaron errores bloqueantes en los flujos principales evaluados.
+
+### Evidencia complementaria
+
+La validación funcional se suma a:
+
+- backend: `12 passed`;
+- frontend automatizado: `4 passed`.
+
+### Decisión
+
+Cerrar B37 — Pruebas funcionales finales.
+
+La siguiente validación prioritaria corresponde a B36 — Validación con al menos dos especialistas de la BVQ.
+
+Las pruebas funcionales técnicas no sustituyen esa validación con usuarios reales.
 
 ---
 
@@ -2283,6 +2476,10 @@ Pruebas automatizadas frontend:
 
 **4 APROBADAS**
 
+Pruebas funcionales finales:
+
+**10 DE 10 APROBADAS**
+
 Integración con FastAPI:
 
 **FUNCIONAL**
@@ -2326,6 +2523,8 @@ Validación con especialistas:
 29. Las credenciales reales no deben versionarse.
 30. Los datasets operacionales no deben publicarse en Git.
 31. El frontend debe mantener pruebas automatizadas independientes de las pruebas de integración del backend.
+32. Las pruebas funcionales integradas deben documentarse separadamente de las pruebas automáticas.
+33. El precalentamiento de SHAP al iniciar FastAPI forma parte del comportamiento operacional verificado del prototipo actual.
 
 ---
 
@@ -2355,6 +2554,8 @@ Se han identificado los siguientes aprendizajes:
 - las pruebas automáticas son necesarias para reducir regresiones en backend y frontend;
 - las pruebas de interfaz deben aislarse correctamente entre ejecuciones para evitar contaminación del DOM;
 - los mocks permiten validar la capa React sin depender de PostgreSQL ni de la ejecución real de SHAP;
+- las pruebas funcionales extremo a extremo son necesarias para comprobar que PostgreSQL, FastAPI, React y SHAP funcionan de manera integrada;
+- los casos sin comparables y los expedientes inexistentes deben manejarse explícitamente sin inventar información;
 - la supervisión humana es una parte central del diseño.
 
 ---
@@ -2432,6 +2633,7 @@ El proyecto utiliza actualmente:
 - PostgreSQL;
 - pruebas automáticas del backend;
 - pruebas automatizadas del frontend;
+- matriz de pruebas funcionales finales;
 - build reproducible del frontend;
 - lint del frontend;
 - metadatos;
@@ -2605,6 +2807,7 @@ Las versiones frontend se mantienen en:
 | Build frontend | Correcto |
 | Lint frontend | 0 warnings / 0 errors |
 | Pruebas automatizadas frontend | 4 aprobadas |
+| Pruebas funcionales finales | 10 de 10 aprobadas |
 | Docker FastAPI | Pendiente |
 | Alembic | Pendiente de configuración |
 | DVC | Pendiente |
@@ -2633,6 +2836,7 @@ Las versiones frontend se mantienen en:
 | `b1b577f` | Pruebas API |
 | `c0dac5a` | Actualización documental de arquitectura y estado |
 | `20fb2e4` | Frontend React funcional |
+| `7a50bf6` | Pruebas automatizadas del frontend y documentación asociada |
 
 ---
 
@@ -2711,25 +2915,24 @@ Después de observar TEST:
 
 # 43. Próxima fase
 
-La siguiente fase se concentra en cerrar la capa de MLOps, fortalecer las pruebas del producto y ejecutar la validación formal.
+La siguiente fase se concentra en ejecutar la validación formal con especialistas y cerrar la capa de MLOps.
 
 Las actividades pendientes principales son:
 
-1. modularizar progresivamente el frontend donde aporte mantenibilidad;
-2. mejorar la presentación de los valores originales asociados a los factores SHAP;
+1. realizar validación con al menos dos especialistas BVQ;
+2. documentar resultados de validación;
 3. completar dockerización de FastAPI;
 4. configurar migraciones Alembic;
 5. implementar DVC;
 6. implementar MLflow;
 7. completar mecanismos de monitoreo;
-8. ejecutar pruebas funcionales finales del producto;
-9. realizar validación con al menos dos especialistas BVQ;
-10. documentar resultados de validación;
-11. revisar si la rúbrica exige explícitamente una implementación adicional con TensorFlow/Keras;
-12. preparar el informe final;
-13. preparar la presentación final.
+8. modularizar progresivamente el frontend donde aporte mantenibilidad;
+9. mejorar la presentación de los valores originales asociados a los factores SHAP;
+10. revisar si la rúbrica exige explícitamente una implementación adicional con TensorFlow/Keras;
+11. preparar el informe final;
+12. preparar la presentación final.
 
-La construcción básica del frontend, su integración con FastAPI, la validación inicial desde navegador y la primera suite automatizada del frontend ya no forman parte de los pendientes.
+La construcción básica del frontend, su integración con FastAPI, la suite automatizada del frontend y las pruebas funcionales finales ya no forman parte de los pendientes.
 
 ---
 
@@ -2844,7 +3047,10 @@ La bitácora se encuentra actualizada hasta:
 - build del frontend;
 - lint del frontend;
 - pruebas automatizadas del frontend;
-- versionamiento del frontend.
+- versionamiento del frontend;
+- precalentamiento de SHAP verificado durante el arranque de FastAPI;
+- matriz de pruebas funcionales finales;
+- 10 de 10 pruebas funcionales aprobadas.
 
 Modelo final:
 
@@ -2878,13 +3084,21 @@ Pruebas frontend:
 
 `4 passed`
 
-Commit frontend:
+Pruebas funcionales finales:
+
+`10 de 10 aprobadas`
+
+Commit frontend principal:
 
 `20fb2e4`
 
+Commit pruebas automatizadas frontend:
+
+`7a50bf6`
+
 Pendientes principales:
 
-**MLOps, pruebas funcionales finales, validación con especialistas y cierre documental.**
+**validación con especialistas, MLOps y cierre documental.**
 
 ---
 

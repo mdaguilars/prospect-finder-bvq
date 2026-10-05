@@ -143,6 +143,10 @@ El estado actual es:
 
 **IMPLEMENTADO Y VALIDADO TÉCNICAMENTE**
 
+### Pruebas funcionales finales
+
+**10 DE 10 APROBADAS**
+
 ---
 
 # 5. Modelo final v10
@@ -322,7 +326,7 @@ El resultado evidencia que el modelo conserva capacidad de ordenamiento general,
 | B34 | Alta | Incorporar DVC | Pendiente |
 | B35 | Alta | Incorporar MLflow | Pendiente |
 | B36 | Alta | Validar con al menos dos especialistas BVQ | Pendiente |
-| B37 | Alta | Ejecutar pruebas funcionales finales | En desarrollo |
+| B37 | Alta | Ejecutar pruebas funcionales finales | Completado |
 | B38 | Alta | Preparar documentación e informe final | En desarrollo |
 | B39 | Alta | Preparar presentación final | Pendiente |
 | B40 | Baja | Autenticación institucional | Pendiente |
@@ -792,12 +796,11 @@ Desde navegador se verificó:
 
 La funcionalidad principal del prototipo está implementada.
 
-Se mantiene como `Completado inicialmente` porque todavía faltan:
+Se mantiene como `Completado inicialmente` porque todavía falta:
 
-- pruebas funcionales finales estructuradas;
 - validación real con al menos dos especialistas de la BVQ.
 
-Las pruebas automatizadas específicas del frontend ya se encuentran implementadas y validadas.
+Las pruebas automatizadas específicas del frontend y las pruebas funcionales finales estructuradas ya se encuentran implementadas y validadas.
 
 Estas actividades se controlan por separado y no implican reabrir el desarrollo básico del frontend.
 
@@ -1190,9 +1193,17 @@ Los errores observados se encuentran únicamente dentro del orden de precisión 
 
 ### Optimización
 
-El servicio reutiliza el runtime de explicabilidad mediante caché en memoria después de su primera inicialización.
+El servicio reutiliza el runtime de explicabilidad mediante caché en memoria.
 
-La implementación actual no debe describirse como un warm-up obligatorio ejecutado durante el `lifespan` de FastAPI mientras dicho comportamiento no se encuentre explícitamente implementado y verificado en el código vigente.
+Durante la ejecución funcional del 4 de octubre de 2026 se verificó además el precalentamiento de SHAP al iniciar FastAPI. El log de arranque mostró:
+
+`Inicializando explicabilidad SHAP...`
+
+`Precalentando SHAP con expediente 1...`
+
+`SHAP inicializado correctamente.`
+
+Por tanto, el entorno funcional validado inicia el runtime de explicabilidad y ejecuta un calentamiento antes de atender las consultas del usuario.
 
 ---
 
@@ -1359,6 +1370,14 @@ Las pruebas finales y la validación con especialistas permanecen como actividad
 **Prioridad:** Alta
 
 **Estado:** Completado
+
+**Commit:**
+
+`7a50bf6`
+
+**Mensaje Git:**
+
+`test: add frontend automated tests`
 
 Se incorporó una suite automatizada específica para la interfaz React.
 
@@ -1591,57 +1610,145 @@ No se deben inventar resultados de validación.
 
 **Prioridad:** Alta
 
-**Estado:** En desarrollo
+**Estado:** Completado
 
-La integración del frontend ya fue completada, se ejecutaron validaciones manuales iniciales desde navegador y existe una primera suite automatizada del frontend con cuatro pruebas aprobadas.
+Se ejecutó una matriz estructurada de pruebas funcionales sobre el prototipo integrado.
+
+Documento de evidencia:
+
+`docs/v10_functional_test_matrix.md`
+
+### Entorno validado
+
+Flujo principal:
+
+`PostgreSQL → FastAPI → React → usuario`
+
+Flujo de explicabilidad:
+
+`modelo v10 congelado → SHAP → FastAPI → React → usuario`
+
+### Escenarios ejecutados
+
+#### PF-01 — Carga inicial del ranking
+
+**Resultado:** APROBADA
 
 Se verificó:
 
-- carga del ranking;
-- paginación;
-- filtros;
-- apertura de ficha;
-- indicadores financieros;
-- comparables;
-- explicación SHAP;
-- representación de factores positivos;
-- representación de factores negativos.
+- universo prospectable: `137.156`;
+- mayor afinidad visible: `0.974`;
+- `24` provincias;
+- `9` tipos de compañía;
+- fecha de decisión `01 mayo 2024`;
+- carga correcta del ranking.
 
-Todavía debe formalizarse una matriz final de escenarios y resultados antes de cerrar esta actividad.
+#### PF-02 — Búsqueda de empresa
 
-Ejemplos:
+**Resultado:** APROBADA
 
-### Escenario 1
+Se buscó `CUYABENOPETRO` y la interfaz devolvió correctamente `CUYABENOPETRO S.A.`.
 
-Buscar una empresa por RUC.
+#### PF-03 — Filtro por provincia
 
-### Escenario 2
+**Resultado:** APROBADA
 
-Filtrar empresas de una provincia.
+Se seleccionó `PICHINCHA` y se obtuvieron `43.487` resultados.
 
-### Escenario 3
+#### PF-04 — Filtro por tipo de compañía
 
-Abrir una empresa priorizada.
+**Resultado:** APROBADA
 
-### Escenario 4
+Se seleccionó `RESPONSABILIDAD LIMITADA` y se obtuvieron `28.972` resultados.
 
-Consultar explicación SHAP.
+#### PF-05 — Paginación
 
-### Escenario 5
+**Resultado:** APROBADA
 
-Consultar los cinco emisores comparables.
+Se verificó la navegación a `Página 2 de 5.487`, manteniendo la numeración global del ranking.
 
-### Escenario 6
+#### PF-06 — Ficha empresarial
 
-Verificar el comportamiento cuando no existe similitud suficiente.
+**Resultado:** APROBADA
 
-### Escenario 7
+Se abrió `CUYABENOPETRO S.A.` y se verificaron ranking, Índice de Afinidad Bursátil, percentil, activos, patrimonio, ventas, empleados y comparables.
 
-Verificar un expediente inexistente.
+#### PF-07 — Explicabilidad SHAP
+
+**Resultado:** APROBADA
+
+Se verificaron factores que aumentan y reducen afinidad utilizando un caso con ambas direcciones:
+
+`ACEITES TROPICALES SOCIEDAD ANONIMA ATSA`
+
+RUC:
+
+`1790013731001`
+
+Ranking:
+
+`#16.302`
+
+#### PF-08 — Emisores históricos comparables
+
+**Resultado:** APROBADA
+
+Se verificó la presentación de cinco comparables históricos con sus porcentajes de similitud.
+
+#### PF-09 — Empresa sin similitud suficiente
+
+**Resultado:** APROBADA
+
+Se verificó:
+
+`EXPORTQUILSA & PRODUCTORES ASOCIADOS S.A.`
+
+RUC:
+
+`992708093001`
+
+La interfaz mostró correctamente:
+
+`No existen comparables históricos suficientes para esta empresa.`
+
+sin generar comparables artificiales.
+
+#### PF-10 — Expediente inexistente
+
+**Resultado:** APROBADA
+
+Se consultó:
+
+`GET /api/prospects/999999999999`
+
+La API respondió:
+
+`404`
+
+con el mensaje:
+
+`{"detail":"No se encontró una empresa con el expediente solicitado."}`
+
+### Resultado general
+
+`10 de 10 pruebas funcionales aprobadas`
+
+No se identificaron errores bloqueantes en los flujos principales evaluados.
+
+### Evidencia complementaria
+
+Las pruebas funcionales se suman a:
+
+- backend: `12 passed`;
+- frontend automatizado: `4 passed`.
 
 ### Criterio de aceptación
 
-Los principales flujos deberán completarse sin errores funcionales.
+Cumplido.
+
+Los principales flujos fueron ejecutados y documentados sin errores bloqueantes.
+
+La validación técnica de B37 no sustituye B36 — Validación con al menos dos especialistas de la BVQ.
 
 ---
 
@@ -1658,7 +1765,8 @@ Se encuentran actualizados o en proceso de actualización:
 - diseño operacional;
 - explicabilidad;
 - bitácora;
-- backlog.
+- backlog;
+- matriz de pruebas funcionales finales.
 
 ### Pendiente
 
@@ -1734,17 +1842,16 @@ Esta actividad no es requisito para probar la lógica funcional del prototipo ac
 
 La secuencia recomendada desde el estado actual es:
 
-1. completar B37 — pruebas funcionales finales;
-2. completar B36 — validación con al menos dos especialistas;
-3. B32 — dockerizar FastAPI;
-4. B33 — configurar Alembic;
-5. B34 — incorporar DVC;
-6. B35 — incorporar MLflow;
-7. B19 — implementar evidencia inicial de monitoreo;
-8. cerrar B38 — informe final;
-9. completar B39 — presentación final.
+1. completar B36 — validación con al menos dos especialistas;
+2. B32 — dockerizar FastAPI;
+3. B33 — configurar Alembic;
+4. B34 — incorporar DVC;
+5. B35 — incorporar MLflow;
+6. B19 — implementar evidencia inicial de monitoreo;
+7. cerrar B38 — informe final;
+8. completar B39 — presentación final.
 
-B31 y B41 ya se encuentran completados.
+B31, B37 y B41 ya se encuentran completados.
 
 B20 deberá resolverse según el requerimiento académico específico, sin modificar el modelo v10.
 
@@ -1907,7 +2014,7 @@ Incluye:
 
 Estado:
 
-**Avanzado / pendiente de validación final**
+**Avanzado / pendiente de validación con especialistas**
 
 Backend implementado.
 
@@ -1917,11 +2024,14 @@ Pruebas automatizadas del frontend:
 
 `4 passed`
 
-Ranking, filtros, ficha financiera, comparables y SHAP fueron validados técnicamente desde navegador.
+Pruebas funcionales finales:
+
+`10 de 10 aprobadas`
+
+Ranking, filtros, ficha financiera, comparables y SHAP fueron validados técnicamente.
 
 Pendiente:
 
-- pruebas funcionales finales estructuradas;
 - validación real con al menos dos especialistas de la BVQ.
 
 ## Objetivo 6 — Reproducibilidad y MLOps
@@ -1939,6 +2049,7 @@ Implementado:
 - Docker PostgreSQL;
 - 12 pruebas automatizadas del backend;
 - 4 pruebas automatizadas del frontend;
+- 10 pruebas funcionales finales aprobadas;
 - documentación.
 
 Pendiente:
@@ -1952,7 +2063,9 @@ Pendiente:
 
 # 55. Control de versiones reciente
 
-Las pruebas automatizadas del frontend ya están implementadas localmente, pero en esta actualización no se registra todavía un commit específico porque el cambio aún no ha sido confirmado en Git.
+Las pruebas automatizadas del frontend fueron confirmadas y publicadas en Git mediante el commit `7a50bf6`.
+
+La matriz de pruebas funcionales finales se encuentra preparada localmente y todavía debe incluirse en el siguiente commit.
 
 | Commit | Hito |
 |---|---|
@@ -1972,6 +2085,7 @@ Las pruebas automatizadas del frontend ya están implementadas localmente, pero 
 | `c0dac5a` | Actualización documental de arquitectura y estado |
 | `20fb2e4` | Frontend React funcional |
 | `5fdd292` | Documentación actualizada con estado del frontend |
+| `7a50bf6` | Pruebas automatizadas del frontend y documentación asociada |
 
 ---
 
@@ -2020,8 +2134,10 @@ Prospect Finder BVQ cuenta actualmente con:
 - SHAP global;
 - SHAP individual;
 - reutilización del runtime de explicabilidad mediante caché en memoria;
+- precalentamiento de SHAP verificado durante el arranque de FastAPI;
 - 12 pruebas automáticas del backend aprobadas;
 - 4 pruebas automatizadas del frontend aprobadas;
+- 10 de 10 pruebas funcionales finales aprobadas;
 - Node.js y npm;
 - frontend React funcional;
 - integración React–FastAPI;
@@ -2035,9 +2151,9 @@ Prospect Finder BVQ cuenta actualmente con:
 
 La prioridad inmediata es:
 
-**cerrar las pruebas funcionales finales y preparar la validación con especialistas de la BVQ.**
+**preparar y ejecutar la validación con al menos dos especialistas de la BVQ.**
 
-Las pruebas automatizadas específicas del frontend ya se encuentran completadas.
+Las pruebas automatizadas del frontend y las pruebas funcionales finales ya se encuentran completadas.
 
 Después deberán completarse:
 
