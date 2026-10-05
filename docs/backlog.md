@@ -131,9 +131,13 @@ El estado actual es:
 
 **IMPLEMENTADO**
 
-### Pruebas automáticas
+### Pruebas automáticas backend
 
 **12 APROBADAS**
+
+### Pruebas automatizadas frontend
+
+**4 APROBADAS**
 
 ### Frontend
 
@@ -322,6 +326,7 @@ El resultado evidencia que el modelo conserva capacidad de ordenamiento general,
 | B38 | Alta | Preparar documentación e informe final | En desarrollo |
 | B39 | Alta | Preparar presentación final | Pendiente |
 | B40 | Baja | Autenticación institucional | Pendiente |
+| B41 | Alta | Implementar pruebas automatizadas frontend | Completado |
 
 ---
 
@@ -790,8 +795,9 @@ La funcionalidad principal del prototipo está implementada.
 Se mantiene como `Completado inicialmente` porque todavía faltan:
 
 - pruebas funcionales finales estructuradas;
-- pruebas automatizadas específicas del frontend;
 - validación real con al menos dos especialistas de la BVQ.
+
+Las pruebas automatizadas específicas del frontend ya se encuentran implementadas y validadas.
 
 Estas actividades se controlan por separado y no implican reabrir el desarrollo básico del frontend.
 
@@ -1184,11 +1190,13 @@ Los errores observados se encuentran únicamente dentro del orden de precisión 
 
 ### Optimización
 
-Se incorporó warm-up de SHAP durante el arranque de FastAPI.
+El servicio reutiliza el runtime de explicabilidad mediante caché en memoria después de su primera inicialización.
+
+La implementación actual no debe describirse como un warm-up obligatorio ejecutado durante el `lifespan` de FastAPI mientras dicho comportamiento no se encuentre explícitamente implementado y verificado en el código vigente.
 
 ---
 
-# 40. B30 — Pruebas automáticas
+# 40. B30 — Pruebas automáticas del backend
 
 **Prioridad:** Alta
 
@@ -1246,9 +1254,16 @@ No sustituyen la validación funcional con especialistas.
 - Lucide React `1.52.0`;
 - React Router DOM `7.18.4`;
 - Recharts `3.10.1`;
-- Oxlint `1.86.0`.
+- Oxlint `1.86.0`;
+- Vitest `5.0.3`;
+- Testing Library React `16.3.3`;
+- Testing Library jest-dom `7.0.1`;
+- Testing Library user-event `14.6.7`;
+- jsdom `30.1.2`.
 
 React Router DOM y Recharts están instalados para evolución posterior. La primera vista funcional no depende todavía de navegación compleja ni de gráficos construidos con Recharts.
+
+Vitest, Testing Library y jsdom se utilizan para las pruebas automatizadas del frontend.
 
 ### Funcionalidad implementada
 
@@ -1318,6 +1333,16 @@ Resultado:
 
 `0 errors`
 
+Pruebas automatizadas:
+
+`npm --prefix frontend run test`
+
+Resultado:
+
+`1 test file passed`
+
+`4 tests passed`
+
 ### Criterio de aceptación
 
 Se verificó desde navegador el flujo:
@@ -1327,6 +1352,96 @@ Se verificó desde navegador el flujo:
 La actividad de construcción del frontend se considera completada.
 
 Las pruebas finales y la validación con especialistas permanecen como actividades independientes.
+
+
+# 41.1 B41 — Pruebas automatizadas frontend
+
+**Prioridad:** Alta
+
+**Estado:** Completado
+
+Se incorporó una suite automatizada específica para la interfaz React.
+
+### Herramientas
+
+- Vitest `5.0.3`;
+- `@testing-library/react 16.3.3`;
+- `@testing-library/jest-dom 7.0.1`;
+- `@testing-library/user-event 14.6.7`;
+- jsdom `30.1.2`.
+
+### Archivos
+
+`frontend/src/test/setup.ts`
+
+`frontend/src/test/App.test.tsx`
+
+Configuración:
+
+`frontend/vite.config.ts`
+
+Script:
+
+`npm --prefix frontend run test`
+
+### Cobertura funcional inicial
+
+La suite valida:
+
+1. carga inicial del ranking y de los catálogos;
+2. aplicación de búsqueda desde el formulario;
+3. apertura del detalle financiero de una empresa;
+4. consulta y presentación de factores SHAP positivos y negativos.
+
+Las llamadas a la API se sustituyen por mocks para aislar la capa React.
+
+Estas pruebas no consultan PostgreSQL ni ejecutan SHAP real.
+
+La integración completa continúa validándose mediante las pruebas del backend y las pruebas funcionales del prototipo.
+
+### Resultado inicial
+
+Primera ejecución:
+
+`1 passed`
+
+`3 failed`
+
+La causa correspondió a contaminación del DOM entre pruebas.
+
+### Corrección
+
+Se incorporó:
+
+`cleanup()`
+
+en:
+
+`frontend/src/test/setup.ts`
+
+para desmontar la interfaz después de cada prueba.
+
+### Resultado final
+
+`1 test file passed`
+
+`4 tests passed`
+
+Build posterior:
+
+`1898 modules transformed`
+
+Lint posterior:
+
+`0 warnings`
+
+`0 errors`
+
+### Criterio de aceptación
+
+Cumplido.
+
+La cobertura deberá ampliarse progresivamente cuando se incorporen nuevas vistas o flujos relevantes.
 
 ---
 
@@ -1478,7 +1593,7 @@ No se deben inventar resultados de validación.
 
 **Estado:** En desarrollo
 
-La integración del frontend ya fue completada y se ejecutaron validaciones manuales iniciales desde navegador.
+La integración del frontend ya fue completada, se ejecutaron validaciones manuales iniciales desde navegador y existe una primera suite automatizada del frontend con cuatro pruebas aprobadas.
 
 Se verificó:
 
@@ -1629,7 +1744,7 @@ La secuencia recomendada desde el estado actual es:
 8. cerrar B38 — informe final;
 9. completar B39 — presentación final.
 
-B31 ya se encuentra completado.
+B31 y B41 ya se encuentran completados.
 
 B20 deberá resolverse según el requerimiento académico específico, sin modificar el modelo v10.
 
@@ -1798,6 +1913,10 @@ Backend implementado.
 
 Frontend implementado.
 
+Pruebas automatizadas del frontend:
+
+`4 passed`
+
 Ranking, filtros, ficha financiera, comparables y SHAP fueron validados técnicamente desde navegador.
 
 Pendiente:
@@ -1818,7 +1937,8 @@ Implementado:
 - requirements;
 - modelo congelado;
 - Docker PostgreSQL;
-- pruebas;
+- 12 pruebas automatizadas del backend;
+- 4 pruebas automatizadas del frontend;
 - documentación.
 
 Pendiente:
@@ -1831,6 +1951,8 @@ Pendiente:
 ---
 
 # 55. Control de versiones reciente
+
+Las pruebas automatizadas del frontend ya están implementadas localmente, pero en esta actualización no se registra todavía un commit específico porque el cambio aún no ha sido confirmado en Git.
 
 | Commit | Hito |
 |---|---|
@@ -1897,8 +2019,9 @@ Prospect Finder BVQ cuenta actualmente con:
 - ficha de empresa;
 - SHAP global;
 - SHAP individual;
-- precalentamiento del explicador;
+- reutilización del runtime de explicabilidad mediante caché en memoria;
 - 12 pruebas automáticas del backend aprobadas;
+- 4 pruebas automatizadas del frontend aprobadas;
 - Node.js y npm;
 - frontend React funcional;
 - integración React–FastAPI;
@@ -1912,7 +2035,9 @@ Prospect Finder BVQ cuenta actualmente con:
 
 La prioridad inmediata es:
 
-**cerrar las pruebas funcionales y preparar la validación con especialistas de la BVQ.**
+**cerrar las pruebas funcionales finales y preparar la validación con especialistas de la BVQ.**
+
+Las pruebas automatizadas específicas del frontend ya se encuentran completadas.
 
 Después deberán completarse:
 

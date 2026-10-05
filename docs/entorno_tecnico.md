@@ -93,6 +93,11 @@ Las versiones efectivamente instaladas y verificadas son:
 | @types/node | 24.19.1 | Tipos TypeScript para Node.js |
 | @types/react | 19.3.0 | Tipos TypeScript para React |
 | @types/react-dom | 19.3.0 | Tipos TypeScript para React DOM |
+| Vitest | 5.0.3 | Ejecución de pruebas automatizadas del frontend |
+| Testing Library React | 16.3.3 | Pruebas de componentes y comportamiento de la interfaz |
+| Testing Library jest-dom | 7.0.1 | Matchers adicionales para validaciones sobre el DOM |
+| Testing Library user-event | 14.6.7 | Simulación de interacción de usuario |
+| jsdom | 30.1.2 | Entorno DOM para ejecutar pruebas de React fuera del navegador |
 
 `Lucide React` se utiliza actualmente en la interfaz.
 
@@ -167,6 +172,9 @@ La estructura técnica principal es:
     │   │   ├── pages/
     │   │   ├── services/
     │   │   │   └── api.ts
+    │   │   ├── test/
+    │   │   │   ├── App.test.tsx
+    │   │   │   └── setup.ts
     │   │   ├── types/
     │   │   │   ├── catalog.ts
     │   │   │   ├── explainability.ts
@@ -852,7 +860,7 @@ La prueba del endpoint local SHAP utiliza aislamiento de la ejecución pesada me
 
 ---
 
-## 20. Validación técnica del frontend
+## 20. Validación técnica y pruebas automatizadas del frontend
 
 El frontend puede iniciarse desde la raíz del repositorio mediante:
 
@@ -861,6 +869,60 @@ El frontend puede iniciarse desde la raíz del repositorio mediante:
 Dirección local:
 
 `http://localhost:5173/`
+
+### 20.1 Pruebas automatizadas
+
+El frontend utiliza:
+
+`Vitest 5.0.3`
+
+junto con:
+
+- `@testing-library/react 16.3.3`;
+- `@testing-library/jest-dom 7.0.1`;
+- `@testing-library/user-event 14.6.7`;
+- `jsdom 30.1.2`.
+
+La configuración de pruebas se encuentra integrada en:
+
+`frontend/vite.config.ts`
+
+El entorno de pruebas utiliza:
+
+`jsdom`
+
+y el archivo de preparación:
+
+`frontend/src/test/setup.ts`
+
+realiza la carga de `jest-dom` y la limpieza del DOM después de cada prueba.
+
+Las pruebas principales se encuentran en:
+
+`frontend/src/test/App.test.tsx`
+
+Actualmente validan cuatro comportamientos funcionales de la interfaz:
+
+- carga inicial del ranking y catálogos;
+- aplicación de búsqueda desde el formulario;
+- apertura del detalle financiero de una empresa;
+- consulta y presentación de factores SHAP positivos y negativos.
+
+La suite se ejecuta mediante:
+
+`npm --prefix frontend run test`
+
+Resultado validado:
+
+`1 test file passed`
+
+`4 tests passed`
+
+Las pruebas del frontend aíslan la interfaz mediante mocks del servicio API. Por tanto, no consultan PostgreSQL ni ejecutan SHAP real durante esta suite. Su objetivo es validar el comportamiento de la capa React de forma rápida, controlada y reproducible.
+
+La integración real con FastAPI, PostgreSQL y SHAP se valida adicionalmente mediante las pruebas del backend y las verificaciones funcionales del prototipo.
+
+### 20.2 Build de producción
 
 La construcción para producción se valida mediante:
 
@@ -872,6 +934,8 @@ La compilación validada utilizando Vite 8.3.2 produjo:
 
 y finalizó correctamente sin errores de TypeScript ni de construcción.
 
+### 20.3 Validación estática
+
 La validación estática se ejecuta mediante:
 
 `npm --prefix frontend run lint`
@@ -881,6 +945,8 @@ Resultado validado:
 `0 warnings`
 
 `0 errors`
+
+### 20.4 Validación funcional del flujo integrado
 
 La interfaz fue probada funcionalmente contra la API y PostgreSQL locales.
 
@@ -996,6 +1062,7 @@ La reproducibilidad se apoya actualmente en:
 - Docker Compose;
 - React y TypeScript;
 - build reproducible mediante Vite;
+- pruebas automatizadas del frontend mediante Vitest y Testing Library;
 - `random_state = 42` cuando corresponde;
 - metadatos de resultados;
 - validación de scores operacionales frente al modelo final.
@@ -1056,6 +1123,16 @@ Por tanto, valida primero TypeScript y posteriormente genera el build de producc
 
 Ejecuta Oxlint.
 
+### Pruebas
+
+`npm --prefix frontend run test`
+
+Ejecuta:
+
+`vitest run`
+
+y valida automáticamente los principales comportamientos de la interfaz React mediante Testing Library y `jsdom`.
+
 ### Preview
 
 `npm --prefix frontend run preview`
@@ -1093,7 +1170,8 @@ Los commits registran progresivamente:
 - integración del frontend con FastAPI;
 - interfaz de ranking;
 - detalle empresarial;
-- explicabilidad SHAP en interfaz.
+- explicabilidad SHAP en interfaz;
+- pruebas automatizadas del frontend.
 
 La primera versión funcional del frontend fue incorporada al repositorio mediante el commit:
 
@@ -1185,11 +1263,12 @@ El flujo técnico actual es:
 21. Pruebas automáticas del backend.
 22. Construcción del frontend React.
 23. Integración frontend–FastAPI.
-24. Validación de build y lint.
-25. Validación funcional preliminar de la interfaz.
-26. Formalización MLOps.
-27. Validación funcional con especialistas.
-28. Documentación final de operación y despliegue.
+24. Incorporación de pruebas automatizadas del frontend.
+25. Validación de pruebas, build y lint.
+26. Validación funcional preliminar de la interfaz.
+27. Formalización MLOps.
+28. Validación funcional con especialistas.
+29. Documentación final de operación y despliegue.
 
 ---
 
@@ -1224,7 +1303,8 @@ El entorno se encuentra operativo para:
 - explicabilidad SHAP bajo demanda;
 - representación de factores positivos y negativos;
 - build de producción;
-- lint del frontend.
+- lint del frontend;
+- pruebas automatizadas del frontend.
 
 El frontend consume actualmente:
 
@@ -1272,8 +1352,9 @@ Quedan disponibles mejoras posteriores de experiencia de usuario, entre ellas:
 - utilización de Recharts donde aporte valor;
 - presentación más explicativa de los valores originales asociados a cada factor SHAP;
 - estados de carga más elaborados;
-- manejo visual más explícito de errores;
-- pruebas automatizadas específicas del frontend.
+- manejo visual más explícito de errores.
+
+Las pruebas automatizadas específicas del frontend ya se encuentran implementadas y validadas con Vitest y Testing Library.
 
 Estas mejoras no afectan el funcionamiento básico actualmente validado.
 
@@ -1287,7 +1368,6 @@ Los principales componentes técnicos que todavía deben completarse son:
 - migraciones formales con Alembic;
 - integración formal de DVC;
 - integración formal de MLflow;
-- pruebas automatizadas específicas del frontend;
 - pruebas funcionales finales del producto;
 - validación real con al menos dos especialistas de la BVQ;
 - registro estructurado de los resultados de dicha validación;
@@ -1424,6 +1504,7 @@ A la fecha de esta documentación se encuentran implementados los siguientes mec
 - PostgreSQL en Docker;
 - API versionada;
 - pruebas automáticas del backend;
+- pruebas automatizadas del frontend;
 - frontend versionado;
 - build reproducible;
 - lint del frontend;
@@ -1448,8 +1529,9 @@ Prospect Finder BVQ dispone actualmente de un flujo técnico funcional compuesto
 8. explicabilidad SHAP;
 9. frontend React;
 10. pruebas automatizadas del backend;
-11. validaciones técnicas del frontend;
-12. control de versiones mediante Git y GitHub.
+11. pruebas automatizadas del frontend;
+12. validaciones técnicas del frontend;
+13. control de versiones mediante Git y GitHub.
 
 La solución permite actualmente identificar y priorizar empresas, consultar información financiera, revisar emisores históricos comparables y explicar individualmente los principales factores que influyen sobre el Índice de Afinidad Bursátil.
 

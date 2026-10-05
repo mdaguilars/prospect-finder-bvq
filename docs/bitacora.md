@@ -1765,34 +1765,34 @@ La velocidad no compensa una explicación que no sea fiel al score producido por
 
 # 27. Optimización de SHAP
 
-La primera ejecución de PermutationExplainer podía presentar tiempos elevados debido al cold start.
+La primera ejecución de PermutationExplainer puede presentar tiempos elevados debido al cold start.
 
-Una ejecución inicial llegó aproximadamente a:
+Durante las pruebas de desarrollo se observó una ejecución inicial de aproximadamente:
 
 `72,66 segundos`
 
-Las siguientes ejecuciones fueron sustancialmente menores.
+Las ejecuciones posteriores fueron sustancialmente menores.
 
-Se probaron backgrounds reducidos y se comprobó que el principal problema no correspondía al número de observaciones del background.
+Se probaron backgrounds reducidos y se comprobó que el principal problema no correspondía únicamente al número de observaciones del background.
 
-### Solución
+### Implementación actual
 
-Implementar precalentamiento en el `lifespan` de FastAPI.
+El servicio operacional reutiliza el runtime de explicabilidad mediante caché en memoria.
 
-Al iniciar la aplicación:
+Esto permite conservar:
 
-1. se carga el runtime;
-2. se carga el modelo;
-3. se inicializa SHAP;
-4. se ejecuta una explicación operacional de calentamiento.
+- el modelo cargado;
+- las categorías aprendidas;
+- el background;
+- el explicador SHAP;
 
-### Resultado
+después de su primera inicialización dentro del proceso de la API.
 
-Después de:
+La implementación actual no debe documentarse como un precalentamiento obligatorio ejecutado en el `lifespan` de FastAPI mientras dicho comportamiento no se encuentre explícitamente implementado y verificado en el código vigente.
 
-`Application startup complete`
+### Resultado observado
 
-una primera consulta local posterior registró aproximadamente:
+Con el runtime ya inicializado se registraron consultas locales de aproximadamente:
 
 `0,254 segundos`
 
@@ -1800,7 +1800,9 @@ También se verificaron otros casos con tiempos adecuados para el prototipo.
 
 ### Decisión
 
-Mantener PermutationExplainer y resolver la latencia mediante warm-up.
+Mantener PermutationExplainer por su fidelidad con el score del modelo y reutilizar el runtime inicializado para reducir el costo de solicitudes posteriores.
+
+Un warm-up explícito al iniciar FastAPI puede evaluarse posteriormente si el escenario de despliegue lo requiere.
 
 ---
 
@@ -1906,9 +1908,16 @@ Se construyó y versionó la primera versión funcional de la interfaz web de Pr
 - Lucide React `1.52.0`;
 - React Router DOM `7.18.4`;
 - Recharts `3.10.1`;
-- Oxlint `1.86.0`.
+- Oxlint `1.86.0`;
+- Vitest `5.0.3`;
+- Testing Library React `16.3.3`;
+- Testing Library jest-dom `7.0.1`;
+- Testing Library user-event `14.6.7`;
+- jsdom `30.1.2`.
 
 React Router DOM y Recharts se encuentran instalados para la evolución del prototipo. La primera vista funcional todavía no depende de navegación compleja ni de gráficos construidos con Recharts.
+
+Vitest, Testing Library y jsdom se utilizan para las pruebas automatizadas específicas del frontend.
 
 ### Funcionalidad implementada
 
@@ -1979,6 +1988,114 @@ y:
 `modelo congelado → SHAP → FastAPI → React → usuario`.
 
 El frontend no accede directamente al modelo ni a PostgreSQL.
+
+
+## 30.1 Pruebas automatizadas del frontend — 4 de octubre de 2026
+
+Se incorporó una suite automatizada específica para la interfaz React.
+
+### Herramientas
+
+- Vitest `5.0.3`;
+- `@testing-library/react 16.3.3`;
+- `@testing-library/jest-dom 7.0.1`;
+- `@testing-library/user-event 14.6.7`;
+- jsdom `30.1.2`.
+
+### Archivos
+
+`frontend/src/test/setup.ts`
+
+`frontend/src/test/App.test.tsx`
+
+La configuración de Vitest se incorporó en:
+
+`frontend/vite.config.ts`
+
+y se añadió el script:
+
+`npm --prefix frontend run test`
+
+### Cobertura funcional inicial
+
+La suite valida:
+
+1. carga inicial del ranking y de los catálogos;
+2. aplicación de búsqueda desde el formulario;
+3. apertura del detalle financiero de una empresa;
+4. consulta y presentación de factores SHAP que aumentan o reducen afinidad.
+
+Las llamadas a la API se sustituyen por mocks controlados para aislar la capa React.
+
+Por esta razón estas pruebas no consultan PostgreSQL ni ejecutan SHAP real.
+
+La integración real con PostgreSQL, FastAPI y SHAP continúa validándose mediante las pruebas del backend y las pruebas funcionales del flujo completo.
+
+### Incidencia encontrada y corregida
+
+En la primera ejecución se aprobó:
+
+`1 de 4 pruebas`
+
+Las tres pruebas restantes fallaron porque el DOM generado por una prueba permanecía disponible en la siguiente.
+
+Testing Library encontraba elementos duplicados, por ejemplo:
+
+- el campo de búsqueda;
+- el nombre de la empresa de prueba.
+
+Se incorporó limpieza explícita mediante:
+
+`cleanup()`
+
+en:
+
+`frontend/src/test/setup.ts`
+
+### Resultado final
+
+Comando:
+
+`npm --prefix frontend run test`
+
+Resultado:
+
+`1 test file passed`
+
+`4 tests passed`
+
+Duración observada:
+
+`5,78 segundos`
+
+### Validaciones posteriores
+
+Build:
+
+`npm --prefix frontend run build`
+
+Resultado:
+
+- TypeScript correcto;
+- Vite `8.3.2`;
+- `1898 modules transformed`;
+- build completado correctamente.
+
+Lint:
+
+`npm --prefix frontend run lint`
+
+Resultado:
+
+`0 warnings`
+
+`0 errors`
+
+### Decisión
+
+Mantener pruebas automatizadas del frontend como parte de la validación técnica del producto.
+
+La suite deberá ampliarse cuando se incorporen nuevas vistas, componentes o flujos relevantes.
 
 ---
 
@@ -2162,6 +2279,10 @@ Lint:
 
 **0 WARNINGS / 0 ERRORS**
 
+Pruebas automatizadas frontend:
+
+**4 APROBADAS**
+
 Integración con FastAPI:
 
 **FUNCIONAL**
@@ -2204,6 +2325,7 @@ Validación con especialistas:
 28. Las nuevas versiones deberán registrarse explícitamente.
 29. Las credenciales reales no deben versionarse.
 30. Los datasets operacionales no deben publicarse en Git.
+31. El frontend debe mantener pruebas automatizadas independientes de las pruebas de integración del backend.
 
 ---
 
@@ -2230,7 +2352,9 @@ Se han identificado los siguientes aprendizajes:
 - la explicación no representa causalidad;
 - la arquitectura desacoplada facilita evolución;
 - la persistencia relacional simplifica la capa de producto;
-- las pruebas automáticas son necesarias antes de construir la interfaz;
+- las pruebas automáticas son necesarias para reducir regresiones en backend y frontend;
+- las pruebas de interfaz deben aislarse correctamente entre ejecuciones para evitar contaminación del DOM;
+- los mocks permiten validar la capa React sin depender de PostgreSQL ni de la ejecución real de SHAP;
 - la supervisión humana es una parte central del diseño.
 
 ---
@@ -2273,7 +2397,7 @@ Las principales limitaciones vigentes son:
 10. la similitud con emisores no constituye una predicción;
 11. el análisis retrospectivo de similitud no demuestra poder predictivo;
 12. la autenticación institucional no está implementada;
-13. no existen todavía pruebas automatizadas específicas del frontend;
+13. la cobertura automatizada del frontend es todavía inicial y deberá ampliarse cuando crezca la interfaz;
 14. la interfaz todavía puede modularizarse y mejorar su experiencia de usuario;
 15. el monitoreo operacional completo todavía está pendiente;
 16. DVC todavía no está integrado;
@@ -2306,7 +2430,8 @@ El proyecto utiliza actualmente:
 - `random_state = 42`;
 - Docker;
 - PostgreSQL;
-- pruebas automáticas;
+- pruebas automáticas del backend;
+- pruebas automatizadas del frontend;
 - build reproducible del frontend;
 - lint del frontend;
 - metadatos;
@@ -2404,6 +2529,26 @@ Oxlint:
 
 `1.86.0`
 
+Vitest:
+
+`5.0.3`
+
+Testing Library React:
+
+`16.3.3`
+
+Testing Library jest-dom:
+
+`7.0.1`
+
+Testing Library user-event:
+
+`14.6.7`
+
+jsdom:
+
+`30.1.2`
+
 Las versiones Python se mantienen en:
 
 `requirements-lock.txt`
@@ -2448,7 +2593,7 @@ Las versiones frontend se mantienen en:
 | Detalle API | Implementado |
 | Catálogos API | Implementado |
 | SHAP API | Implementado |
-| Pruebas automáticas | 12 aprobadas |
+| Pruebas automáticas backend | 12 aprobadas |
 | Node.js/npm | Instalados |
 | Frontend React | Implementado |
 | Integración frontend–FastAPI | Implementada |
@@ -2459,7 +2604,7 @@ Las versiones frontend se mantienen en:
 | SHAP web | Implementado |
 | Build frontend | Correcto |
 | Lint frontend | 0 warnings / 0 errors |
-| Pruebas automatizadas frontend | Pendientes |
+| Pruebas automatizadas frontend | 4 aprobadas |
 | Docker FastAPI | Pendiente |
 | Alembic | Pendiente de configuración |
 | DVC | Pendiente |
@@ -2572,20 +2717,19 @@ Las actividades pendientes principales son:
 
 1. modularizar progresivamente el frontend donde aporte mantenibilidad;
 2. mejorar la presentación de los valores originales asociados a los factores SHAP;
-3. incorporar pruebas automatizadas específicas del frontend;
-4. completar dockerización de FastAPI;
-5. configurar migraciones Alembic;
-6. implementar DVC;
-7. implementar MLflow;
-8. completar mecanismos de monitoreo;
-9. ejecutar pruebas funcionales finales del producto;
-10. realizar validación con al menos dos especialistas BVQ;
-11. documentar resultados de validación;
-12. revisar si la rúbrica exige explícitamente una implementación adicional con TensorFlow/Keras;
-13. preparar el informe final;
-14. preparar la presentación final.
+3. completar dockerización de FastAPI;
+4. configurar migraciones Alembic;
+5. implementar DVC;
+6. implementar MLflow;
+7. completar mecanismos de monitoreo;
+8. ejecutar pruebas funcionales finales del producto;
+9. realizar validación con al menos dos especialistas BVQ;
+10. documentar resultados de validación;
+11. revisar si la rúbrica exige explícitamente una implementación adicional con TensorFlow/Keras;
+12. preparar el informe final;
+13. preparar la presentación final.
 
-La construcción básica del frontend, su integración con FastAPI y la validación inicial desde navegador ya no forman parte de los pendientes.
+La construcción básica del frontend, su integración con FastAPI, la validación inicial desde navegador y la primera suite automatizada del frontend ya no forman parte de los pendientes.
 
 ---
 
@@ -2699,6 +2843,7 @@ La bitácora se encuentra actualizada hasta:
 - validación de factores positivos y negativos;
 - build del frontend;
 - lint del frontend;
+- pruebas automatizadas del frontend;
 - versionamiento del frontend.
 
 Modelo final:
@@ -2729,13 +2874,17 @@ Frontend:
 
 **IMPLEMENTADO Y VALIDADO TÉCNICAMENTE**
 
+Pruebas frontend:
+
+`4 passed`
+
 Commit frontend:
 
 `20fb2e4`
 
 Pendientes principales:
 
-**MLOps, pruebas frontend, validación con especialistas y cierre documental.**
+**MLOps, pruebas funcionales finales, validación con especialistas y cierre documental.**
 
 ---
 
