@@ -1,4 +1,5 @@
 # Congelamiento del Feature Set núcleo v10
+**Nota de vigencia:** Este documento registra el congelamiento del Feature Set núcleo inicial de v10 previo a la construcción y selección del modelo final. No representa el Feature Set definitivo utilizado por `v10_hgb_financial_c3`. El modelo final utiliza 25 variables predictoras y excluye `provincia`. Para la configuración final deben consultarse `docs/v10_final_candidate_freeze.md`, `docs/v10_final_test_protocol.md`, `docs/v10_final_test_results.md` y el `README.md`.
 
 **Proyecto:** Prospect Finder BVQ  
 **Versión:** v10  

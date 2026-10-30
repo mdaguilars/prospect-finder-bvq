@@ -4,7 +4,7 @@
 
 Este documento registra las pruebas funcionales finales del prototipo Prospect Finder BVQ.
 
-El objetivo es verificar que los principales flujos de usuario funcionen correctamente antes de realizar la validación con especialistas de la Bolsa de Valores Quito.
+El objetivo es verificar que los principales flujos de usuario funcionen correctamente antes de la posterior validación con especialistas de la Bolsa de Valores Quito.
 
 Estas pruebas corresponden al funcionamiento del producto.
 
@@ -149,9 +149,9 @@ La pantalla cargó correctamente y mostró:
 
 **Resultado obtenido:**
 
-Se buscó `CUYABENOPETRO`.
+Se buscó `EMPRESA PRUEBA A`.
 
-La interfaz devolvió un único resultado correspondiente a `CUYABENOPETRO S.A.` y mantuvo sus datos de ranking, provincia, tipo de compañía, afinidad y similitud.
+La interfaz devolvió un único resultado correspondiente a `EMPRESA PRUEBA A S.A.` y mantuvo sus datos de ranking, provincia, tipo de compañía, afinidad y similitud.
 
 **Estado:** **APROBADA**
 
@@ -219,7 +219,7 @@ Las flechas de navegación anterior y siguiente permanecieron disponibles.
 
 **Resultado obtenido:**
 
-Se abrió `CUYABENOPETRO S.A.`.
+Se abrió `EMPRESA PRUEBA A S.A.`.
 
 La ficha mostró:
 
@@ -244,9 +244,9 @@ La ficha mostró:
 
 **Resultado obtenido:**
 
-Se verificó la generación de explicación para `CUYABENOPETRO S.A.`.
+Se verificó la generación de explicación para `EMPRESA PRUEBA A S.A.`.
 
-Posteriormente se seleccionó `ACEITES TROPICALES SOCIEDAD ANONIMA ATSA`, RUC `1790013731001`, ranking `#16.302`.
+Posteriormente se seleccionó `EMPRESA PRUEBA B S.A.`, RUC `[RUC ANONIMIZADO]`, ranking `#16.302`.
 
 La interfaz mostró factores en ambas direcciones.
 
@@ -274,7 +274,7 @@ Ejemplos que reducen afinidad:
 
 **Resultado obtenido:**
 
-Para `ACEITES TROPICALES SOCIEDAD ANONIMA ATSA` se visualizaron cinco comparables:
+Para `EMPRESA PRUEBA B S.A.` se visualizaron cinco comparables:
 
 1. `HOTEL CASAGANGOTENA S.A.` — `91,5 %`;
 2. `BOLSA DE VALORES DE QUITO BVQ SOCIEDAD ANONIMA` — `90,8 %`;
@@ -380,6 +380,10 @@ La validación funcional aquí documentada corresponde al control técnico del p
 
 No sustituye la validación real con especialistas de la BVQ.
 
+Dicha validación fue ejecutada posteriormente mediante la actividad B36 y se encuentra documentada en:
+
+`docs/v10_specialist_validation.md`
+
 ---
 
 # 9. Cierre de B37
@@ -395,28 +399,57 @@ porque:
 3. no se identificaron incidencias críticas pendientes;
 4. el producto permitió completar los escenarios principales sin errores bloqueantes.
 
-La aprobación técnica de B37 no sustituye B36 — Validación con al menos dos especialistas de la BVQ.
+La aprobación técnica de B37 no sustituye B36 — Validación con especialistas de la BVQ.
+
+B36 fue completada posteriormente con cuatro participantes, superando el mínimo previsto para el proyecto.
 
 ---
 
-# 10. Siguiente etapa
+# 10. Relación con la validación de especialistas
 
-La siguiente actividad prioritaria es:
+Después de completar las pruebas funcionales B37 se ejecutó:
 
-**B36 — Validación con al menos dos especialistas de la BVQ**
+**B36 — Validación con especialistas de la BVQ**
 
-La validación deberá registrar evidencia real de:
+La validación contó con:
 
-- participantes;
-- funciones;
-- tareas realizadas;
-- utilidad percibida;
-- claridad del ranking;
-- comprensión del Índice de Afinidad Bursátil;
-- comprensión de SHAP;
-- utilidad de comparables;
-- problemas encontrados;
-- sugerencias;
-- decisiones de mejora.
+- 4 participantes;
+- perfiles comerciales, financieros y contables;
+- 25 afirmaciones principales valoradas en escala de 1 a 5;
+- preguntas de decisión y utilidad;
+- retroalimentación cualitativa;
+- recomendaciones de evolución.
 
-No deberán inventarse resultados de validación ni participantes.
+Resultados consolidados de B36:
+
+| Indicador | Resultado |
+|---|---:|
+| Participantes | 4 |
+| Promedio global Q04–Q28 | 4,82 / 5 |
+| Experiencia general | 5,00 / 5 |
+| Utilidad para prospección | 4,75 / 5 |
+| Información suficiente para decidir una revisión adicional | 100 % |
+| Revisaría con mayor profundidad una empresa prioritaria | 100 % |
+| Recomendaría utilizar la herramienta | 100 % |
+
+Por tanto, la secuencia de cierre queda:
+
+`B37 — Pruebas funcionales finales → COMPLETADO`
+
+`B36 — Validación con especialistas → COMPLETADO`
+
+La evidencia completa de B36 se encuentra en:
+
+`docs/v10_specialist_validation.md`
+
+Las recomendaciones obtenidas durante la validación con especialistas se consideran oportunidades de evolución del producto y no modifican retrospectivamente:
+
+- el modelo v10;
+- el Feature Set;
+- el target;
+- los hiperparámetros;
+- el split temporal;
+- los resultados TEST;
+- el ranking operacional.
+
+Con esto, las pruebas funcionales finales y la validación con especialistas quedan documentadas como actividades complementarias y completadas.

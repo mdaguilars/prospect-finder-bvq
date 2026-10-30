@@ -5,6 +5,8 @@
 **Estado:** CONGELADO  
 **Fecha:** octubre de 2026
 
+> **Nota de vigencia:** Este documento registra el congelamiento del dataset físico `v10-core`, correspondiente a una etapa previa al modelado final de v10. No representa el dataset de features definitivo utilizado por `v10_hgb_financial_c3`. Posteriormente se construyó el dataset financiero `data/processed/v10_features_financial_2012_2023.csv.gz`, utilizado por el modelo final con 25 variables predictoras y sin `provincia` como predictor. Las referencias a TEST cerrado y a etapas posteriores se conservan intencionalmente como evidencia cronológica del proceso metodológico. Para la configuración final deben consultarse `docs/v10_final_candidate_freeze.md`, `docs/v10_final_test_protocol.md`, `docs/v10_final_test_results.md` y el `README.md`.
+
 ---
 
 ## 1. Propósito

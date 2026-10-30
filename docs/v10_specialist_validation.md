@@ -2,599 +2,845 @@
 
 ## 1. Propósito
 
-Este documento define el protocolo y la evidencia para la validación funcional del prototipo Prospect Finder BVQ con especialistas de la Bolsa de Valores Quito.
+Este documento registra el protocolo ejecutado, la evidencia obtenida y los resultados de la validación funcional y comercial del prototipo Prospect Finder BVQ con especialistas vinculados a la Bolsa de Valores de Quito.
 
-La validación busca determinar si el prototipo resulta comprensible y útil como herramienta de apoyo para priorizar empresas con potencial de convertirse en emisores del mercado de valores ecuatoriano.
+La validación busca determinar si el prototipo resulta comprensible, útil y aplicable como herramienta de apoyo para priorizar empresas con potencial de convertirse en emisores del mercado de valores ecuatoriano.
 
 La actividad corresponde a:
 
 **B36 — Validar con al menos dos especialistas BVQ**
 
-y se relaciona con el objetivo del Capstone de disponer de un prototipo funcional validado por usuarios conocedores del proceso de prospección.
+y se relaciona con el objetivo del Capstone de disponer de un prototipo funcional validado por usuarios conocedores del proceso comercial, financiero y de prospección.
 
-Esta validación no evalúa nuevamente el desempeño estadístico del modelo. El modelo v10 permanece congelado.
+Esta validación no vuelve a evaluar el desempeño estadístico del modelo. El modelo v10 permanece congelado.
 
 ---
 
 ## 2. Alcance
 
-La validación se concentra en la experiencia de uso y utilidad práctica del prototipo.
+La validación se concentra en:
 
-Se evaluarán principalmente:
-
-- claridad del ranking;
-- utilidad del Índice de Afinidad Bursátil;
-- facilidad de búsqueda y filtros;
-- comprensión de la ficha empresarial;
-- utilidad de los indicadores financieros;
-- comprensión de la explicación SHAP;
-- utilidad de los emisores históricos comparables;
-- claridad de las advertencias y limitaciones;
+- claridad de la pantalla principal;
 - facilidad de navegación;
-- utilidad general para apoyar la prospección comercial.
+- utilidad de búsqueda y filtros;
+- comprensión del ranking y de los niveles Top;
+- utilidad de la información financiera;
+- comprensión de las razones que explican la prioridad;
+- utilidad de emisores históricos comparables;
+- orientación del próximo paso comercial;
+- capacidad para reducir el universo de revisión;
+- utilidad general para la prospección;
+- intención de uso;
+- recomendaciones de mejora.
 
-No se solicitará a los especialistas modificar:
+No se solicitó a los participantes modificar:
 
 - el modelo;
 - los hiperparámetros;
-- las variables;
+- las variables predictoras;
 - el target;
 - el protocolo temporal;
 - los resultados de TEST.
 
----
-
-## 3. Participantes requeridos
-
-La validación debe realizarse con al menos:
-
-**2 especialistas de la Bolsa de Valores Quito**
-
-Los participantes deben tener conocimiento relacionado con uno o más de los siguientes ámbitos:
-
-- mercado de valores;
-- emisores;
-- estructuración;
-- prospección comercial;
-- análisis financiero;
-- gestión comercial;
-- conocimiento institucional del proceso de incorporación de emisores.
-
-No es necesario publicar información personal innecesaria.
-
-Para la documentación académica puede utilizarse un código de participante.
-
-Ejemplo:
-
-- `E1`
-- `E2`
+Las observaciones obtenidas corresponden a experiencia de uso, presentación de información y evolución funcional del producto.
 
 ---
 
-## 4. Registro de participantes
+## 3. Fuente de evidencia
 
-| Código | Nombre | Cargo / función | Área | Fecha de validación | Estado |
-|---|---|---|---|---|---|
-| E1 | PENDIENTE | PENDIENTE | PENDIENTE | PENDIENTE | PENDIENTE |
-| E2 | PENDIENTE | PENDIENTE | PENDIENTE | PENDIENTE | PENDIENTE |
+La evidencia utilizada para este documento proviene del formulario:
 
-Si participa una tercera persona puede añadirse:
+**Validación comercial – Prospect Finder BVQ**
 
-| Código | Nombre | Cargo / función | Área | Fecha de validación | Estado |
-|---|---|---|---|---|---|
-| E3 | PENDIENTE | PENDIENTE | PENDIENTE | PENDIENTE | PENDIENTE |
+La exportación analizada contiene:
+
+- 4 respuestas;
+- fecha y hora de respuesta;
+- identificación o nombre del participante;
+- cargo o función;
+- experiencia;
+- 25 afirmaciones principales valoradas en escala de 1 a 5;
+- preguntas de decisión y utilidad;
+- valoración general;
+- recomendación de uso;
+- preguntas abiertas de retroalimentación.
+
+La escala utilizada para las afirmaciones cuantitativas es:
+
+| Valor | Interpretación |
+|---:|---|
+| 1 | Valoración mínima |
+| 2 | Valoración baja |
+| 3 | Valoración intermedia |
+| 4 | Valoración favorable |
+| 5 | Valoración máxima |
 
 ---
 
-## 5. Entorno de validación
+## 4. Participantes
 
-La sesión se realizará utilizando el prototipo funcional de Prospect Finder BVQ.
+El requisito mínimo era contar con dos especialistas.
 
-Flujo:
+La validación fue respondida por cuatro participantes:
+
+| Código | Participante | Cargo / función registrado | Experiencia registrada | Fecha |
+|---|---|---|---|---|
+| E1 | Gabriela Flores | Jefe de Contabiliad | Entre 1 y 3 años | 22-oct-2026 |
+| E2 | Ivanova Correa | Jefe Comercial | Entre 7 y 10 años | 23-oct-2026 |
+| E3 | Anahir Salazar | Analista Comercial | Menos de 1 año | 23-oct-2026 |
+| E4 | Gerardo Cepeda | Gerente Financiero | Más de 10 años | 27-oct-2026 |
+
+La muestra incluye perfiles comerciales, financieros y contables con distintos niveles de experiencia.
+
+El número de participantes supera el mínimo definido para B36.
+
+---
+
+## 5. Entorno funcional evaluado
+
+La validación se realizó sobre el prototipo funcional de Prospect Finder BVQ.
+
+Flujo general:
 
 `PostgreSQL → FastAPI → React → usuario`
 
-Explicabilidad:
+Flujo de explicabilidad:
 
 `modelo v10 congelado → SHAP → FastAPI → React → usuario`
 
-Componentes disponibles:
+Entre los componentes evaluados se encuentran:
 
 - ranking operacional;
 - búsqueda;
 - filtros;
-- paginación;
+- navegación entre secciones;
 - ficha empresarial;
-- indicadores financieros;
-- Índice de Afinidad Bursátil;
-- percentil;
-- ranking;
+- activos;
+- patrimonio;
+- ventas;
+- empleados;
+- posición en ranking;
+- clasificación Top;
+- nivel de afinidad;
+- información de completitud;
+- razones que explican la prioridad;
+- intensidad relativa de las razones;
 - emisores históricos comparables;
-- explicación SHAP.
+- orientación de próximo paso comercial.
 
 Fecha de decisión del universo operacional:
 
 `2024-05-01`
 
-Universo:
+Universo operacional:
 
 `137.156 empresas`
 
 ---
 
-## 6. Consideraciones antes de iniciar
+## 6. Consideraciones de interpretación
 
-Antes de cada sesión se debe explicar brevemente al participante que:
+Prospect Finder BVQ debe utilizarse como herramienta de apoyo a la priorización.
 
-1. Prospect Finder BVQ es una herramienta de apoyo para priorización.
-2. El Índice de Afinidad Bursátil no representa una probabilidad calibrada.
-3. Un score alto no garantiza que una empresa se convierta en emisor.
-4. SHAP explica el comportamiento del modelo y no demuestra causalidad.
-5. La similitud con emisores representa cercanía del perfil financiero y no probabilidad de emisión.
-6. La decisión comercial final permanece bajo criterio humano.
-7. El objetivo de la sesión es evaluar el prototipo y no evaluar al participante.
+El score o Índice de Afinidad Bursátil:
 
----
+- representa una señal relativa de priorización;
+- no es una probabilidad calibrada de convertirse en emisor;
+- no garantiza que una empresa vaya a emitir valores;
+- debe interpretarse junto con información empresarial y criterio humano.
 
-# 7. Guion de validación
+Las explicaciones asociadas al modelo describen cómo determinadas variables contribuyen al score.
 
-Cada especialista deberá realizar los siguientes escenarios.
+No demuestran causalidad.
 
-## Tarea V-01 — Revisar el ranking principal
+La similitud con emisores históricos representa cercanía de perfil y no probabilidad de emisión.
 
-**Instrucción al participante:**
-
-Revise la pantalla principal y observe las primeras empresas del ranking.
-
-**Aspectos a observar:**
-
-- si comprende qué representa el ranking;
-- si identifica fácilmente las empresas prioritarias;
-- si entiende el Índice de Afinidad Bursátil;
-- si la información principal resulta suficiente para una primera revisión.
-
-**Resultado E1:** PENDIENTE
-
-**Resultado E2:** PENDIENTE
-
-**Observaciones:** PENDIENTE
+La decisión comercial final permanece bajo responsabilidad del especialista.
 
 ---
 
-## Tarea V-02 — Buscar una empresa
+## 7. Instrumento cuantitativo principal
 
-**Instrucción al participante:**
+Las preguntas 4 a 28 del formulario constituyen 25 afirmaciones valoradas de 1 a 5.
 
-Utilice el buscador para localizar una empresa conocida por nombre o RUC.
+Estas afirmaciones cubren cuatro dimensiones:
 
-**Aspectos a observar:**
+1. claridad y usabilidad;
+2. priorización y contexto del ranking;
+3. análisis empresarial y explicabilidad;
+4. utilidad comercial.
 
-- facilidad de uso;
-- claridad del resultado;
-- utilidad de la búsqueda para el trabajo cotidiano.
-
-**Resultado E1:** PENDIENTE
-
-**Resultado E2:** PENDIENTE
-
-**Observaciones:** PENDIENTE
+El resultado global se calcula como promedio simple de las respuestas válidas.
 
 ---
 
-## Tarea V-03 — Utilizar filtros
+## 8. Resultado general
 
-**Instrucción al participante:**
+El promedio global de las 25 afirmaciones principales fue:
 
-Filtre el ranking por provincia y posteriormente por tipo de compañía.
+**4,82 / 5**
 
-**Aspectos a observar:**
+Distribución observada:
 
-- facilidad para encontrar los filtros;
-- comprensión de los criterios;
-- utilidad comercial del filtrado;
-- necesidad de filtros adicionales.
+- todas las respuestas cuantitativas de Q04 a Q28 fueron 4 o 5;
+- no se registraron valoraciones de 1, 2 o 3;
+- E1 registró 14 valoraciones de 5 y 11 de 4;
+- E2 registró 25 valoraciones de 5;
+- E3 registró 25 valoraciones de 5;
+- E4 registró 18 valoraciones de 5 y 7 de 4.
 
-**Resultado E1:** PENDIENTE
+Esto evidencia una valoración consistentemente favorable del prototipo dentro del grupo participante.
 
-**Resultado E2:** PENDIENTE
-
-**Observaciones:** PENDIENTE
-
----
-
-## Tarea V-04 — Revisar la ficha empresarial
-
-**Instrucción al participante:**
-
-Abra una empresa del ranking y revise su ficha.
-
-**Aspectos a observar:**
-
-- claridad de la identificación empresarial;
-- utilidad de activos, patrimonio, ventas y empleados;
-- comprensión del ranking y percentil;
-- información adicional que el especialista consideraría necesaria.
-
-**Resultado E1:** PENDIENTE
-
-**Resultado E2:** PENDIENTE
-
-**Observaciones:** PENDIENTE
+El resultado debe interpretarse como validación funcional y comercial de una muestra especializada pequeña y no como evidencia estadística generalizable a toda una población.
 
 ---
 
-## Tarea V-05 — Interpretar el Índice de Afinidad Bursátil
+## 9. Resultado por participante
 
-**Instrucción al participante:**
+| Participante | Promedio Q04–Q28 |
+|---|---:|
+| E1 — Gabriela Flores | 4,56 |
+| E2 — Ivanova Correa | 5,00 |
+| E3 — Anahir Salazar | 5,00 |
+| E4 — Gerardo Cepeda | 4,72 |
+| **Promedio general** | **4,82** |
 
-Explique con sus propias palabras qué entiende por Índice de Afinidad Bursátil después de observar la ficha.
-
-**Interpretación esperada conceptualmente:**
-
-El participante debería comprender que se trata de un indicador de priorización relativa producido por el modelo y no de una probabilidad cierta de emisión.
-
-**Resultado E1:** PENDIENTE
-
-**Resultado E2:** PENDIENTE
-
-**Observaciones:** PENDIENTE
+Los cuatro participantes presentan una valoración promedio superior a 4,5.
 
 ---
 
-## Tarea V-06 — Revisar los factores SHAP
+## 10. Resultado por dimensión
 
-**Instrucción al participante:**
+Para facilitar la interpretación, las 25 afirmaciones se agruparon de la siguiente manera:
 
-Seleccione `Analizar factores` y revise los factores que aumentan o reducen la afinidad.
-
-**Aspectos a observar:**
-
-- comprensión de factores positivos y negativos;
-- claridad de las etiquetas;
-- utilidad de la explicación;
-- riesgo de interpretar los factores como causas;
-- necesidad de información adicional.
-
-**Resultado E1:** PENDIENTE
-
-**Resultado E2:** PENDIENTE
-
-**Observaciones:** PENDIENTE
-
----
-
-## Tarea V-07 — Revisar emisores comparables
-
-**Instrucción al participante:**
-
-Revise la sección de emisores históricos comparables.
-
-**Aspectos a observar:**
-
-- si entiende el significado de similitud;
-- si considera útil conocer emisores con perfiles financieros cercanos;
-- si la información aporta contexto para la prospección;
-- si diferencia similitud de afinidad predictiva.
-
-**Resultado E1:** PENDIENTE
-
-**Resultado E2:** PENDIENTE
-
-**Observaciones:** PENDIENTE
-
----
-
-## Tarea V-08 — Evaluar utilidad para prospección
-
-**Instrucción al participante:**
-
-Considere cómo utilizaría el prototipo dentro de un proceso real de prospección de potenciales emisores.
-
-**Aspectos a observar:**
-
-- utilidad para priorizar contactos;
-- utilidad para preparar análisis preliminar;
-- utilidad para reducir revisión manual;
-- posibilidad de incorporar el sistema al proceso actual;
-- información adicional necesaria antes de contactar una empresa.
-
-**Resultado E1:** PENDIENTE
-
-**Resultado E2:** PENDIENTE
-
-**Observaciones:** PENDIENTE
-
----
-
-# 8. Cuestionario de valoración
-
-Cada participante calificará las siguientes afirmaciones utilizando una escala de 1 a 5.
-
-| Valor | Significado |
-|---:|---|
-| 1 | Totalmente en desacuerdo |
-| 2 | En desacuerdo |
-| 3 | Neutral |
-| 4 | De acuerdo |
-| 5 | Totalmente de acuerdo |
-
-## Preguntas
-
-| ID | Afirmación | E1 | E2 |
-|---|---|---:|---:|
-| Q01 | El ranking permite identificar fácilmente las empresas prioritarias. | PENDIENTE | PENDIENTE |
-| Q02 | El Índice de Afinidad Bursátil es comprensible como indicador de priorización. | PENDIENTE | PENDIENTE |
-| Q03 | La búsqueda y los filtros son fáciles de utilizar. | PENDIENTE | PENDIENTE |
-| Q04 | La ficha empresarial presenta información financiera útil para una primera revisión. | PENDIENTE | PENDIENTE |
-| Q05 | La posición en el ranking y el percentil aportan contexto útil. | PENDIENTE | PENDIENTE |
-| Q06 | Los factores SHAP ayudan a comprender por qué una empresa obtiene determinado nivel de afinidad. | PENDIENTE | PENDIENTE |
-| Q07 | Los emisores históricos comparables aportan contexto útil para analizar un prospecto. | PENDIENTE | PENDIENTE |
-| Q08 | La interfaz resulta clara y fácil de navegar. | PENDIENTE | PENDIENTE |
-| Q09 | El prototipo puede apoyar el proceso de prospección de potenciales emisores. | PENDIENTE | PENDIENTE |
-| Q10 | Utilizaría una herramienta de este tipo como apoyo para priorizar empresas a analizar. | PENDIENTE | PENDIENTE |
-
----
-
-# 9. Preguntas abiertas
-
-Cada especialista deberá responder brevemente.
-
-## P1 — Elemento más útil
-
-**Pregunta:**
-
-¿Qué información o funcionalidad del prototipo considera más útil para el proceso de prospección?
-
-**E1:** PENDIENTE
-
-**E2:** PENDIENTE
-
----
-
-## P2 — Información faltante
-
-**Pregunta:**
-
-¿Qué información adicional debería incorporarse para que la herramienta resulte más útil?
-
-**E1:** PENDIENTE
-
-**E2:** PENDIENTE
-
----
-
-## P3 — Claridad del Índice de Afinidad
-
-**Pregunta:**
-
-¿El significado del Índice de Afinidad Bursátil resulta claro? ¿Qué cambiaría en su presentación?
-
-**E1:** PENDIENTE
-
-**E2:** PENDIENTE
-
----
-
-## P4 — Explicabilidad
-
-**Pregunta:**
-
-¿Los factores que aumentan o reducen afinidad ayudan a comprender el resultado del modelo?
-
-**E1:** PENDIENTE
-
-**E2:** PENDIENTE
-
----
-
-## P5 — Comparables
-
-**Pregunta:**
-
-¿Los emisores históricos comparables aportan información útil? ¿Cómo los utilizaría?
-
-**E1:** PENDIENTE
-
-**E2:** PENDIENTE
-
----
-
-## P6 — Mejoras
-
-**Pregunta:**
-
-¿Cuál sería la principal mejora que recomendaría antes de utilizar esta herramienta en un proceso real?
-
-**E1:** PENDIENTE
-
-**E2:** PENDIENTE
-
----
-
-## P7 — Utilidad general
-
-**Pregunta:**
-
-¿Considera que Prospect Finder BVQ puede ayudar a reducir o focalizar el universo de empresas que deben revisarse manualmente? Explique brevemente.
-
-**E1:** PENDIENTE
-
-**E2:** PENDIENTE
-
----
-
-# 10. Registro de incidencias observadas
-
-| ID | Participante | Escenario | Incidencia | Severidad | Acción propuesta | Estado |
-|---|---|---|---|---|---|---|
-| I01 | PENDIENTE | PENDIENTE | PENDIENTE | PENDIENTE | PENDIENTE | PENDIENTE |
-
-Si no existen incidencias se deberá registrar explícitamente:
-
-`No se identificaron incidencias durante la sesión.`
-
-No se deben inventar incidencias para completar la tabla.
-
----
-
-# 11. Registro de recomendaciones
-
-| ID | Participante | Recomendación | Tipo | Prioridad | Decisión |
-|---|---|---|---|---|---|
-| R01 | PENDIENTE | PENDIENTE | PENDIENTE | PENDIENTE | PENDIENTE |
-
-Tipos sugeridos:
-
-- interfaz;
-- información;
-- filtros;
-- explicabilidad;
-- comparables;
-- proceso comercial;
-- documentación;
-- evolución futura.
-
-La decisión podrá registrarse como:
-
-- incorporar antes del cierre;
-- incorporar como mejora menor;
-- considerar en versión futura;
-- no incorporar, con justificación.
-
----
-
-# 12. Consolidación cuantitativa
-
-Esta sección se completará después de recibir las respuestas reales.
-
-## Resultados por participante
-
-| Participante | Promedio Q01–Q10 | Observación general |
-|---|---:|---|
-| E1 | PENDIENTE | PENDIENTE |
-| E2 | PENDIENTE | PENDIENTE |
-
-## Promedio por dimensión
-
-| Dimensión | Preguntas relacionadas | Resultado |
+| Dimensión | Preguntas | Promedio |
 |---|---|---:|
-| Priorización | Q01, Q02, Q05 | PENDIENTE |
-| Usabilidad | Q03, Q08 | PENDIENTE |
-| Información empresarial | Q04 | PENDIENTE |
-| Explicabilidad | Q06 | PENDIENTE |
-| Comparables | Q07 | PENDIENTE |
-| Utilidad comercial | Q09, Q10 | PENDIENTE |
+| Claridad y usabilidad | Q04–Q09 | 4,75 |
+| Priorización y contexto del ranking | Q10–Q14 | 4,75 |
+| Análisis empresarial y explicabilidad | Q15–Q22 | 4,84 |
+| Utilidad comercial | Q23–Q28 | 4,92 |
+| **Promedio global** | **Q04–Q28** | **4,82** |
 
-No deberán completarse promedios hasta disponer de respuestas reales.
+La dimensión con mayor valoración fue:
 
----
+**Utilidad comercial: 4,92 / 5**
 
-# 13. Consolidación cualitativa
-
-Después de ambas sesiones se deberá resumir únicamente la evidencia observada.
-
-## Fortalezas identificadas
-
-PENDIENTE
-
-## Debilidades identificadas
-
-PENDIENTE
-
-## Información solicitada por los especialistas
-
-PENDIENTE
-
-## Mejoras recomendadas
-
-PENDIENTE
-
-## Riesgos de interpretación identificados
-
-PENDIENTE
-
-## Cambios realizados después de la validación
-
-PENDIENTE
+Esto es consistente con el propósito principal de Prospect Finder BVQ como herramienta para focalizar el esfuerzo comercial.
 
 ---
 
-# 14. Criterio interno de cierre de B36
+## 11. Resultado detallado de las afirmaciones Q04–Q28
 
-B36 podrá marcarse como **Completado** cuando exista evidencia real de:
+| ID | Tema evaluado | Promedio |
+|---|---|---:|
+| Q04 | La pantalla principal permite entender qué empresas revisar primero | 4,75 |
+| Q05 | La información presentada es clara y fácil de entender | 4,50 |
+| Q06 | Los textos y términos son adecuados para el área comercial | 5,00 |
+| Q07 | Tamaño de textos, números y elementos visuales | 4,75 |
+| Q08 | Navegación entre Prospectos, Analítica y Cómo interpretar | 4,75 |
+| Q09 | Utilidad de filtros por empresa, provincia y tipo de compañía | 4,75 |
+| Q10 | La posición asignada ayuda a saber por dónde comenzar | 4,75 |
+| Q11 | Comprensión de Top 1 %, Top 5 %, Top 10 % y otros niveles | 5,00 |
+| Q12 | Información suficiente en lista principal para profundizar | 4,50 |
+| Q13 | Utilidad de conocer qué tan completa está la información | 4,50 |
+| Q14 | Valor aportado por empresas similares que ya participaron en el mercado | 5,00 |
+| Q15 | Facilidad para identificar por qué una empresa merece revisión | 4,75 |
+| Q16 | Utilidad de activos, patrimonio, ventas y empleados | 5,00 |
+| Q17 | Comprensión de la sección “¿Qué explica su prioridad?” | 4,75 |
+| Q18 | Utilidad de expresiones de favorabilidad | 5,00 |
+| Q19 | Utilidad del porcentaje de influencia de cada razón | 4,75 |
+| Q20 | Claridad de explicaciones financieras | 4,75 |
+| Q21 | Utilidad de emisores similares para preparar conversación comercial | 5,00 |
+| Q22 | Utilidad de la sección “Próximo paso comercial” | 4,75 |
+| Q23 | Capacidad para reducir el tiempo de identificación de empresas | 5,00 |
+| Q24 | Capacidad para concentrar el esfuerzo comercial | 4,75 |
+| Q25 | Preparación para primera revisión o conversación | 5,00 |
+| Q26 | Intención de utilizar Prospect Finder en actividades habituales | 5,00 |
+| Q27 | Complemento de la experiencia y criterio del asesor | 5,00 |
+| Q28 | Valor aportado a la gestión comercial de la BVQ | 4,75 |
 
-1. participación de al menos dos especialistas de la BVQ;
-2. ejecución de los escenarios principales;
+Los resultados más altos, con promedio de 5,00, se observan en:
+
+- adecuación del lenguaje comercial;
+- interpretación de niveles Top;
+- valor de empresas similares;
+- comprensión del tamaño y perfil empresarial;
+- expresiones de favorabilidad;
+- referencias para conversación comercial;
+- reducción del tiempo de identificación;
+- preparación para una primera conversación;
+- intención de uso;
+- complementariedad con el criterio del asesor.
+
+---
+
+## 12. Suficiencia de información para revisión comercial
+
+Pregunta:
+
+**Después de revisar una empresa en Prospect Finder, ¿considera que cuenta con información suficiente para decidir si merece una revisión comercial adicional?**
+
+Resultados:
+
+| Respuesta | Participantes | Porcentaje |
+|---|---:|---:|
+| Sí | 4 | 100 % |
+| No | 0 | 0 % |
+
+Los cuatro participantes consideran que Prospect Finder entrega información suficiente para decidir si una empresa merece una revisión comercial adicional.
+
+Este resultado no significa que la herramienta contenga toda la información necesaria para realizar una gestión comercial completa.
+
+Significa que cumple el propósito de apoyar una primera decisión de priorización y profundización.
+
+---
+
+## 13. Acción frente a empresas prioritarias
+
+Pregunta:
+
+**Luego de utilizar la herramienta, ¿qué acción tomaría normalmente con una empresa ubicada entre las primeras posiciones?**
+
+Los cuatro participantes seleccionaron:
+
+**La revisaría con mayor profundidad.**
+
+Resultado:
+
+| Acción | Participantes | Porcentaje |
+|---|---:|---:|
+| Revisarla con mayor profundidad | 4 | 100 % |
+
+Este resultado es coherente con el principio:
+
+`Modelo → Priorización → Especialista → Decisión`
+
+La herramienta orienta qué revisar primero, pero no automatiza la decisión comercial.
+
+---
+
+## 14. Elementos considerados más útiles para decidir una revisión
+
+Las selecciones realizadas por los participantes muestran mayor recurrencia en:
+
+| Elemento | Número de menciones |
+|---|---:|
+| Tamaño financiero | 3 |
+| Emisores similares | 3 |
+| Posición de la empresa en la lista | 2 |
+| Ventas | 2 |
+| Nivel de afinidad | 1 |
+| Razones que explican su prioridad | 1 |
+| Intensidad de cada razón | 1 |
+| Número de empleados | 1 |
+| Otro | 1 |
+
+Los resultados evidencian que los usuarios no basan su revisión en un único indicador.
+
+La combinación de:
+
+- posición;
+- tamaño;
+- ventas;
+- afinidad;
+- explicación;
+- comparables;
+
+es percibida como útil para decidir qué empresas merecen mayor atención.
+
+---
+
+## 15. Experiencia general
+
+Pregunta:
+
+**¿Cómo calificaría su experiencia general utilizando Prospect Finder?**
+
+Resultados:
+
+| Participante | Calificación |
+|---|---:|
+| E1 | 5 |
+| E2 | 5 |
+| E3 | 5 |
+| E4 | 5 |
+| **Promedio** | **5,00 / 5** |
+
+Los cuatro participantes asignaron la máxima calificación disponible a su experiencia general.
+
+---
+
+## 16. Utilidad para la prospección comercial
+
+Pregunta:
+
+**¿Qué tan útil considera Prospect Finder para apoyar la prospección comercial de la BVQ?**
+
+Resultados:
+
+| Participante | Calificación |
+|---|---:|
+| E1 | 5 |
+| E2 | 5 |
+| E3 | 4 |
+| E4 | 5 |
+| **Promedio** | **4,75 / 5** |
+
+La utilidad comercial fue evaluada favorablemente por todos los participantes.
+
+---
+
+## 17. Recomendación de uso
+
+Pregunta:
+
+**¿Recomendaría utilizar esta herramienta como apoyo para el equipo comercial?**
+
+Resultados:
+
+| Respuesta | Participantes | Porcentaje |
+|---|---:|---:|
+| Sí | 2 | 50 % |
+| Sí, con algunos ajustes | 2 | 50 % |
+| No | 0 | 0 % |
+
+Por tanto:
+
+**100 % de los participantes recomendaría utilizar Prospect Finder como apoyo para el equipo comercial, aunque la mitad identifica ajustes deseables.**
+
+Las observaciones asociadas a esos ajustes se registran como oportunidades de evolución del producto.
+
+---
+
+## 18. Resultados cualitativos por participante
+
+### E1 — Gabriela Flores
+
+**Elemento más útil**
+
+El ranking de empresas y la vista de los principales índices financieros.
+
+**Información o explicación no clara**
+
+Indicó que no identificó información o explicación que resultara confusa.
+
+**Información adicional solicitada**
+
+Índice de liquidez.
+
+**Mejora sugerida**
+
+Personalizar más la solución para la BVQ incorporando variables adicionales, como la última fecha en que una empresa emitió un papel en el mercado de valores y el tipo de papel, con el objetivo de facilitar seguimiento.
+
+**Funcionalidad futura sugerida**
+
+Información adicional, particularmente el indicador de liquidez.
+
+**Comentario general**
+
+Considera que la herramienta resume adecuadamente la información necesaria para realizar seguimiento comercial.
+
+---
+
+### E2 — Ivanova Correa
+
+**Elemento más útil**
+
+La relación con emisores históricos comparables.
+
+La participante destaca el valor de mostrar que empresas de características o sectores similares ya participan en el mercado de valores, porque esto puede ayudar a contextualizar la alternativa de emisión frente a potenciales prospectos.
+
+**Información o explicación no clara**
+
+Ninguna.
+
+**Información adicional solicitada**
+
+Datos de contacto.
+
+**Mejora sugerida**
+
+Permitir registrar notas para conservar información encontrada en otras fuentes.
+
+**Funcionalidades futuras sugeridas**
+
+- componente tipo CRM;
+- sección de “balances ajustados”;
+- simulación del antes y después financiero de emitir un determinado título en el mercado de valores.
+
+**Comentario general**
+
+Calificó la solución como una excelente herramienta.
+
+---
+
+### E3 — Anahir Salazar
+
+La participante completó las preguntas cuantitativas y de decisión.
+
+Entre los elementos más útiles seleccionó:
+
+- posición de la empresa en la lista;
+- nivel de afinidad;
+- tamaño financiero;
+- emisores similares.
+
+Indicó que:
+
+- cuenta con información suficiente para decidir si una empresa merece revisión comercial adicional;
+- revisaría con mayor profundidad una empresa ubicada en primeras posiciones;
+- su experiencia general fue 5/5;
+- la utilidad para prospección fue 4/5;
+- recomendaría utilizar la herramienta.
+
+Las preguntas abiertas finales no registran respuesta.
+
+No se incorporan inferencias adicionales sobre esos campos.
+
+---
+
+### E4 — Gerardo Cepeda
+
+**Elemento más útil**
+
+El ranking y la información desplegada al seleccionar una empresa.
+
+**Información o explicación no clara**
+
+Sugiere que determinados indicadores no se presenten en formato decimal sino como porcentaje.
+
+**Información adicional solicitada**
+
+Solicita mayor segmentación por:
+
+- tamaño de empresa;
+- actividad económica, registrada en el formulario como “CIU”;
+- tipo de papel emitido por empresas similares;
+- valor emitido.
+
+**Mejora sugerida**
+
+Incluir KPI adicionales, particularmente liquidez.
+
+**Funcionalidades futuras sugeridas**
+
+- nivel de impagos de empresas similares;
+- calificación de los papeles emitidos por empresas similares.
+
+**Comentario general**
+
+Considera Prospect Finder una herramienta muy útil.
+
+---
+
+## 19. Fortalezas identificadas
+
+A partir de las respuestas cuantitativas y cualitativas se identifican las siguientes fortalezas:
+
+### 19.1 Priorización
+
+El ranking permite reducir un universo muy grande de empresas a una secuencia de revisión manejable.
+
+### 19.2 Utilidad comercial
+
+La dimensión con mayor promedio fue utilidad comercial:
+
+**4,92 / 5**
+
+Los usuarios consideran que la herramienta puede ayudar a reducir tiempo y concentrar el esfuerzo comercial.
+
+### 19.3 Información financiera
+
+Activos, patrimonio, ventas, empleados e indicadores financieros fueron considerados útiles para una primera comprensión empresarial.
+
+### 19.4 Comparables históricos
+
+Los emisores similares fueron uno de los elementos más recurrentemente valorados.
+
+Su utilidad no se limita a la similitud financiera; también puede funcionar como referencia comercial para explicar a un prospecto que existen organizaciones comparables que ya participan en el mercado.
+
+### 19.5 Explicabilidad
+
+Las razones que explican la prioridad y su intensidad fueron valoradas favorablemente.
+
+La explicabilidad ayuda a que el score no se presente como una cifra aislada.
+
+### 19.6 Complemento del criterio humano
+
+La afirmación relacionada con que la herramienta complementa la experiencia y criterio del asesor obtuvo:
+
+**5,00 / 5**
+
+Esto coincide con el enfoque de diseño del proyecto.
+
+---
+
+## 20. Debilidades y oportunidades de mejora
+
+No se identificaron observaciones que invaliden el prototipo.
+
+Las oportunidades de mejora se concentran en enriquecer la información disponible y evolucionar la herramienta hacia un proceso comercial más completo.
+
+Principales oportunidades:
+
+1. incorporar indicador de liquidez;
+2. presentar determinados ratios como porcentajes en lugar de decimales;
+3. incorporar datos de contacto;
+4. incorporar notas comerciales;
+5. agregar información histórica de emisiones;
+6. mostrar tipo y valor de papeles emitidos por empresas comparables;
+7. incorporar segmentación adicional por tamaño y actividad económica;
+8. añadir información sobre impagos y calificaciones de emisiones comparables;
+9. evolucionar hacia funcionalidades tipo CRM;
+10. explorar simulaciones financieras o “balances ajustados” relacionados con una potencial emisión.
+
+---
+
+## 21. Registro de incidencias
+
+No se reportaron incidencias funcionales críticas en las respuestas del formulario.
+
+Se registra una observación de presentación:
+
+| ID | Participante | Observación | Severidad | Acción propuesta | Estado |
+|---|---|---|---|---|---|
+| I01 | E4 | Presentar determinados indicadores como porcentaje y no como decimal | Baja | Revisar formato visual de ratios | Mejora propuesta |
+
+Esta observación afecta presentación y comprensión visual.
+
+No modifica:
+
+- modelo;
+- score;
+- ranking;
+- target;
+- variables predictoras;
+- resultados TEST.
+
+---
+
+## 22. Registro consolidado de recomendaciones
+
+| ID | Recomendación | Participantes relacionados | Tipo | Prioridad propuesta | Decisión |
+|---|---|---|---|---|---|
+| R01 | Incorporar indicador de liquidez | E1, E4 | Información / KPI | Alta | Considerar en siguiente evolución |
+| R02 | Incorporar fecha y tipo de emisiones históricas | E1 | Información comercial | Media | Considerar en siguiente evolución |
+| R03 | Incorporar datos de contacto | E2 | Información comercial | Alta | Considerar en siguiente evolución |
+| R04 | Permitir notas por prospecto | E2 | Proceso comercial | Media | Considerar en siguiente evolución |
+| R05 | Incorporar funciones tipo CRM | E2 | Producto | Media | Versión futura |
+| R06 | Simular balances ajustados antes/después de una emisión | E2 | Analítica avanzada | Media | Versión futura |
+| R07 | Mostrar ratios en porcentaje cuando corresponda | E4 | Interfaz | Media | Mejora visual |
+| R08 | Segmentar por tamaño y actividad económica | E4 | Filtros / análisis | Media | Considerar en siguiente evolución |
+| R09 | Incluir tipo y valor de emisiones de comparables | E4 | Comparables | Media | Considerar en siguiente evolución |
+| R10 | Incluir impagos y calificación de papeles comparables | E4 | Riesgo / comparables | Media | Versión futura |
+
+Las prioridades indicadas corresponden a una organización del backlog a partir de recurrencia y cercanía con el propósito actual del prototipo.
+
+No representan cambios exigidos al modelo v10.
+
+---
+
+## 23. Cambios derivados de la validación
+
+La validación no genera necesidad de modificar retrospectivamente el modelo v10.
+
+Se mantiene congelado:
+
+- Feature Set;
+- algoritmo;
+- hiperparámetros;
+- target;
+- split temporal;
+- evaluación TEST;
+- score;
+- metodología de ranking.
+
+Las recomendaciones obtenidas corresponden principalmente a:
+
+- enriquecimiento de datos;
+- presentación;
+- filtros;
+- seguimiento comercial;
+- comparables;
+- nuevas funcionalidades.
+
+Por integridad metodológica, cualquier evolución predictiva motivada por nueva información deberá desarrollarse como una versión posterior y no como modificación retrospectiva de v10.
+
+---
+
+## 24. Interpretación de la validación
+
+Los resultados permiten afirmar que, dentro del grupo de especialistas participante:
+
+- el prototipo fue comprendido;
+- el ranking fue considerado útil;
+- la información financiera fue considerada relevante;
+- los comparables aportan contexto;
+- la explicación de prioridad fue considerada comprensible;
+- la herramienta puede reducir el esfuerzo de revisión;
+- existe intención de uso;
+- existe recomendación favorable para utilizarla como apoyo comercial.
+
+No debe interpretarse esta validación como:
+
+- prueba estadística de desempeño del modelo;
+- validación externa sobre todo el mercado;
+- garantía de adopción organizacional;
+- medición de impacto comercial real;
+- demostración de causalidad.
+
+La validación responde específicamente a:
+
+**comprensión, utilidad funcional y utilidad comercial percibida.**
+
+---
+
+## 25. Limitaciones de la validación
+
+La validación presenta las siguientes limitaciones:
+
+1. participaron cuatro personas;
+2. la muestra es intencional y especializada;
+3. los resultados no son estadísticamente generalizables;
+4. la evaluación mide percepción de utilidad y usabilidad;
+5. no mide todavía conversión comercial real;
+6. no mide incremento real de nuevos emisores;
+7. no constituye nueva evaluación predictiva;
+8. una participante no completó las preguntas abiertas finales.
+
+Estas limitaciones no invalidan el ejercicio.
+
+Son coherentes con una validación funcional de prototipo dentro de un proyecto Capstone.
+
+---
+
+## 26. Criterio de cierre de B36
+
+El criterio definido requería evidencia de:
+
+1. al menos dos especialistas;
+2. ejecución de la validación;
 3. cuestionario completado;
-4. observaciones cualitativas registradas;
-5. incidencias y recomendaciones documentadas;
-6. decisión sobre los cambios derivados de la validación.
+4. observaciones registradas;
+5. recomendaciones documentadas;
+6. decisión sobre el tratamiento de las recomendaciones.
 
-No se establece en este documento una calificación mínima artificial para declarar válido el prototipo.
+Resultado:
 
-El propósito es obtener evidencia de utilidad, comprensión y oportunidades de mejora.
+| Criterio | Evidencia | Estado |
+|---|---|---|
+| Al menos 2 especialistas | 4 participantes | Cumplido |
+| Evaluación del prototipo | Formulario de validación comercial | Cumplido |
+| Respuestas cuantitativas | 4 respuestas completas Q04–Q34 | Cumplido |
+| Evidencia cualitativa | Respuestas abiertas de E1, E2 y E4; E3 sin respuestas abiertas | Cumplido con observación |
+| Recomendaciones documentadas | R01–R10 | Cumplido |
+| Tratamiento de recomendaciones | Backlog de evolución, sin modificar v10 | Cumplido |
 
-Si los especialistas identifican problemas importantes, deberán documentarse y resolverse o justificarse antes del cierre final del proyecto.
+Por tanto:
+
+**B36 — COMPLETADO**
 
 ---
 
-# 15. Evidencia recomendada
+## 27. Resultado final de B36
 
-Para respaldar académicamente la actividad se recomienda conservar:
+**Estado actual:** COMPLETADO
 
-- este documento completado;
-- capturas de pantalla de la sesión cuando corresponda;
-- formulario o registro de respuestas;
-- fecha de cada validación;
-- identificación funcional del participante;
-- observaciones;
+**Número mínimo de especialistas requerido:** 2
+
+**Número de participantes validados:** 4
+
+**Promedio global Q04–Q28:** 4,82 / 5
+
+**Experiencia general promedio:** 5,00 / 5
+
+**Utilidad para prospección:** 4,75 / 5
+
+**Considera suficiente la información para decidir una revisión adicional:** 100 %
+
+**Revisaría con mayor profundidad una empresa prioritaria:** 100 %
+
+**Recomendaría utilizar la herramienta:** 100 %
+
+**Resultado consolidado:** FAVORABLE
+
+**Decisión final:** Prospect Finder BVQ cumple el objetivo de disponer de un prototipo funcional cuya utilidad, comprensión y aplicabilidad comercial han sido validadas por un grupo de especialistas. Las recomendaciones obtenidas se registran como oportunidades de evolución y no requieren modificar retrospectivamente el modelo v10.
+
+---
+
+## 28. Evidencia conservada
+
+Para trazabilidad académica se recomienda conservar:
+
+- este documento;
+- exportación CSV del formulario;
+- formulario utilizado;
+- fechas de las respuestas;
+- identificación funcional de los participantes;
+- resultados cuantitativos;
+- observaciones cualitativas;
 - recomendaciones;
-- evidencia de cambios implementados como consecuencia de la validación.
+- capturas del prototipo cuando formen parte del informe de defensa.
 
-No es necesario almacenar información personal que no aporte a la evidencia académica.
-
----
-
-# 16. Resultado final de B36
-
-**Estado actual:** PENDIENTE
-
-**Número de especialistas requeridos:** 2
-
-**Número de especialistas validados:** 0
-
-**Resultado consolidado:** PENDIENTE
-
-**Decisión final:** PENDIENTE
+La evidencia debe conservarse respetando las políticas internas de tratamiento de información y evitando recopilar datos personales innecesarios.
 
 ---
 
-# 17. Regla de integridad de la evidencia
+## 29. Relación con el modelo
 
-No se deben inventar:
+La validación con especialistas no altera el resultado predictivo.
 
-- participantes;
-- cargos;
-- respuestas;
-- puntuaciones;
-- observaciones;
-- recomendaciones;
-- incidencias;
-- fechas de validación;
-- conclusiones atribuidas a especialistas.
+El modelo permanece:
 
-Toda información incorporada en la sección de resultados deberá provenir de una validación efectivamente realizada.
+`v10_hgb_financial_c3`
+
+La validación se encuentra aguas abajo del modelo:
+
+`Modelo → Priorización → Explicación → Especialista → Decisión`
+
+La evidencia obtenida refuerza el propósito de Prospect Finder BVQ como sistema de apoyo y no como mecanismo de decisión automatizada.
 
 ---
 
-# 18. Próximo paso
+## 30. Conclusión
 
-Realizar la sesión con el primer especialista y registrar sus respuestas como:
+La validación comercial fue completada con cuatro participantes, superando el mínimo de dos especialistas previsto para B36.
 
-`E1`
+El resultado cuantitativo global fue:
 
-Después realizar la misma sesión con el segundo especialista y registrar sus respuestas como:
+**4,82 / 5**
 
-`E2`
+La experiencia general obtuvo:
 
-Una vez completadas ambas sesiones se consolidarán los resultados y se determinarán los ajustes finales del prototipo.
+**5,00 / 5**
+
+y la utilidad para apoyar la prospección comercial:
+
+**4,75 / 5**
+
+Todos los participantes indicaron que la información disponible permite decidir si una empresa merece una revisión comercial adicional, y todos revisarían con mayor profundidad una empresa ubicada en las primeras posiciones.
+
+Las respuestas cualitativas muestran especial valoración por:
+
+- ranking;
+- información financiera;
+- comparables históricos;
+- explicación de prioridad;
+- capacidad de focalizar la gestión comercial.
+
+Las principales recomendaciones se orientan a enriquecer la solución con:
+
+- liquidez;
+- datos de contacto;
+- información histórica de emisiones;
+- segmentación adicional;
+- notas;
+- funciones tipo CRM;
+- indicadores de comparables;
+- simulaciones financieras.
+
+Estas mejoras corresponden a la evolución futura del producto y no modifican la integridad metodológica de v10.
+
+Con esta evidencia:
+
+**la actividad B36 queda formalmente cerrada como COMPLETADA.**

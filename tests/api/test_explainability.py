@@ -137,7 +137,7 @@ def test_local_explanation_endpoint_structure(
                 "expediente_key":
                     EXPECTED_EXPEDIENTE,
                 "nombre":
-                    "CUYABENOPETRO S.A.",
+                    "EMPRESA PRUEBA A S.A.",
             },
             "score": {
                 "modelo":
@@ -192,7 +192,7 @@ def test_local_explanation_endpoint_structure(
         "empresa"
     ][
         "nombre"
-    ] == "CUYABENOPETRO S.A."
+    ] == "EMPRESA PRUEBA A S.A."
 
     assert response[
         "score"

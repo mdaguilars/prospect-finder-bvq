@@ -1,5 +1,7 @@
 # Dataset v10 — Congelamiento de universo, target e integración de fuentes
 
+> **Nota de vigencia:** Este documento registra el congelamiento de la base integrada v10 previa a la ingeniería de variables y al modelado final. Conserva intencionalmente el estado metodológico existente en ese momento, incluyendo referencias a etapas posteriores todavía no ejecutadas. No representa el dataset final de features utilizado por `v10_hgb_financial_c3`. El modelo final utiliza `data/processed/v10_features_financial_2012_2023.csv.gz`, con 25 variables predictoras y sin `provincia` como predictor. Para la configuración final deben consultarse `docs/v10_final_candidate_freeze.md`, `docs/v10_final_test_protocol.md`, `docs/v10_final_test_results.md` y el `README.md`.
+
 ## 1. Propósito
 
 Este documento registra las decisiones metodológicas y los controles utilizados para congelar la base integrada v10 del proyecto Prospect Finder BVQ.
@@ -255,8 +257,8 @@ Se identificó una única discrepancia entre el RUC histórico y `bi_compania`:
 
 - Expediente: `749052`
 - Empresa: `CIMA INMOBIL CIMABIL S.A.S.`
-- RUC histórico: `0916053283001`
-- RUC en `bi_compania`: `0993379824001`
+- RUC histórico: `[RUC HISTÓRICO ANONIMIZADO]`
+- RUC en `bi_compania`: `[RUC BI ANONIMIZADO]`
 
 La empresa presenta valores financieros coincidentes entre las fuentes para 2023.
 

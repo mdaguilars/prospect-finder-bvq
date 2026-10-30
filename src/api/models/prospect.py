@@ -15,6 +15,10 @@ Tablas
    Contiene los cinco emisores históricos más similares para cada
    empresa con información suficiente.
 
+4. issuer_reference_profiles
+   Contiene los perfiles financieros históricos de los emisores
+   utilizados como universo de referencia por el motor de similitud.
+
 El score predictivo y la similitud se almacenan por separado.
 No existe una fórmula que combine ambos indicadores.
 """
@@ -342,6 +346,182 @@ class IssuerSimilaritySummary(Base):
         "OperationalProspect"
     ] = relationship(
         back_populates="similarity_summary",
+    )
+
+
+# ============================================================
+# PERFILES HISTÓRICOS DE EMISORES
+# ============================================================
+
+class IssuerReferenceProfile(Base):
+    """
+    Perfil financiero histórico de un emisor utilizado como
+    referencia por el motor de similitud de Prospect Finder.
+
+    Cada fila representa el perfil temporal seleccionado antes
+    de la primera inscripción del emisor.
+
+    Las siete variables financieras y sus percentiles son
+    exactamente las utilizadas por el motor de similitud v10.
+    """
+
+    __tablename__ = "issuer_reference_profiles"
+
+    # --------------------------------------------------------
+    # IDENTIFICACIÓN
+    # --------------------------------------------------------
+
+    expediente_key: Mapped[int] = mapped_column(
+        BigInteger,
+        primary_key=True,
+        nullable=False,
+    )
+
+    ruc: Mapped[str | None] = mapped_column(
+        String(20),
+        nullable=True,
+        index=True,
+    )
+
+    nombre: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    anio: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+        index=True,
+    )
+
+    tipo_compania: Mapped[str | None] = mapped_column(
+        String(150),
+        nullable=True,
+        index=True,
+    )
+
+    provincia: Mapped[str | None] = mapped_column(
+        String(150),
+        nullable=True,
+        index=True,
+    )
+
+    # --------------------------------------------------------
+    # REFERENCIA TEMPORAL
+    # --------------------------------------------------------
+
+    fecha_decision: Mapped[date] = mapped_column(
+        Date,
+        nullable=False,
+        index=True,
+    )
+
+    fecha_primera_inscripcion: Mapped[date] = mapped_column(
+        Date,
+        nullable=False,
+        index=True,
+    )
+
+    dias_hasta_inscripcion: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+    )
+
+    # --------------------------------------------------------
+    # 7 VARIABLES DEL MOTOR DE SIMILITUD
+    # --------------------------------------------------------
+
+    activos_final: Mapped[float] = mapped_column(
+        Float,
+        nullable=False,
+    )
+
+    patrimonio_final: Mapped[float] = mapped_column(
+        Float,
+        nullable=False,
+    )
+
+    bi_ingresos_ventas: Mapped[float] = mapped_column(
+        Float,
+        nullable=False,
+    )
+
+    bi_n_empleados: Mapped[float] = mapped_column(
+        Float,
+        nullable=False,
+    )
+
+    fin_ratio_patrimonio_activos: Mapped[float] = mapped_column(
+        Float,
+        nullable=False,
+    )
+
+    fin_roa: Mapped[float] = mapped_column(
+        Float,
+        nullable=False,
+    )
+
+    fin_rotacion_activos: Mapped[float] = mapped_column(
+        Float,
+        nullable=False,
+    )
+
+    # --------------------------------------------------------
+    # PERCENTILES UTILIZADOS EN LA DISTANCIA
+    # --------------------------------------------------------
+
+    pct__activos_final: Mapped[float] = mapped_column(
+        Float,
+        nullable=False,
+    )
+
+    pct__patrimonio_final: Mapped[float] = mapped_column(
+        Float,
+        nullable=False,
+    )
+
+    pct__bi_ingresos_ventas: Mapped[float] = mapped_column(
+        Float,
+        nullable=False,
+    )
+
+    pct__bi_n_empleados: Mapped[float] = mapped_column(
+        Float,
+        nullable=False,
+    )
+
+    pct__fin_ratio_patrimonio_activos: Mapped[
+        float
+    ] = mapped_column(
+        Float,
+        nullable=False,
+    )
+
+    pct__fin_roa: Mapped[float] = mapped_column(
+        Float,
+        nullable=False,
+    )
+
+    pct__fin_rotacion_activos: Mapped[float] = mapped_column(
+        Float,
+        nullable=False,
+    )
+
+    # --------------------------------------------------------
+    # ÍNDICES
+    # --------------------------------------------------------
+
+    __table_args__ = (
+        Index(
+            "ix_issuer_reference_profiles_provincia_tipo",
+            "provincia",
+            "tipo_compania",
+        ),
+        Index(
+            "ix_issuer_reference_profiles_dates",
+            "fecha_decision",
+            "fecha_primera_inscripcion",
+        ),
     )
 
 

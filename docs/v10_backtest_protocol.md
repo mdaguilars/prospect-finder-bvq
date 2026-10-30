@@ -1,5 +1,7 @@
 # Protocolo de backtesting temporal v10
 
+**Nota de vigencia:** Este documento registra el protocolo de backtesting temporal definido durante la etapa inicial de modelado v10, cuando el proyecto utilizaba el dataset `v10_features_core_2012_2023.csv.gz` y evaluaba inicialmente configuraciones de Regresión Logística. Posteriormente el mismo esquema temporal de cuatro folds fue utilizado para comparar configuraciones adicionales y seleccionar el candidato final `v10_hgb_financial_c3`, basado en `HistGradientBoostingClassifier` y un Feature Set financiero de 25 variables. Para los resultados finales deben consultarse `docs/v10_final_candidate_freeze.md`, `docs/v10_final_test_protocol.md`, `docs/v10_final_test_results.md` y el `README.md`.
+
 ## 1. Objetivo
 
 Este documento define el procedimiento de backtesting temporal para los modelos de la generación v10 de Prospect Finder BVQ.

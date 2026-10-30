@@ -1,0 +1,17 @@
+{
+  "test_id": "P05",
+  "model": "v10_hgb_financial_c3",
+  "config": "C3_CONSERVATIVE",
+  "test_period": "2022-2023",
+  "test_rows": 260445,
+  "test_positives": 54,
+  "prevalence": 0.00020733744168634452,
+  "top_k_values": [
+    20,
+    50,
+    100
+  ],
+  "first_positive_rank": 165,
+  "result": "CUMPLE",
+  "interpretation": "La ejecución de la prueba cumple. La utilidad comercial Top-K debe interpretarse separadamente."
+}

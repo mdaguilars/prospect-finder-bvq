@@ -1,0 +1,13 @@
+{
+  "test_id": "P04",
+  "description": "Sensibilidad del modelo ante perturbaciones de ±5 %.",
+  "model": "v10_hgb_financial_c3",
+  "config": "C3_CONSERVATIVE",
+  "feature": "fin_rotacion_activos",
+  "perturbations": {
+    "-5%": 0.95,
+    "+5%": 1.05
+  },
+  "test_rows": 260445,
+  "result": "CUMPLE"
+}

@@ -1,0 +1,11 @@
+{
+  "test_id": "P06",
+  "model": "v10_hgb_financial_c3",
+  "config": "C3_CONSERVATIVE",
+  "method": "SHAP PermutationExplainer",
+  "background_source": "TRAIN exclusivamente",
+  "background_size": 75,
+  "selection": "TEST 2023, registros completos, mismo tipo de compañía, aproximación P90 vs P10 de activos",
+  "causality_warning": "SHAP explica contribuciones al score; no demuestra causalidad.",
+  "result": "CUMPLE"
+}

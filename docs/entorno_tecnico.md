@@ -372,10 +372,12 @@ La interfaz implementada permite:
 - visualizar su Índice de Afinidad Bursátil;
 - visualizar su percentil;
 - visualizar su posición en el ranking;
+- visualizar su nivel relativo de prioridad mediante referencias como Top 1 %, Top 5 % y Top 10 %;
 - consultar indicadores financieros;
 - visualizar emisores históricos comparables;
 - solicitar una explicación SHAP bajo demanda;
-- diferenciar factores que aumentan o reducen la afinidad.
+- diferenciar factores que aumentan o reducen la afinidad;
+- revisar un próximo paso comercial como orientación para continuar el análisis humano.
 
 ### 9.2 `frontend/src/services/api.ts`
 
@@ -512,6 +514,7 @@ Cada empresa dispone, según disponibilidad de datos, de:
 - ranking;
 - score de afinidad;
 - percentil;
+- nivel relativo de prioridad;
 - identificación;
 - provincia;
 - tipo de compañía;
@@ -632,7 +635,7 @@ Las credenciales incluidas actualmente corresponden exclusivamente al ambiente l
 
 No deben utilizarse como credenciales de producción.
 
-La dockerización completa de FastAPI se considera una etapa posterior del cierre de MLOps.
+La dockerización completa de FastAPI se considera una evolución posterior orientada a despliegues productivos y MLOps. No constituye un requisito pendiente para el cierre funcional del Capstone.
 
 El servicio PostgreSQL puede iniciarse mediante:
 
@@ -991,7 +994,7 @@ Entre las evidencias verificadas se encuentran:
 - filtro Pichincha con `43.487` resultados;
 - filtro Responsabilidad Limitada con `28.972` resultados;
 - navegación a `Página 2 de 5.487`;
-- ficha de `CUYABENOPETRO S.A.`;
+- ficha de `EMPRESA PRUEBA A S.A.`;
 - factores SHAP positivos y negativos;
 - cinco emisores históricos comparables;
 - manejo de `INFORMACION_INSUFICIENTE` sin crear comparables artificiales;
@@ -999,7 +1002,7 @@ Entre las evidencias verificadas se encuentran:
 
 Las pruebas funcionales finales quedaron cerradas técnicamente.
 
-No sustituyen la validación formal con al menos dos especialistas de la BVQ.
+Esta evidencia técnica se complementó posteriormente con la validación formal B36 realizada con cuatro especialistas de la Bolsa de Valores de Quito.
 
 ---
 
@@ -1037,14 +1040,17 @@ Al seleccionar una empresa se presenta un panel lateral con:
 - nombre;
 - RUC;
 - provincia;
+- tipo de compañía;
 - ranking;
 - Índice de Afinidad Bursátil;
 - percentil;
+- nivel relativo de prioridad;
 - activos;
 - patrimonio;
 - ingresos por ventas;
 - número de empleados;
-- emisores comparables.
+- emisores comparables;
+- próximo paso comercial.
 
 ### 21.4 Explicabilidad
 
@@ -1065,11 +1071,9 @@ El sistema mantiene visible la advertencia de que el Índice de Afinidad Bursát
 
 Alembic 1.20.0 se encuentra instalado como dependencia.
 
-Está previsto utilizarlo para formalizar las migraciones de esquema de PostgreSQL.
+Su utilización para formalizar migraciones de esquema de PostgreSQL se mantiene como una evolución futura orientada a una operación productiva más formal.
 
-La inicialización de migraciones todavía no constituye una etapa cerrada del proyecto.
-
-Por esta razón no debe afirmarse todavía que la base se encuentre administrada mediante migraciones Alembic.
+La versión funcional validada del Capstone no depende de migraciones Alembic y no debe afirmarse que la base actual se encuentre administrada mediante ellas.
 
 ---
 
@@ -1216,7 +1220,7 @@ Las pruebas automatizadas específicas del frontend fueron incorporadas mediante
 
 Ambos cambios fueron sincronizados con la rama remota `main`.
 
-La matriz de pruebas funcionales finales se encuentra preparada para incorporarse en el siguiente commit documental.
+La matriz de pruebas funcionales finales se encuentra cerrada y forma parte de la documentación técnica preparada para el versionado final del proyecto.
 
 El repositorio no debe utilizarse para publicar información empresarial sensible ni datasets operacionales no autorizados.
 
@@ -1305,9 +1309,9 @@ El flujo técnico actual es:
 24. Incorporación de pruebas automatizadas del frontend.
 25. Validación de pruebas, build y lint.
 26. Ejecución de pruebas funcionales finales del producto.
-27. Validación con al menos dos especialistas de la BVQ.
-28. Formalización MLOps.
-29. Documentación final de operación y despliegue.
+27. Validación B36 con cuatro especialistas de la Bolsa de Valores de Quito.
+28. Cierre documental y versionado final del Capstone.
+29. Evolución futura hacia producción y MLOps cuando el producto lo requiera.
 
 ---
 
@@ -1344,7 +1348,8 @@ El entorno se encuentra operativo para:
 - build de producción;
 - lint del frontend;
 - pruebas automatizadas del frontend;
-- pruebas funcionales finales con `10 de 10` escenarios aprobados.
+- pruebas funcionales finales con `10 de 10` escenarios aprobados;
+- validación B36 con cuatro especialistas y promedio global de `4,82 / 5`.
 
 El frontend consume actualmente:
 
@@ -1377,12 +1382,14 @@ La versión actual permite demostrar los componentes principales exigidos para e
 
 - ranking de prospectos;
 - indicadores de priorización;
+- niveles relativos de prioridad;
 - búsqueda;
 - filtros;
 - detalle de empresa;
 - indicadores financieros;
 - emisores históricos comparables;
-- factores explicativos.
+- factores explicativos;
+- próximo paso comercial.
 
 Quedan disponibles mejoras posteriores de experiencia de usuario, entre ellas:
 
@@ -1404,28 +1411,36 @@ según:
 
 `docs/v10_functional_test_matrix.md`
 
+La validación con especialistas B36 también se encuentra cerrada con cuatro participantes. El promedio global de las 25 afirmaciones principales fue `4,82 / 5`, la experiencia general obtuvo `5,00 / 5` y la utilidad para prospección `4,75 / 5`.
+
+Las recomendaciones obtenidas en esta validación se consideran evolución futura del producto y no modifican el modelo v10 congelado.
+
 Estas mejoras no afectan el funcionamiento básico actualmente validado.
 
 ---
 
-## 32. Componentes pendientes
+## 32. Evolución técnica posterior al Capstone
 
-Los principales componentes técnicos que todavía deben completarse son:
+Para el alcance académico y funcional definido, el prototipo se encuentra implementado, probado y validado.
 
-- validación real con al menos dos especialistas de la BVQ;
-- registro estructurado de los resultados de dicha validación;
-- dockerización completa de FastAPI;
+La validación con especialistas B36 ya fue ejecutada y documentada con cuatro participantes, por lo que no constituye un componente pendiente.
+
+Los siguientes elementos se mantienen como evolución futura para un eventual ambiente productivo o una madurez MLOps superior:
+
+- dockerización de FastAPI y del frontend;
 - migraciones formales con Alembic;
 - integración formal de DVC;
 - integración formal de MLflow;
-- monitoreo operacional;
-- documentación final de despliegue;
-- documentación final de operación.
+- monitoreo operacional continuo;
+- autenticación y controles de acceso productivos;
+- hardening y gestión segura de secretos;
+- automatización de despliegues;
+- documentación operativa específica del ambiente productivo;
+- estrategia de respaldo, recuperación y continuidad según el entorno de despliegue.
 
-La interfaz web ya no se considera un componente pendiente.
+Estos elementos no son bloqueantes para el cierre del Capstone y no modifican el modelo v10 congelado ni los resultados ya reportados.
 
-Las mejoras visuales y de experiencia de usuario pueden continuar de manera incremental, pero la primera versión funcional del frontend ya se encuentra implementada y validada técnicamente.
-
+Las mejoras visuales y de experiencia de usuario pueden continuar de manera incremental, pero la versión funcional actual ya se encuentra implementada, probada y validada.
 ---
 
 ## 33. Principio de trazabilidad
@@ -1567,7 +1582,9 @@ Las pruebas verificaron, entre otros aspectos:
 
 Esta validación corresponde al cierre técnico de las pruebas funcionales del producto.
 
-No debe confundirse con la validación formal de utilidad y usabilidad que todavía debe realizarse con al menos dos especialistas de la BVQ.
+Posteriormente se ejecutó la validación formal B36 de utilidad y usabilidad con cuatro especialistas de la Bolsa de Valores de Quito. El promedio global obtenido fue `4,82 / 5`.
+
+Ambas evidencias son complementarias: B37 valida el funcionamiento técnico del producto y B36 valida su utilidad y usabilidad desde la perspectiva de especialistas.
 
 ---
 
@@ -1594,7 +1611,7 @@ A la fecha de esta documentación se encuentran implementados los siguientes mec
 - documentación técnica;
 - explicabilidad reproducible.
 
-La incorporación de DVC, MLflow, migraciones Alembic y contenedor de FastAPI completará la capa de MLOps prevista para el proyecto.
+La incorporación futura de DVC, MLflow, migraciones Alembic y contenedores adicionales ampliará la madurez MLOps para un eventual despliegue productivo. Estos componentes no son necesarios para considerar cerrado el alcance funcional y metodológico del Capstone.
 
 ---
 
@@ -1615,8 +1632,13 @@ Prospect Finder BVQ dispone actualmente de un flujo técnico funcional compuesto
 11. pruebas automatizadas del frontend;
 12. pruebas funcionales finales con `10 de 10` escenarios aprobados;
 13. validaciones técnicas del frontend;
-14. control de versiones mediante Git y GitHub.
+14. validación B36 con cuatro especialistas;
+15. control de versiones mediante Git y GitHub.
 
 La solución permite actualmente identificar y priorizar empresas, consultar información financiera, revisar emisores históricos comparables y explicar individualmente los principales factores que influyen sobre el Índice de Afinidad Bursátil.
 
-Las etapas restantes se concentran principalmente en validación con especialistas, MLOps y documentación de despliegue.
+La validación B36 obtuvo un promedio global de `4,82 / 5`, una valoración de experiencia general de `5,00 / 5` y una utilidad para prospección de `4,75 / 5`.
+
+Con la integración técnica, las pruebas automáticas, las `10 de 10` pruebas funcionales B37 y la validación B36, el prototipo se considera implementado, probado y validado para el alcance del Capstone.
+
+Las actividades de dockerización completa, DVC, MLflow, Alembic, monitoreo continuo y despliegue productivo se mantienen como evolución posterior y no como pendientes bloqueantes del proyecto académico.

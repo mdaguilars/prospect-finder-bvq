@@ -37,6 +37,55 @@ reports/results/v10/*
 !reports/results/v10/*.json
 !reports/results/v10/*.txt
 
+# Rankings de validación con identificadores empresariales
+reports/results/v10/*_validation_top500.csv
+
+# ============================================
+# Pruebas finales v10
+# ============================================
+
+# Por defecto, no versionar evidencia fila-a-fila o metadatos
+# estructurados generados por las pruebas. Pueden contener:
+# RUC, nombre, expediente, ranking, scores o variables financieras.
+reports/live_tests/**/*.csv
+reports/live_tests/**/*.json
+reports/live_tests/**/*.csv.gz
+
+# Mantener únicamente evidencia agregada / metodológica segura.
+
+# P01 - consistencia
+!reports/live_tests/P01/metrics_run1.csv
+!reports/live_tests/P01/metrics_run2.csv
+!reports/live_tests/P01/ranking_metrics_run1.csv
+!reports/live_tests/P01/ranking_metrics_run2.csv
+
+# P02 - fuga temporal
+!reports/live_tests/P02/p02_metadata.json
+!reports/live_tests/P02/p02_model_features.csv
+
+# P03 - faltantes y valores atípicos
+!reports/live_tests/P03/p03_extreme_reference.json
+
+# P04 - robustez ante pequeños cambios
+!reports/live_tests/P04/p04_metadata.json
+!reports/live_tests/P04/p04_results.csv
+
+# P05 - utilidad Top-K
+!reports/live_tests/P05/p05_metadata.json
+!reports/live_tests/P05/p05_topk_metrics.csv
+
+# P06 - explicabilidad y escala
+!reports/live_tests/P06/p06_metadata.json
+!reports/live_tests/P06/p06_size_analysis.csv
+
+# Las visualizaciones SHAP de casos individuales pueden revelar
+# información específica de empresas; mantenerlas fuera del repositorio público.
+reports/live_tests/P06/p06_shap_empresa_*.png
+
+# ACTA_PRUEBAS_V10.md y HOJA_DEFENSA_V10.md permanecen versionables.
+# Antes de publicar el repositorio, deben revisarse para evitar
+# información empresarial individual innecesaria.
+
 # Salidas temporales de auditoría y validación
 /salida_paso*.txt
 
@@ -74,5 +123,5 @@ Thumbs.db
 *.pfx
 *.p12
 
-# Rankings de validación con identificadores empresariales
-reports/results/v10/*_validation_top500.csv
+# Ranking TEST con identificadores empresariales
+reports/results/v10/final_test_v10_top500.csv

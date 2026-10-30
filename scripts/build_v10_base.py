@@ -127,6 +127,7 @@ old["ruc_old_fila"] = normalizar_ruc_historico(
 
 old = old.rename(
     columns={
+
         "NOMBRE": "nombre_old",
         "PLAN_CONTABLE": "plan_contable_old",
         "ACTIVO_TOTAL": "activos_old",

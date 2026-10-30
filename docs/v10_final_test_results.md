@@ -208,6 +208,10 @@ Dentro de las 200 empresas con mayor score del TEST conjunto:
 
 **se encontró 1 futuro emisor.**
 
+El primer caso positivo del ranking conjunto aparece en la posición:
+
+**165**
+
 Esto representa:
 
 - Precision@200: **0,5 %**
@@ -373,7 +377,7 @@ Los resultados muestran una disminución entre ambos periodos:
 - 2022: **4 positivos**
 - 2023: **1 positivo**
 
-Esta diferencia constituye una señal relevante de posible variación temporal en la relación entre las variables financieras y la probabilidad posterior de emisión.
+Esta diferencia constituye una señal relevante de posible variación temporal en la relación entre las variables financieras y la ocurrencia posterior del evento objetivo.
 
 ---
 
@@ -599,19 +603,50 @@ La siguiente etapa del proyecto deberá centrarse en comprender el comportamient
 
 ---
 
-## 32. Próximas etapas
+---
 
-Después del cierre de v10 se realizarán análisis independientes de:
+## 32. Evolución posterior a la evaluación TEST
 
-1. explicabilidad del modelo;
-2. importancia de variables;
-3. estabilidad temporal;
-4. posible concept drift o data drift;
-5. comportamiento del score entre años;
-6. sesgos y riesgos;
-7. criterios operativos de uso;
-8. diseño del ranking comercial;
-9. monitoreo;
-10. documentación académica y presentación final.
+Después del cierre del experimento de modelado v10 se desarrollaron actividades complementarias que no modificaron retrospectivamente el modelo ni sus resultados oficiales.
 
-Estas actividades no modificarán retrospectivamente los resultados oficiales obtenidos por v10.
+Entre ellas:
+
+1. análisis de explicabilidad mediante SHAP;
+2. análisis complementario mediante LIME;
+3. evaluación de importancia global y explicaciones locales;
+4. análisis de riesgo y comportamiento segmentado;
+5. evaluación específica de sensibilidad, faltantes y valores extremos;
+6. evaluación de influencia de variables asociadas al tamaño empresarial;
+7. construcción del ranking operativo con información financiera 2023;
+8. construcción de perfiles de emisores históricos comparables;
+9. implementación de PostgreSQL, FastAPI y frontend React;
+10. ejecución de las pruebas finales P01–P06;
+11. preparación de evidencias reproducibles para defensa;
+12. documentación del producto y de su arquitectura.
+
+Estas actividades se realizaron manteniendo congelados:
+
+- el feature set;
+- el algoritmo;
+- los hiperparámetros;
+- el conjunto TRAIN;
+- el conjunto TEST;
+- la configuración `C3_CONSERVATIVE`;
+- los resultados oficiales de evaluación.
+
+Las mejoras futuras del modelo deberán desarrollarse como una nueva versión independiente, por ejemplo:
+
+`v11`
+
+Entre las líneas futuras se consideran:
+
+- monitoreo de data drift y concept drift;
+- análisis periódico de estabilidad del score;
+- evaluación de nuevas cohortes temporales;
+- estudio de estrategias para mejorar recuperación Top-K;
+- segmentación adicional por tamaño empresarial;
+- incorporación controlada de nuevas variables;
+- retroalimentación de especialistas;
+- evaluación del valor comercial real de los prospectos priorizados.
+
+Los resultados de TEST v10 no serán utilizados para reajustar retrospectivamente el modelo.

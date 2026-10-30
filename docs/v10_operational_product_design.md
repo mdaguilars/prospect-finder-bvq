@@ -3,7 +3,7 @@
 
 ### 1. Propósito
 
-Prospect Finder BVQ es una herramienta de apoyo analítico para el proceso de prospección de potenciales emisores de la Bolsa de Valores Quito.
+Prospect Finder BVQ es una herramienta de apoyo analítico para el proceso de prospección de potenciales emisores de la Bolsa de Valores de Quito.
 
 Su propósito es permitir que los especialistas puedan analizar un universo amplio de empresas, priorizar aquellas que presentan mayor afinidad según el modelo desarrollado, revisar sus principales características financieras, comprender los factores asociados con el score y contrastar su perfil con emisores históricos.
 
@@ -26,13 +26,13 @@ Tampoco constituye:
 - evaluación regulatoria;
 - aprobación de una empresa como emisor.
 
-La decisión comercial final permanece en los especialistas de la Bolsa de Valores Quito.
+La decisión comercial final permanece en los especialistas de la Bolsa de Valores de Quito.
 
 ---
 
 ### 2. Usuario principal
 
-El usuario principal del prototipo es un especialista autorizado de la Bolsa de Valores Quito involucrado en actividades de:
+El usuario principal del prototipo es un especialista autorizado de la Bolsa de Valores de Quito involucrado en actividades de:
 
 - prospección;
 - desarrollo de mercado;
@@ -183,24 +183,30 @@ Los principales campos disponibles son:
 
 ### 9. Clasificación visual de prioridad
 
-La primera versión funcional no incorpora todavía categorías discretas como:
+La interfaz incorpora niveles relativos de prioridad derivados de la posición percentil dentro del ranking.
 
-- Muy alta;
-- Alta;
-- Media;
-- Baja.
+Entre los niveles utilizados para facilitar la interpretación comercial se encuentran referencias como:
 
-Actualmente la interfaz presenta directamente:
+- Top 1 %;
+- Top 5 %;
+- Top 10 %;
+- otros niveles relativos de posicionamiento.
+
+Estas categorías:
+
+- se calculan sobre la posición relativa dentro del universo;
+- pertenecen únicamente a la capa de presentación;
+- no modifican el score original;
+- no constituyen una nueva predicción;
+- no representan probabilidades de emisión.
+
+La interfaz mantiene además:
 
 - posición del ranking;
 - Índice de Afinidad Bursátil;
 - percentil.
 
-Una futura clasificación visual deberá calcularse sobre percentiles del ranking.
-
-No deberá interpretarse como probabilidad.
-
-La clasificación visual pertenecería únicamente a la capa de presentación y no modificaría el resultado del modelo.
+La clasificación visual permite que el especialista interprete con mayor rapidez la posición relativa de una empresa dentro del universo prospectable.
 
 ---
 
@@ -389,6 +395,7 @@ La ficha se organiza en bloques de:
 - perfil financiero;
 - explicación;
 - emisores comparables;
+- próximo paso comercial;
 - advertencias de interpretación.
 
 ---
@@ -973,6 +980,8 @@ La primera versión funcional contiene:
 | Afinidad | Score, percentil y posición |
 | Explicabilidad | Factores SHAP bajo demanda |
 | Emisores comparables | Hasta cinco perfiles históricos similares |
+| Prioridad relativa | Nivel Top derivado del percentil |
+| Próximo paso comercial | Orientación para continuar el análisis humano |
 | Calidad | Indicador resumido de disponibilidad |
 | Modelo | Versión y configuración v10 |
 | Advertencias | Limitaciones de interpretación |
@@ -1065,6 +1074,17 @@ No deben convertirse automáticamente en reglas de exclusión.
 
 Provincia no es una variable predictiva del modelo.
 
+Como evidencia complementaria, la prueba P06 evaluó explicaciones locales en empresas de distinto tamaño y evidenció una influencia relevante de variables asociadas a escala empresarial.
+
+Este resultado no constituye por sí mismo evidencia de discriminación o sesgo injusto, pero justifica mantener:
+
+- análisis segmentado por tamaño empresarial;
+- monitoreo periódico del ranking;
+- revisión de cambios en la importancia de variables de escala;
+- supervisión humana.
+
+La prueba P06 no fue utilizada para modificar retrospectivamente el modelo v10.
+
 ---
 
 ### 56. Consideración temporal
@@ -1153,10 +1173,13 @@ o una versión posterior.
 | SHAP web | Implementado |
 | Build frontend | Correcto |
 | Lint frontend | 0 warnings / 0 errors |
-| Pruebas automatizadas frontend | Pendientes |
+| Pruebas automatizadas frontend | 4 aprobadas |
+| Pruebas funcionales finales | B37 completado — 10 de 10 aprobadas |
+| Clasificación Top / prioridad relativa | Implementada |
+| Próximo paso comercial | Implementado |
 | Autenticación institucional | Pendiente |
 | Monitoreo operacional completo | Pendiente |
-| Validación con especialistas | Pendiente |
+| Validación con especialistas | Completada — B36, 4 participantes |
 
 ---
 
@@ -1208,32 +1231,83 @@ Adicionalmente se ejecutaron verificaciones manuales desde navegador sobre:
 - comparables;
 - SHAP positivo y negativo.
 
-Las pruebas automatizadas específicas del frontend todavía están pendientes.
+La suite automatizada específica del frontend registra:
 
-Estas validaciones técnicas no sustituyen la validación funcional con especialistas.
+`4 pruebas aprobadas`
+
+También se ejecutó B37 — Pruebas funcionales finales, con resultado:
+
+`10 de 10 pruebas funcionales aprobadas`
+
+Estas validaciones técnicas complementan, pero no sustituyen, la validación funcional y comercial con especialistas.
 
 ---
 
 ### 61. Validación con especialistas
 
-La propuesta del Capstone requiere validación funcional con al menos:
+La validación funcional y comercial B36 fue completada con:
 
-`2 especialistas de la BVQ`
+`4 participantes`
 
-Esta actividad todavía debe realizarse.
+superando el mínimo de dos especialistas previsto para el Capstone.
 
-La validación deberá revisar aspectos como:
+La evaluación incluyó perfiles comerciales, financieros y contables.
+
+Resultados principales:
+
+| Indicador | Resultado |
+|---|---:|
+| Promedio global Q04–Q28 | 4,82 / 5 |
+| Experiencia general | 5,00 / 5 |
+| Utilidad para prospección | 4,75 / 5 |
+| Información suficiente para decidir una revisión adicional | 100 % |
+| Revisaría con mayor profundidad una empresa prioritaria | 100 % |
+| Recomendaría utilizar la herramienta | 100 % |
+
+La validación confirmó favorablemente aspectos relacionados con:
 
 - utilidad del ranking;
-- claridad de los indicadores;
-- utilidad de los filtros;
-- comprensión del score;
-- utilidad de SHAP;
-- relevancia de comparables;
-- claridad de advertencias;
-- facilidad de navegación.
+- claridad de la interfaz;
+- comprensión de los niveles Top;
+- utilidad de búsqueda y filtros;
+- relevancia de la información financiera;
+- comprensión de las razones que explican la prioridad;
+- utilidad de emisores históricos comparables;
+- orientación del próximo paso comercial;
+- capacidad para reducir el universo de revisión;
+- intención de uso.
 
-Los resultados deberán registrarse como evidencia del proyecto.
+Las principales recomendaciones obtenidas se orientan a:
+
+- incorporar liquidez;
+- agregar datos de contacto;
+- permitir notas comerciales;
+- incluir información histórica de emisiones;
+- segmentar adicionalmente por tamaño y actividad económica;
+- enriquecer comparables con tipo y valor de papeles emitidos;
+- incorporar información sobre impagos y calificaciones;
+- evolucionar hacia funcionalidades tipo CRM;
+- explorar simulaciones financieras.
+
+Estas recomendaciones se registran como oportunidades de evolución del producto.
+
+No modifican retrospectivamente:
+
+- el modelo v10;
+- el Feature Set;
+- el target;
+- los hiperparámetros;
+- el split temporal;
+- los resultados TEST;
+- el ranking operacional.
+
+La evidencia completa se encuentra en:
+
+`docs/v10_specialist_validation.md`
+
+Por tanto:
+
+**B36 — COMPLETADO**
 
 ---
 
@@ -1324,30 +1398,55 @@ Para el usuario se priorizarán expresiones como:
 
 ---
 
-### 66. Resultado actual y cierre esperado
+### 66. Resultado actual y cierre del producto
 
-Prospect Finder BVQ ya permite que un especialista explore:
+Prospect Finder BVQ permite que un especialista explore:
 
 `137.156 empresas`
 
 y reduzca progresivamente el universo de análisis utilizando:
 
-`Ranking + Búsqueda + Filtros + Información financiera + Explicabilidad + Comparables`
+`Ranking + Búsqueda + Filtros + Información financiera + Explicabilidad + Comparables + Prioridad relativa + Próximo paso comercial`
 
 El flujo funcional es:
 
 `Explorar → Filtrar → Priorizar → Comprender → Comparar → Analizar → Decidir`
 
-Para completar el cierre del producto permanecen principalmente:
+La solución cuenta con evidencia técnica y funcional de cierre:
 
-- pruebas automatizadas específicas del frontend;
-- pruebas funcionales finales estructuradas;
-- validación con al menos dos especialistas de la BVQ;
-- componentes pendientes de MLOps;
-- monitoreo operacional;
-- documentación e informe final.
+- backend: `12 pruebas aprobadas`;
+- frontend: `4 pruebas automatizadas aprobadas`;
+- build frontend correcto;
+- lint frontend con `0 warnings` y `0 errors`;
+- B37: `10 de 10 pruebas funcionales aprobadas`;
+- B36: validación con `4 participantes`;
+- promedio global de validación: `4,82 / 5`;
+- experiencia general: `5,00 / 5`;
+- utilidad para prospección: `4,75 / 5`.
+
+Por tanto, para efectos del Capstone:
+
+**el producto funcional se considera implementado, probado y validado.**
+
+Los siguientes elementos corresponden a evolución posterior hacia un producto institucional o un entorno de producción y no constituyen bloqueantes para el cierre del prototipo:
+
+- autenticación y autorización institucional;
+- monitoreo operacional formal;
+- integración de datos de contacto;
+- notas y seguimiento tipo CRM;
+- nuevos indicadores como liquidez;
+- información histórica ampliada de emisiones;
+- segmentación adicional;
+- enriquecimiento de comparables;
+- dockerización completa de servicios;
+- DVC;
+- MLflow;
+- observabilidad y automatización de despliegues.
 
 La finalidad del sistema es mejorar la capacidad de prospección y reducir el esfuerzo requerido para analizar manualmente un universo empresarial amplio.
 
 Prospect Finder BVQ permanece como herramienta de apoyo analítico y comercial, no como sistema automatizado de decisión.
 
+El principio final es:
+
+`Modelo → Priorización → Explicación → Especialista → Decisión`

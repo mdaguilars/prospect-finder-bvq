@@ -106,7 +106,7 @@ El evento se utiliza exclusivamente para:
 
 No se presenta como variable de entrada en el producto operacional.
 
-### 3.3 Bolsa de Valores Quito
+### 3.3 Bolsa de Valores de Quito
 
 La información de la BVQ se utiliza como fuente complementaria para:
 
@@ -272,9 +272,9 @@ No se utiliza como predictor para evitar que el modelo aprenda patrones asociado
 | Valor | Período |
 |---|---|
 | `TRAIN` | 2012–2018 |
-| `EMBARGO1` | 2019 |
+| `EMBARGO_1` | 2019 |
 | `VALIDATION` | 2020 |
-| `EMBARGO2` | 2021 |
+| `EMBARGO_2` | 2021 |
 | `TEST` | 2022–2023 |
 
 **Uso como predictor:** no.
@@ -1141,7 +1141,7 @@ La capa de presentación utiliza etiquetas comprensibles.
 
 # 27. Campos visibles en la interfaz
 
-La primera versión funcional del frontend presenta principalmente:
+La versión funcional del frontend presenta principalmente:
 
 ### Ranking
 
@@ -1151,6 +1151,7 @@ La primera versión funcional del frontend presenta principalmente:
 - tipo de compañía;
 - Índice de Afinidad Bursátil;
 - percentil;
+- nivel relativo de prioridad, mediante referencias como Top 1 %, Top 5 % y Top 10 %;
 - similitud con emisor;
 - calidad.
 
@@ -1163,13 +1164,21 @@ La primera versión funcional del frontend presenta principalmente:
 - ranking;
 - score;
 - percentil;
+- nivel relativo de prioridad;
 - activos;
 - patrimonio;
 - ingresos por ventas;
 - empleados;
 - factores SHAP;
 - comparables históricos;
+- próximo paso comercial;
 - advertencias de interpretación.
+
+Los niveles Top son una clasificación de presentación derivada de la posición relativa de la empresa dentro del ranking.
+
+No representan una probabilidad adicional ni modifican el score generado por el modelo.
+
+El próximo paso comercial funciona como orientación para continuar el análisis humano y no constituye una decisión automatizada.
 
 No todos los campos existentes en PostgreSQL deben mostrarse simultáneamente.
 
@@ -1344,17 +1353,17 @@ La calidad no debe utilizarse como regla automática de rechazo de una empresa.
 
 ---
 
-# 36. Variables futuras
+# 36. Variables y datos futuros
 
 El modelo v10 se encuentra congelado.
 
 Por tanto, variables nuevas no deben incorporarse retroactivamente.
 
-Posibles ampliaciones deberán evaluarse en una nueva versión, por ejemplo:
+Cualquier cambio que modifique el vector predictivo deberá evaluarse en una nueva versión, por ejemplo:
 
 `v11`
 
-Entre ellas podrían considerarse:
+Entre las posibles ampliaciones predictivas podrían considerarse:
 
 - tendencias multianuales;
 - promedios móviles;
@@ -1364,7 +1373,31 @@ Entre ellas podrían considerarse:
 - nuevas fuentes empresariales;
 - información interna BVQ con justificación metodológica.
 
-Toda nueva variable deberá documentar:
+La validación con especialistas B36 también identificó oportunidades de enriquecimiento del producto, entre ellas:
+
+- indicador de liquidez;
+- datos de contacto;
+- información histórica de emisiones;
+- tipo y valor de papeles emitidos por empresas comparables;
+- segmentación adicional por tamaño y actividad económica;
+- información sobre impagos y calificaciones de emisiones comparables;
+- notas de seguimiento comercial;
+- funcionalidades tipo CRM;
+- simulaciones financieras relacionadas con una potencial emisión.
+
+Estas recomendaciones no implican que todos esos datos deban convertirse en predictores.
+
+Cada elemento deberá definirse según su función:
+
+- predictor potencial;
+- filtro;
+- dato descriptivo;
+- información comercial;
+- atributo de comparables;
+- funcionalidad de seguimiento;
+- apoyo para análisis humano.
+
+Toda nueva variable predictiva deberá documentar:
 
 - fuente;
 - fecha de disponibilidad;
@@ -1375,6 +1408,8 @@ Toda nueva variable deberá documentar:
 - riesgo de leakage;
 - justificación;
 - efecto sobre reproducibilidad.
+
+Las mejoras exclusivamente operacionales o de interfaz deberán mantenerse separadas del Feature Set del modelo.
 
 ---
 
@@ -1414,12 +1449,33 @@ El diccionario vigente documenta:
 - exclusión de `provincia` del modelo;
 - ranking operacional;
 - score y percentil;
+- niveles relativos de prioridad;
 - campos de calidad;
 - motor de similitud;
 - tablas PostgreSQL;
 - campos SHAP;
-- campos visibles en el frontend.
+- campos visibles en el frontend;
+- próximo paso comercial;
+- oportunidades de enriquecimiento identificadas en la validación con especialistas.
+
+El prototipo asociado a este diccionario se encuentra implementado, probado y validado.
+
+Evidencia de cierre:
+
+| Evidencia | Resultado |
+|---|---:|
+| Pruebas automáticas API | 12 aprobadas |
+| Pruebas automatizadas frontend | 4 aprobadas |
+| Pruebas funcionales B37 | 10 de 10 aprobadas |
+| Participantes validación B36 | 4 |
+| Promedio global B36 | 4,82 / 5 |
+| Experiencia general B36 | 5,00 / 5 |
+| Utilidad para prospección B36 | 4,75 / 5 |
 
 La referencia metodológica vigente es v10.
+
+El modelo `v10_hgb_financial_c3` permanece congelado.
+
+Las recomendaciones posteriores de usuarios se registran como evolución del producto y no modifican retrospectivamente las 25 variables, el target, los hiperparámetros, el split temporal ni los resultados TEST.
 
 Los componentes correspondientes al antiguo MVP y Baseline v1 se conservan únicamente como evidencia histórica del proceso de desarrollo y no deben utilizarse para describir el modelo final.

@@ -5,6 +5,8 @@
 **Estado:** CONGELADO  
 **Fecha:** octubre de 2026
 
+> **Nota de vigencia:** Este documento registra el congelamiento del split temporal v10 antes de la selección del modelo final y antes de abrir TEST para evaluación predictiva. Conserva intencionalmente expresiones como “TEST permanece cerrado” y referencias a etapas futuras, porque forman parte de la evidencia metodológica de que la partición temporal fue definida previamente. Posteriormente, el modelo final `v10_hgb_financial_c3` fue congelado y TEST 2022–2023 fue evaluado una sola vez conforme al protocolo. Para los resultados finales deben consultarse `docs/v10_final_candidate_freeze.md`, `docs/v10_final_test_protocol.md`, `docs/v10_final_test_results.md` y el `README.md`.
+
 ---
 
 ## 1. Propósito

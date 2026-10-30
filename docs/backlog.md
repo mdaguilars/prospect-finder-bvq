@@ -14,7 +14,7 @@ El backlog se construye a partir de:
 - compromisos del proyecto de titulación;
 - arquitectura del prototipo;
 - requerimientos de validación;
-- relación del sistema con el proceso de prospección de la Bolsa de Valores Quito.
+- relación del sistema con el proceso de prospección de la Bolsa de Valores de Quito.
 
 Su objetivo es mantener claridad sobre:
 
@@ -40,6 +40,7 @@ Los estados utilizados son:
 - `Completado`
 - `Completado inicialmente`
 - `Descartado para v10`
+- `Evolución futura`
 
 ## Interpretación
 
@@ -54,6 +55,8 @@ Los estados utilizados son:
 **Completado inicialmente:** existe implementación funcional, pero podría ampliarse posteriormente.
 
 **Descartado para v10:** la actividad no se incorporará al modelo v10 congelado. Podrá reconsiderarse en una futura versión.
+
+**Evolución futura:** la actividad puede aportar a un despliegue productivo, MLOps o a una nueva versión, pero no es bloqueante para el cierre académico y funcional del Capstone.
 
 ---
 
@@ -143,9 +146,39 @@ El estado actual es:
 
 **IMPLEMENTADO Y VALIDADO TÉCNICAMENTE**
 
-### Pruebas funcionales finales
+### Pruebas funcionales finales B37
 
 **10 DE 10 APROBADAS**
+
+### Pruebas finales P01–P06
+
+**EJECUTADAS Y DOCUMENTADAS**
+
+P01–P04 no evidenciaron fallos en los controles evaluados.
+
+P05 identificó una limitación en recuperación temprana Top-K.
+
+P06 evidenció influencia relevante de variables de escala.
+
+### Validación con especialistas B36
+
+**COMPLETADA**
+
+Participantes:
+
+`4`
+
+Promedio global:
+
+`4,82 / 5`
+
+Experiencia general:
+
+`5,00 / 5`
+
+Utilidad para prospección:
+
+`4,75 / 5`
 
 ---
 
@@ -278,11 +311,15 @@ Después de TEST no se realizó retuning.
 
 Ranking combinado:
 
+- Top 20: 0 positivos;
 - Top 50: 0 positivos;
 - Top 100: 0 positivos;
-- Top 200: 1 positivo.
+- Top 200: 1 positivo;
+- primer positivo: posición 165.
 
-El resultado evidencia que el modelo conserva capacidad de ordenamiento general, pero su utilidad debe interpretarse como priorización y no como predicción determinística.
+El resultado evidencia que el modelo conserva capacidad de ordenamiento general, pero presenta una limitación explícita en recuperación temprana Top-K.
+
+Su utilidad debe interpretarse como priorización y no como predicción determinística.
 
 ---
 
@@ -299,17 +336,17 @@ El resultado evidencia que el modelo conserva capacidad de ordenamiento general,
 | B07 | Alta | Fortalecer control temporal | Completado |
 | B08 | Media | Evaluar Random Forest | Descartado para v10 |
 | B09 | Media | Estrategias adicionales de desbalance | Descartado para v10 |
-| B10 | Media | Ampliar Top-K según capacidad comercial | Pendiente |
+| B10 | Baja | Ajustar tamaños Top-K a capacidad comercial | Evolución futura |
 | B11 | Alta | Analizar estabilidad temporal | Completado |
 | B12 | Alta | Integrar fuentes para v10 | Completado |
 | B13 | Media | Evaluar calibración probabilística | Descartado para v10 |
 | B14 | Alta | Definir Índice de Afinidad Bursátil | Completado |
 | B15 | Alta | Incorporar interpretabilidad | Completado |
-| B16 | Media | Formalizar diccionario de datos | Completado inicialmente |
+| B16 | Media | Formalizar diccionario de datos | Completado |
 | B17 | Media | Evaluar red neuronal MLP | Completado |
-| B18 | Alta | Desarrollar prototipo web funcional | Completado inicialmente |
-| B19 | Media | Implementar monitoreo de drift | Pendiente |
-| B20 | Media | Evaluar TensorFlow/Keras | En análisis |
+| B18 | Alta | Desarrollar prototipo web funcional | Completado |
+| B19 | Media | Implementar monitoreo de drift | Evolución futura |
+| B20 | Media | Evaluar TensorFlow/Keras | Descartado para v10 |
 | B21 | Alta | Evaluar sesgo y desempeño segmentado | Completado |
 | B22 | Alta | Construir Dataset / Feature Set v10 | Completado |
 | B23 | Alta | Ejecutar selección final antes de TEST | Completado |
@@ -321,16 +358,17 @@ El resultado evidencia que el modelo conserva capacidad de ordenamiento general,
 | B29 | Alta | Implementar SHAP operacional | Completado |
 | B30 | Alta | Implementar pruebas automáticas API | Completado |
 | B31 | Alta | Construir frontend web | Completado |
-| B32 | Media | Dockerizar FastAPI | Pendiente |
-| B33 | Media | Implementar migraciones Alembic | Pendiente |
-| B34 | Alta | Incorporar DVC | Pendiente |
-| B35 | Alta | Incorporar MLflow | Pendiente |
-| B36 | Alta | Validar con al menos dos especialistas BVQ | Pendiente |
+| B32 | Media | Dockerizar FastAPI y frontend | Evolución futura |
+| B33 | Media | Implementar migraciones Alembic | Evolución futura |
+| B34 | Media | Incorporar DVC | Evolución futura |
+| B35 | Media | Incorporar MLflow | Evolución futura |
+| B36 | Alta | Validar con especialistas BVQ | Completado |
 | B37 | Alta | Ejecutar pruebas funcionales finales | Completado |
-| B38 | Alta | Preparar documentación e informe final | En desarrollo |
+| B38 | Alta | Preparar documentación e informe final | Completado |
 | B39 | Alta | Preparar presentación final | Pendiente |
-| B40 | Baja | Autenticación institucional | Pendiente |
+| B40 | Baja | Autenticación institucional | Evolución futura |
 | B41 | Alta | Implementar pruebas automatizadas frontend | Completado |
+| B42 | Alta | Ejecutar pruebas finales P01–P06 | Completado |
 
 ---
 
@@ -536,36 +574,37 @@ Podrán explorarse en una nueva versión.
 
 ---
 
-# 20. B10 — Ampliar Top-K según capacidad comercial
+# 20. B10 — Ajustar Top-K según capacidad comercial
 
-**Prioridad:** Media
+**Prioridad:** Baja
 
-**Estado:** Pendiente
+**Estado:** Evolución futura
 
-Durante evaluación se utilizaron principalmente:
+Durante la evaluación se utilizaron principalmente:
 
+- Top 20;
 - Top 50;
 - Top 100;
 - Top 200.
 
-El producto permite explorar el universo completo mediante paginación y filtros.
+El producto permite explorar el universo completo mediante paginación, filtros, percentiles y niveles relativos de prioridad.
 
-### Pendiente
+La validación B36 confirmó utilidad comercial general del producto, pero no estableció un único tamaño operativo de lista que deba fijarse como regla permanente.
 
-Durante la validación con especialistas se deberá determinar qué tamaños de lista son realmente manejables comercialmente.
+### Decisión
 
-Posibles segmentos:
+No bloquear el cierre del Capstone por esta definición.
+
+En una etapa productiva podrá acordarse con el área comercial una cadencia de revisión y tamaños de lista manejables, por ejemplo:
 
 - Top 25;
 - Top 50;
 - Top 100;
 - Top 200;
-- Top 500.
+- Top 500;
+- segmentos por percentil.
 
-### Criterio de aceptación
-
-Obtener evidencia de usuarios BVQ sobre el volumen de prospectos que puede analizarse periódicamente.
-
+La elección deberá responder a capacidad real de seguimiento y no modificar el score del modelo.
 ---
 
 # 21. B11 — Estabilidad temporal
@@ -712,25 +751,35 @@ SHAP reprodujo los scores de los casos evaluados dentro de tolerancia numérica.
 
 **Prioridad:** Media
 
-**Estado:** Completado inicialmente
+**Estado:** Completado
 
 Documento:
 
 `docs/diccionario_datos.md`
 
-Existe documentación de variables y fuentes.
+El diccionario fue actualizado para reflejar:
 
-### Pendiente de cierre documental
+- dataset v10 2012–2023;
+- 25 predictores del modelo final;
+- variables actuales y `t-1`;
+- ratios y crecimientos;
+- banderas de calidad;
+- exclusión de `provincia` del modelo;
+- ranking operacional;
+- score y percentil;
+- niveles relativos de prioridad;
+- tablas PostgreSQL;
+- motor de similitud;
+- campos SHAP;
+- campos del frontend;
+- próximo paso comercial;
+- recomendaciones de evolución identificadas en B36.
 
-Antes de la entrega final conviene verificar que el diccionario refleje:
+### Criterio de aceptación
 
-- feature set v10;
-- variables operacionales;
-- campos administrativos;
-- campos de auditoría.
+Cumplido.
 
-Esta actualización documental no modifica el modelo.
-
+La actualización documental no modifica el modelo congelado.
 ---
 
 # 27. B17 — MLP
@@ -753,9 +802,9 @@ No seleccionar MLP como modelo final.
 
 **Prioridad:** Alta
 
-**Estado:** Completado inicialmente
+**Estado:** Completado
 
-El prototipo web ya dispone de un flujo funcional integrado:
+El prototipo web dispone de un flujo funcional integrado:
 
 `PostgreSQL → FastAPI → React → usuario`
 
@@ -774,14 +823,16 @@ y:
 - indicadores financieros;
 - Índice de Afinidad Bursátil;
 - percentil;
+- niveles relativos de prioridad;
 - explicabilidad SHAP bajo demanda;
 - emisores comparables;
 - calidad de datos;
+- próximo paso comercial;
 - información del modelo.
 
 ### Validación realizada
 
-Desde navegador se verificó:
+Se verificó:
 
 - carga de `137.156` empresas;
 - `24` provincias;
@@ -790,102 +841,50 @@ Desde navegador se verificó:
 - filtros;
 - ficha financiera;
 - comparables;
-- factores SHAP positivos y negativos.
+- factores SHAP positivos y negativos;
+- pruebas automatizadas frontend: `4 passed`;
+- pruebas funcionales B37: `10 de 10 aprobadas`;
+- validación B36 con cuatro especialistas.
 
 ### Criterio de cierre
 
-La funcionalidad principal del prototipo está implementada.
+Cumplido.
 
-Se mantiene como `Completado inicialmente` porque todavía falta:
+La funcionalidad principal del prototipo está implementada, probada y validada para el alcance del Capstone.
 
-- validación real con al menos dos especialistas de la BVQ.
-
-Las pruebas automatizadas específicas del frontend y las pruebas funcionales finales estructuradas ya se encuentran implementadas y validadas.
-
-Estas actividades se controlan por separado y no implican reabrir el desarrollo básico del frontend.
-
+Las mejoras futuras de experiencia de usuario no reabren esta actividad.
 ---
 
 # 29. B19 — Monitoreo de drift
 
 **Prioridad:** Media
 
-**Estado:** Pendiente
+**Estado:** Evolución futura
 
-Deberá contemplar:
+Un despliegue productivo debería contemplar monitoreo sobre datos, features, score, ranking y desempeño cuando existan labels maduros.
 
-### Datos
+### Decisión
 
-- missingness;
-- nuevas categorías;
-- cobertura;
-- distribución.
-
-### Features
-
-- distribución;
-- PSI;
-- cambios estructurales.
-
-### Score
-
-- media;
-- mediana;
-- percentiles;
-- concentración.
-
-### Ranking
-
-- composición;
-- tipo societario;
-- tamaño;
-- provincia.
-
-### Desempeño
-
-Cuando existan labels maduros:
-
-- PR-AUC;
-- ROC-AUC;
-- Precision@K;
-- Recall@K;
-- Lift@K.
-
+El monitoreo continuo corresponde a una etapa productiva posterior y no constituye un pendiente bloqueante del Capstone.
 ---
 
 # 30. B20 — TensorFlow/Keras
 
 **Prioridad:** Media
 
-**Estado:** En análisis
+**Estado:** Descartado para v10
 
 TensorFlow/Keras fue contemplado dentro de las tecnologías potenciales del planteamiento inicial.
 
-Ya se evaluó una alternativa neuronal mediante MLP.
+El proyecto sí evaluó una alternativa neuronal mediante MLP.
 
 El modelo v10 se encuentra congelado y TEST ya fue abierto.
 
-### Regla
+### Decisión
 
-No se debe incorporar un experimento TensorFlow/Keras dentro del proceso de selección v10 después de observar TEST.
+No incorporar un nuevo experimento TensorFlow/Keras dentro del ciclo v10 después de observar TEST.
 
-### Decisión pendiente
-
-Revisar el requerimiento académico final.
-
-Si la rúbrica exige explícitamente una implementación con TensorFlow/Keras, deberá documentarse como:
-
-**experimento complementario posterior**
-
-sin modificar:
-
-- modelo v10;
-- hiperparámetros;
-- ranking operacional;
-- conclusión de TEST.
-
-Si la exigencia corresponde únicamente a comparar aprendizaje automático clásico frente a una red neuronal, el experimento MLP ya proporciona esa comparación conceptual.
-
+Si una futura actividad académica exigiera específicamente TensorFlow/Keras, deberá documentarse como experimento complementario independiente o como parte de una nueva versión metodológica.
 ---
 
 # 31. B21 — Sesgo y desempeño segmentado
@@ -1362,7 +1361,7 @@ Se verificó desde navegador el flujo:
 
 La actividad de construcción del frontend se considera completada.
 
-Las pruebas finales y la validación con especialistas permanecen como actividades independientes.
+Las pruebas automatizadas, las pruebas funcionales B37 y la validación con especialistas B36 fueron ejecutadas como actividades independientes y se encuentran cerradas.
 
 
 # 41.1 B41 — Pruebas automatizadas frontend
@@ -1464,146 +1463,135 @@ La cobertura deberá ampliarse progresivamente cuando se incorporen nuevas vista
 
 ---
 
-# 42. B32 — Dockerizar FastAPI
+# 41.2 B42 — Pruebas finales P01–P06
 
-**Prioridad:** Media
+**Prioridad:** Alta
 
-**Estado:** Pendiente
+**Estado:** Completado
 
-Actualmente Docker ejecuta PostgreSQL.
+Se ejecutó una batería adicional de pruebas sobre el modelo final y su comportamiento operacional.
 
-### Objetivo
+Evidencia:
 
-Añadir FastAPI al entorno contenerizado.
+`reports/live_tests/ACTA_PRUEBAS_V10.md`
+
+`reports/live_tests/HOJA_DEFENSA_V10.md`
+
+### Resultados
+
+- P01 — Consistencia: **CUMPLE**;
+- P02 — Fuga temporal: **CUMPLE**;
+- P03 — Faltantes y valores atípicos: **CUMPLE**;
+- P04 — Robustez ±5 %: **CUMPLE**;
+- P05 — Utilidad Top-K: **CUMPLE CON LIMITACIÓN**;
+- P06 — Explicabilidad y escala: **CUMPLE CON OBSERVACIÓN**.
+
+En P05:
+
+- Top 20: 0 positivos;
+- Top 50: 0 positivos;
+- Top 100: 0 positivos;
+- Top 200: 1 positivo;
+- primer positivo: posición 165.
+
+P06 confirmó reconstrucción SHAP dentro de tolerancia numérica y evidenció influencia relevante de variables de escala en los casos evaluados.
 
 ### Criterio de aceptación
 
-Poder levantar al menos:
+Cumplido con las limitaciones y observaciones documentadas.
 
-`PostgreSQL + FastAPI`
+No se realizó retuning posterior a estas pruebas.
 
-mediante Docker Compose.
+---
 
-El modelo y archivos necesarios deberán estar disponibles de manera controlada.
+# 42. B32 — Dockerizar FastAPI y frontend
 
+**Prioridad:** Media
+
+**Estado:** Evolución futura
+
+Actualmente Docker ejecuta PostgreSQL mediante `compose.yaml`.
+
+La contenerización completa de FastAPI y frontend corresponde a una evolución productiva futura y no es bloqueante para el cierre del Capstone.
 ---
 
 # 43. B33 — Alembic
 
 **Prioridad:** Media
 
-**Estado:** Pendiente
+**Estado:** Evolución futura
 
-Alembic está instalado.
+Alembic se encuentra instalado, pero la versión funcional validada no utiliza todavía migraciones formales.
 
-Todavía no se configuraron migraciones.
-
-### Objetivo
-
-Versionar la estructura de PostgreSQL.
-
-### Criterio de aceptación
-
-Disponer de:
-
-- configuración Alembic;
-- migración inicial;
-- posibilidad de reproducir el esquema desde cero.
-
+Su incorporación corresponde a una mejora productiva futura y no es requisito bloqueante del Capstone.
 ---
 
 # 44. B34 — DVC
 
-**Prioridad:** Alta
+**Prioridad:** Media
 
-**Estado:** Pendiente
+**Estado:** Evolución futura
 
-### Objetivo
+DVC puede fortalecer la reproducibilidad de datasets, transformaciones y artefactos.
 
-Fortalecer la reproducibilidad de:
+La trazabilidad actual de v10 se sustenta en scripts reproducibles, hashes, datasets identificados, documentación de congelamiento, Git/GitHub y el modelo serializado.
 
-- datasets;
-- transformaciones;
-- artefactos de datos.
-
-### Restricción
-
-No publicar información sensible en repositorios remotos no autorizados.
-
-### Criterio de aceptación
-
-Poder identificar de forma reproducible qué versión de datos corresponde al modelo v10.
-
+DVC puede añadirse posteriormente como mejora MLOps.
 ---
 
 # 45. B35 — MLflow
 
-**Prioridad:** Alta
+**Prioridad:** Media
 
-**Estado:** Pendiente
+**Estado:** Evolución futura
 
-### Objetivo
+MLflow puede utilizarse en una futura madurez MLOps para registrar experimentos, parámetros, métricas, artefactos y modelos.
 
-Registrar formalmente:
+La selección de v10 ya se encuentra documentada mediante protocolos, resultados, archivos de métricas, Git y el modelo final congelado.
 
-- experimentos;
-- parámetros;
-- métricas;
-- artefactos;
-- modelo seleccionado.
-
-### Criterio de aceptación
-
-Registrar al menos:
-
-- modelo final v10;
-- parámetros;
-- principales métricas;
-- identificador del experimento.
-
-MLflow no deberá utilizarse para modificar retrospectivamente la selección de v10.
-
+No constituye un requisito bloqueante del Capstone.
 ---
 
 # 46. B36 — Validación con especialistas BVQ
 
 **Prioridad:** Alta
 
-**Estado:** Pendiente
+**Estado:** Completado
 
-La propuesta del proyecto requiere validación funcional con al menos:
+Documento de evidencia:
 
-`2 especialistas de la BVQ`
+`docs/v10_specialist_validation.md`
 
-### Aspectos a evaluar
+La validación fue ejecutada con `4 participantes`, superando el mínimo inicialmente previsto de dos especialistas.
 
-- utilidad del ranking;
-- claridad del Índice de Afinidad;
-- facilidad de filtros;
-- claridad de ficha;
-- comprensión de SHAP;
-- utilidad de emisores comparables;
-- claridad de riesgos;
-- facilidad de navegación;
-- utilidad para prospección.
+### Resultados
 
-### Evidencia requerida
+Promedio global: `4,82 / 5`.
 
-Registrar:
+Experiencia general: `5,00 / 5`.
 
-- fecha;
-- participante;
-- función;
-- tareas ejecutadas;
-- observaciones;
-- sugerencias;
-- problemas;
-- cambios derivados.
+Utilidad para prospección: `4,75 / 5`.
 
-### Regla
+Dimensiones:
 
-No se deben inventar resultados de validación.
+| Dimensión | Resultado |
+|---|---:|
+| Claridad y usabilidad | 4,75 / 5 |
+| Priorización y contexto | 4,75 / 5 |
+| Análisis de negocio y explicabilidad | 4,84 / 5 |
+| Utilidad comercial | 4,92 / 5 |
 
+### Hallazgos
+
+- 100 % consideró suficiente la información para decidir una revisión comercial más profunda;
+- 100 % indicó que revisaría una empresa ubicada en los primeros lugares del ranking;
+- 100 % recomendaría utilizar la herramienta, con o sin ajustes.
+
+### Decisión
+
+Cerrar B36.
+
+Las recomendaciones se registran como evolución futura del producto y no modifican retrospectivamente el modelo v10 congelado.
 ---
 
 # 47. B37 — Pruebas funcionales finales
@@ -1647,7 +1635,7 @@ Se verificó:
 
 **Resultado:** APROBADA
 
-Se buscó `CUYABENOPETRO` y la interfaz devolvió correctamente `CUYABENOPETRO S.A.`.
+Se buscó `EMPRESA PRUEBA A` y la interfaz devolvió correctamente `EMPRESA PRUEBA A S.A.`.
 
 #### PF-03 — Filtro por provincia
 
@@ -1671,7 +1659,7 @@ Se verificó la navegación a `Página 2 de 5.487`, manteniendo la numeración g
 
 **Resultado:** APROBADA
 
-Se abrió `CUYABENOPETRO S.A.` y se verificaron ranking, Índice de Afinidad Bursátil, percentil, activos, patrimonio, ventas, empleados y comparables.
+Se abrió `EMPRESA PRUEBA A S.A.` y se verificaron ranking, Índice de Afinidad Bursátil, percentil, activos, patrimonio, ventas, empleados y comparables.
 
 #### PF-07 — Explicabilidad SHAP
 
@@ -1679,11 +1667,11 @@ Se abrió `CUYABENOPETRO S.A.` y se verificaron ranking, Índice de Afinidad Bur
 
 Se verificaron factores que aumentan y reducen afinidad utilizando un caso con ambas direcciones:
 
-`ACEITES TROPICALES SOCIEDAD ANONIMA ATSA`
+`EMPRESA PRUEBA B S.A.`
 
 RUC:
 
-`1790013731001`
+`[RUC ANONIMIZADO]`
 
 Ranking:
 
@@ -1748,7 +1736,7 @@ Cumplido.
 
 Los principales flujos fueron ejecutados y documentados sin errores bloqueantes.
 
-La validación técnica de B37 no sustituye B36 — Validación con al menos dos especialistas de la BVQ.
+La validación técnica de B37 se complementa con B36, que fue ejecutada posteriormente con cuatro especialistas y quedó cerrada.
 
 ---
 
@@ -1756,38 +1744,15 @@ La validación técnica de B37 no sustituye B36 — Validación con al menos dos
 
 **Prioridad:** Alta
 
-**Estado:** En desarrollo
+**Estado:** Completado
 
-Se encuentran actualizados o en proceso de actualización:
+Se actualizaron y cerraron los principales documentos de v10, incluyendo README, diccionario de datos, inventario de fuentes, entorno técnico, bitácora, backlog, congelamientos, resultados finales, arquitectura, diseño operacional, explicabilidad, pruebas funcionales y validación con especialistas.
 
-- entorno técnico;
-- arquitectura;
-- diseño operacional;
-- explicabilidad;
-- bitácora;
-- backlog;
-- matriz de pruebas funcionales finales.
+La documentación diferencia entre evidencia histórica, configuración final v10, resultados TEST, producto operacional, pruebas, validación, limitaciones y evolución futura.
 
-### Pendiente
+### Criterio de aceptación
 
-Consolidar:
-
-- metodología;
-- resultados;
-- arquitectura final;
-- evidencias;
-- limitaciones;
-- validación;
-- conclusiones;
-- trabajo futuro.
-
-La documentación deberá diferenciar siempre entre:
-
-- evidencia histórica;
-- evidencia v10;
-- producto;
-- trabajo futuro.
-
+Cumplido.
 ---
 
 # 49. B39 — Presentación final
@@ -1821,7 +1786,7 @@ Debe dejar claro que Prospect Finder BVQ es una herramienta de priorización.
 
 **Prioridad:** Baja
 
-**Estado:** Pendiente
+**Estado:** Evolución futura
 
 El prototipo académico puede ejecutarse inicialmente en ambiente controlado.
 
@@ -1842,19 +1807,19 @@ Esta actividad no es requisito para probar la lógica funcional del prototipo ac
 
 La secuencia recomendada desde el estado actual es:
 
-1. completar B36 — validación con al menos dos especialistas;
-2. B32 — dockerizar FastAPI;
-3. B33 — configurar Alembic;
-4. B34 — incorporar DVC;
-5. B35 — incorporar MLflow;
-6. B19 — implementar evidencia inicial de monitoreo;
-7. cerrar B38 — informe final;
-8. completar B39 — presentación final.
+1. realizar auditoría final del repositorio antes de cambiar su visibilidad;
+2. verificar que no existan credenciales, secretos o datasets no autorizados;
+3. realizar el commit final de documentación y evidencias;
+4. sincronizar la rama `main`;
+5. crear el tag de versión para defensa;
+6. completar B39 — presentación final;
+7. preparar preguntas y respuestas para defensa.
 
-B31, B37 y B41 ya se encuentran completados.
+Después de la defensa, y únicamente si se decide avanzar hacia una implantación productiva, podrán priorizarse B32, B33, B34, B35, B19, B40 y B10.
 
-B20 deberá resolverse según el requerimiento académico específico, sin modificar el modelo v10.
+B36, B37, B38, B41 y B42 ya se encuentran completados.
 
+B20 queda fuera de v10.
 ---
 
 # 52. Actividades que no deben reabrir v10
@@ -1940,6 +1905,31 @@ Mitigación:
 - no publicar datasets operacionales;
 - no almacenar credenciales reales en Git.
 
+## Recuperación temprana Top-K
+
+Limitación:
+
+- Top 20, Top 50 y Top 100 no recuperan positivos en TEST;
+- primer positivo en posición 165.
+
+Mitigación:
+
+- no exagerar la utilidad temprana del ranking;
+- combinar ranking con filtros, contexto y revisión especialista;
+- evaluar nuevas estrategias únicamente en una versión futura.
+
+## Influencia de escala
+
+Observación:
+
+- P06 evidenció influencia relevante de variables de escala en los casos evaluados.
+
+Mitigación:
+
+- monitoreo por tamaño empresarial;
+- análisis segmentado;
+- no interpretar SHAP como causalidad o discriminación por sí sola.
+
 ## Drift
 
 Mitigación futura:
@@ -2014,7 +2004,7 @@ Incluye:
 
 Estado:
 
-**Avanzado / pendiente de validación con especialistas**
+**Cumplido**
 
 Backend implementado.
 
@@ -2030,15 +2020,18 @@ Pruebas funcionales finales:
 
 Ranking, filtros, ficha financiera, comparables y SHAP fueron validados técnicamente.
 
-Pendiente:
+Validación con especialistas B36:
 
-- validación real con al menos dos especialistas de la BVQ.
+- 4 participantes;
+- promedio global `4,82 / 5`;
+- experiencia general `5,00 / 5`;
+- utilidad para prospección `4,75 / 5`.
 
 ## Objetivo 6 — Reproducibilidad y MLOps
 
 Estado:
 
-**Parcialmente cumplido**
+**Cumplido para el alcance del Capstone; con evolución productiva futura**
 
 Implementado:
 
@@ -2046,26 +2039,31 @@ Implementado:
 - GitHub;
 - requirements;
 - modelo congelado;
+- datasets y protocolos identificados;
 - Docker PostgreSQL;
 - 12 pruebas automatizadas del backend;
 - 4 pruebas automatizadas del frontend;
-- 10 pruebas funcionales finales aprobadas;
-- documentación.
+- 10 pruebas funcionales B37;
+- pruebas P01–P06;
+- documentación técnica.
 
-Pendiente:
+Evolución futura:
 
 - DVC;
 - MLflow;
-- Docker FastAPI;
-- Alembic.
+- Docker FastAPI/frontend;
+- Alembic;
+- monitoreo continuo;
+- autenticación productiva.
 
+Estas mejoras aumentan la madurez operacional, pero no son necesarias para considerar cerrado el alcance académico actual.
 ---
 
 # 55. Control de versiones reciente
 
 Las pruebas automatizadas del frontend fueron confirmadas y publicadas en Git mediante el commit `7a50bf6`.
 
-La matriz de pruebas funcionales finales se encuentra preparada localmente y todavía debe incluirse en el siguiente commit.
+La matriz de pruebas funcionales finales y las evidencias documentales de cierre se encuentran preparadas para incorporarse al commit final del proyecto.
 
 | Commit | Hito |
 |---|---|
@@ -2111,61 +2109,42 @@ v10 permanecerá como referencia congelada del presente proyecto.
 
 ---
 
-# 57. Estado del backlog al 4 de octubre de 2026
+# 57. Estado del backlog al 30 de octubre de 2026
 
 Prospect Finder BVQ cuenta actualmente con:
 
 - dataset v10 congelado;
 - feature set congelado;
 - protocolo temporal congelado;
-- modelo final seleccionado;
-- TEST evaluado;
-- ranking operacional;
-- 137.156 prospectos;
+- modelo final seleccionado y congelado;
+- TEST evaluado una sola vez después de la selección;
+- ranking operacional con 137.156 prospectos;
 - Índice de Afinidad Bursátil;
 - similitud con emisores;
-- 656.600 relaciones de comparables;
-- PostgreSQL;
-- 930.912 registros operacionales;
-- FastAPI;
-- filtros;
-- catálogos;
-- ficha de empresa;
-- SHAP global;
-- SHAP individual;
-- reutilización del runtime de explicabilidad mediante caché en memoria;
-- precalentamiento de SHAP verificado durante el arranque de FastAPI;
-- 12 pruebas automáticas del backend aprobadas;
-- 4 pruebas automatizadas del frontend aprobadas;
-- 10 de 10 pruebas funcionales finales aprobadas;
-- Node.js y npm;
+- PostgreSQL y FastAPI;
 - frontend React funcional;
-- integración React–FastAPI;
-- ranking web;
-- filtros web;
-- ficha empresarial;
-- comparables web;
-- explicabilidad SHAP en interfaz;
-- build del frontend correcto;
-- lint del frontend con `0 warnings` y `0 errors`.
+- SHAP global e individual;
+- 12 pruebas automáticas del backend;
+- 4 pruebas automatizadas del frontend;
+- 10 de 10 pruebas funcionales B37;
+- pruebas P01–P06 ejecutadas y documentadas;
+- validación B36 completada con 4 especialistas;
+- promedio global B36 de 4,82 / 5;
+- documentación principal de v10 actualizada y cerrada.
 
 La prioridad inmediata es:
 
-**preparar y ejecutar la validación con al menos dos especialistas de la BVQ.**
+**cerrar Git/GitHub y preparar la defensa.**
 
-Las pruebas automatizadas del frontend y las pruebas funcionales finales ya se encuentran completadas.
+Pendientes inmediatos del Capstone:
 
-Después deberán completarse:
+- auditoría final del repositorio;
+- commit y push final;
+- tag de versión de defensa;
+- B39 — presentación final;
+- preparación de preguntas y respuestas.
 
-- validación con especialistas;
-- dockerización completa de FastAPI;
-- Alembic;
-- DVC;
-- MLflow;
-- monitoreo;
-- documentación final;
-- presentación final.
-
+Las actividades de Docker completo, Alembic, DVC, MLflow, monitoreo y autenticación se mantienen como evolución productiva futura y no como bloqueantes del cierre académico.
 ---
 
 # 58. Regla de mantenimiento

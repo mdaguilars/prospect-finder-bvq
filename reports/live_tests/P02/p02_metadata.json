@@ -1,0 +1,11 @@
+{
+  "test_id": "P02",
+  "description": "Prueba de fuga temporal mediante inyección de dato posterior al corte.",
+  "model": "v10_hgb_financial_c3",
+  "config": "C3_CONSERVATIVE",
+  "feature_source": "Artefacto final · clave 'features'",
+  "feature_count": 25,
+  "future_feature": "DATO_FUTURO_PRUEBA",
+  "future_date_field": "FECHA_DATO_FUTURO_PRUEBA",
+  "result": "CUMPLE"
+}

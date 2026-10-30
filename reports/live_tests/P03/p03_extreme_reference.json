@@ -1,0 +1,8 @@
+{
+  "feature": "fin_ratio_patrimonio_activos",
+  "train_p01": -3.3608095520365824,
+  "train_p50": 0.5016524196302276,
+  "train_p99": 1.0,
+  "original_value": 0.9568938803797252,
+  "extreme_test_value": 10.0
+}

@@ -135,9 +135,8 @@ def test_operational_ranking_first_page(
         "expediente_key"
     ] == EXPECTED_TOP_EXPEDIENTE
 
-    assert first[
-        "nombre"
-    ] == "CUYABENOPETRO S.A."
+    assert isinstance(first["nombre"], str)
+    assert first["nombre"].strip()
 
     assert first[
         "provincia"
@@ -266,13 +265,12 @@ def test_prospect_detail(
         "similitud_emisores"
     ]
 
-    assert empresa[
-        "nombre"
-    ] == "CUYABENOPETRO S.A."
+    assert isinstance(empresa["nombre"], str)
+    assert empresa["nombre"].strip()
 
-    assert empresa[
-        "ruc"
-    ] == "1792903890001"
+    assert isinstance(empresa["ruc"], str)
+    assert len(empresa["ruc"]) == 13
+    assert empresa["ruc"].isdigit()
 
     assert empresa[
         "provincia"

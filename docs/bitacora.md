@@ -36,7 +36,7 @@ los resultados anteriores se mantienen como evidencia histórica y no se compara
 
 **Nombre:**
 
-Sistema inteligente basado en aprendizaje automático y redes neuronales para identificar y priorizar empresas con potencial de convertirse en emisores del mercado de valores ecuatoriano para la Bolsa de Valores Quito.
+Sistema inteligente basado en aprendizaje automático y redes neuronales para identificar y priorizar empresas con potencial de convertirse en emisores del mercado de valores ecuatoriano para la Bolsa de Valores de Quito.
 
 **Integrantes:**
 
@@ -155,7 +155,7 @@ Los procesos principales reproducibles se implementan mediante scripts Python.
 
 - estados financieros de la Superintendencia de Compañías, Valores y Seguros;
 - Registro del Mercado de Valores de la SCVS;
-- información complementaria del Data Warehouse de la Bolsa de Valores Quito.
+- información complementaria del Data Warehouse de la Bolsa de Valores de Quito.
 
 ### Decisión
 
@@ -1256,7 +1256,7 @@ La provincia se mantiene fuera de las variables predictivas.
 
 ### Principio
 
-`Modelo → Priorización → Especialista → Decisión`
+`Modelo → Priorización → Explicación → Especialista → Decisión`
 
 ---
 
@@ -2150,7 +2150,7 @@ Se verificó:
 
 **APROBADA**
 
-Se buscó `CUYABENOPETRO` y la interfaz devolvió correctamente `CUYABENOPETRO S.A.`.
+Se buscó `EMPRESA PRUEBA A` y la interfaz devolvió correctamente `EMPRESA PRUEBA A S.A.`.
 
 #### PF-03 — Filtro por provincia
 
@@ -2174,7 +2174,7 @@ Se verificó la navegación a `Página 2 de 5.487`, manteniendo la numeración g
 
 **APROBADA**
 
-Se abrió `CUYABENOPETRO S.A.` y se verificaron:
+Se abrió `EMPRESA PRUEBA A S.A.` y se verificaron:
 
 - ranking `#1`;
 - Índice de Afinidad Bursátil `0.974`;
@@ -2191,11 +2191,11 @@ Se abrió `CUYABENOPETRO S.A.` y se verificaron:
 
 Para verificar factores en ambas direcciones se utilizó:
 
-`ACEITES TROPICALES SOCIEDAD ANONIMA ATSA`
+`EMPRESA PRUEBA B S.A.`
 
 RUC:
 
-`1790013731001`
+`[RUC ANONIMIZADO]`
 
 Ranking:
 
@@ -2221,7 +2221,7 @@ La interfaz distinguió correctamente ambos sentidos de contribución.
 
 **APROBADA**
 
-Para `ACEITES TROPICALES SOCIEDAD ANONIMA ATSA` se visualizaron cinco comparables históricos con sus porcentajes de similitud.
+Para `EMPRESA PRUEBA B S.A.` se visualizaron cinco comparables históricos con sus porcentajes de similitud.
 
 La señal de similitud permaneció separada del Índice de Afinidad Bursátil.
 
@@ -2286,9 +2286,115 @@ La validación funcional se suma a:
 
 Cerrar B37 — Pruebas funcionales finales.
 
-La siguiente validación prioritaria corresponde a B36 — Validación con al menos dos especialistas de la BVQ.
+En ese momento, la siguiente validación prioritaria correspondía a B36 — Validación con especialistas de la BVQ.
 
 Las pruebas funcionales técnicas no sustituyen esa validación con usuarios reales.
+
+**Nota de cierre:** B36 fue ejecutada posteriormente con cuatro especialistas y quedó documentada como completada. Ver sección 44.
+
+---
+
+## 30.3 Pruebas finales P01–P06 — octubre de 2026
+
+Se ejecutó una batería adicional de seis pruebas sobre el modelo final v10 y su comportamiento operacional.
+
+Documentos de evidencia:
+
+`reports/live_tests/ACTA_PRUEBAS_V10.md`
+
+`reports/live_tests/HOJA_DEFENSA_V10.md`
+
+### P01 — Consistencia y reproducibilidad
+
+**Resultado:** CUMPLE
+
+Se ejecutaron dos corridas independientes utilizando:
+
+- TRAIN 2012–2018;
+- TEST 2022–2023;
+- el modelo final congelado;
+- la misma configuración y semillas.
+
+Se verificó que:
+
+- el ranking fuera idéntico;
+- las métricas fueran idénticas;
+- el Top 50 generado fuera idéntico.
+
+### P02 — Fuga temporal
+
+**Resultado:** CUMPLE
+
+Se inyectó deliberadamente un dato futuro correspondiente a julio de 2024 para una decisión de mayo de 2024.
+
+El control temporal detectó que la información era posterior a la fecha de decisión y la excluyó.
+
+### P03 — Faltantes y valores atípicos
+
+**Resultado:** CUMPLE
+
+Se evaluó robustez ante:
+
+- faltantes;
+- valores extremos;
+- alteraciones de ratios.
+
+El modelo produjo predicciones finitas y mantuvo un comportamiento controlado.
+
+### P04 — Robustez ante pequeños cambios
+
+**Resultado:** CUMPLE
+
+Se aplicó una perturbación de ±5 % sobre una variable financiera en un caso seleccionado.
+
+El score y la posición permanecieron estables para el caso evaluado.
+
+La prueba se interpreta como evidencia de robustez local y no como garantía universal de estabilidad.
+
+### P05 — Utilidad Top-K
+
+**Resultado:** CUMPLE CON LIMITACIÓN
+
+La prevalencia en TEST es extremadamente baja.
+
+En el TEST agregado:
+
+- Top 20: 0 positivos;
+- Top 50: 0 positivos;
+- Top 100: 0 positivos;
+- Top 200: 1 positivo;
+- primer positivo: posición 165.
+
+La prueba confirma que el ranking contiene señal global, pero evidencia una limitación en la recuperación temprana de positivos.
+
+Esta limitación se conserva explícitamente y no se corrige mediante retuning posterior a TEST.
+
+### P06 — Explicabilidad y riesgo de sesgo por escala
+
+**Resultado:** CUMPLE CON OBSERVACIÓN
+
+SHAP reconstruyó exactamente el score dentro de tolerancia numérica.
+
+También se observó una influencia relevante de variables de escala empresarial en los casos evaluados.
+
+En los casos analizados:
+
+- empresa de mayor escala: 86,4 % de la magnitud SHAP local asociada a variables de escala;
+- empresa de menor escala: 67,3 %.
+
+Esta evidencia no demuestra discriminación ni causalidad.
+
+Se registra como señal para monitorear comportamiento por tamaño empresarial en una versión productiva o futura.
+
+### Conclusión de las seis pruebas
+
+Las seis pruebas fueron ejecutadas satisfactoriamente.
+
+- P01–P04 no evidenciaron fallos en los controles evaluados;
+- P05 identificó una limitación en recuperación temprana Top-K;
+- P06 evidenció influencia relevante de escala.
+
+La conclusión no debe resumirse como “6/6 sin observaciones”, porque P05 y P06 contienen hallazgos que deben mantenerse visibles.
 
 ---
 
@@ -2484,9 +2590,25 @@ Integración con FastAPI:
 
 **FUNCIONAL**
 
-Validación con especialistas:
+Validación con especialistas B36:
 
-**PENDIENTE**
+**COMPLETADA**
+
+Participantes:
+
+`4`
+
+Promedio global:
+
+`4,82 / 5`
+
+Experiencia general:
+
+`5,00 / 5`
+
+Utilidad para prospección:
+
+`4,75 / 5`
 
 ---
 
@@ -2587,27 +2709,37 @@ Se han identificado los siguientes aprendizajes:
 Las principales limitaciones vigentes son:
 
 1. el target continúa siendo extremadamente desbalanceado;
-2. TEST contiene únicamente 54 eventos positivos;
-3. el comportamiento cambia entre años;
+2. TEST contiene únicamente 54 eventos positivos sobre 260.445 observaciones;
+3. el comportamiento cambia entre años y cohortes;
 4. la regla de disponibilidad financiera es una aproximación conservadora y no la fecha individual real de presentación;
-5. la mayor parte de las variables son financieras;
+5. la mayor parte de las variables utilizadas son financieras;
 6. el score no está calibrado como probabilidad;
 7. un score alto no garantiza conversión en emisor;
-8. existen factores comerciales y estratégicos no observados por el modelo;
-9. SHAP explica el modelo, no causalidad;
-10. la similitud con emisores no constituye una predicción;
+8. existen factores comerciales, estratégicos, regulatorios y cualitativos no observados por el modelo;
+9. SHAP explica el comportamiento del modelo y no causalidad;
+10. la similitud con emisores no constituye una predicción independiente;
 11. el análisis retrospectivo de similitud no demuestra poder predictivo;
-12. la autenticación institucional no está implementada;
-13. la cobertura automatizada del frontend es todavía inicial y deberá ampliarse cuando crezca la interfaz;
-14. la interfaz todavía puede modularizarse y mejorar su experiencia de usuario;
-15. el monitoreo operacional completo todavía está pendiente;
-16. DVC todavía no está integrado;
-17. MLflow todavía no está integrado;
-18. FastAPI todavía no está contenerizado;
-19. las migraciones Alembic todavía no están configuradas;
-20. la validación funcional con especialistas todavía está pendiente;
-21. el ambiente actual corresponde a desarrollo local;
-22. no existe todavía un despliegue productivo institucional.
+12. la recuperación temprana Top-K en TEST es limitada: Top 20, Top 50 y Top 100 no contienen positivos, y el primer positivo aparece en la posición 165;
+13. P06 evidenció influencia relevante de variables de escala, por lo que conviene monitorear el comportamiento por tamaño empresarial;
+14. la autenticación institucional no está implementada en el prototipo académico;
+15. la cobertura automatizada del frontend es suficiente para el alcance actual, pero deberá ampliarse cuando crezca la interfaz;
+16. la interfaz puede seguir modularizándose y mejorando su experiencia de usuario;
+17. el ambiente actual corresponde a desarrollo local;
+18. no existe todavía un despliegue productivo institucional.
+
+Los siguientes elementos no constituyen fallos ni pendientes bloqueantes del Capstone, pero sí oportunidades de madurez productiva:
+
+- monitoreo operacional continuo;
+- DVC;
+- MLflow;
+- contenerización de FastAPI y frontend;
+- migraciones formales con Alembic;
+- autenticación y autorización productivas;
+- gestión de secretos;
+- automatización de despliegues;
+- estrategia formal de respaldo y recuperación.
+
+La validación con especialistas ya no constituye una limitación pendiente: B36 fue completada con cuatro participantes.
 
 ---
 
@@ -2783,6 +2915,7 @@ Las versiones frontend se mantienen en:
 | LIME | Completado |
 | Sesgos | Analizados |
 | Estabilidad | Analizada |
+| Pruebas P01–P06 | Ejecutadas y documentadas |
 | Ranking operacional | Implementado |
 | Índice de Afinidad | Implementado como score operacional |
 | Similitud con emisores | Implementada |
@@ -2807,13 +2940,13 @@ Las versiones frontend se mantienen en:
 | Build frontend | Correcto |
 | Lint frontend | 0 warnings / 0 errors |
 | Pruebas automatizadas frontend | 4 aprobadas |
-| Pruebas funcionales finales | 10 de 10 aprobadas |
-| Docker FastAPI | Pendiente |
-| Alembic | Pendiente de configuración |
-| DVC | Pendiente |
-| MLflow | Pendiente |
-| Monitoreo operacional completo | Pendiente |
-| Validación con especialistas | Pendiente |
+| Pruebas funcionales B37 | 10 de 10 aprobadas |
+| Validación con especialistas B36 | Completada — 4 participantes — 4,82 / 5 |
+| Docker FastAPI / frontend | Evolución productiva futura |
+| Alembic | Evolución productiva futura |
+| DVC | Evolución MLOps futura |
+| MLflow | Evolución MLOps futura |
+| Monitoreo operacional completo | Evolución productiva futura |
 
 ---
 
@@ -2913,50 +3046,136 @@ Después de observar TEST:
 
 ---
 
-# 43. Próxima fase
+# 43. Fase de cierre y evolución posterior
 
-La siguiente fase se concentra en ejecutar la validación formal con especialistas y cerrar la capa de MLOps.
+El alcance funcional y metodológico del Capstone se encuentra implementado, probado y validado.
 
-Las actividades pendientes principales son:
+Las actividades inmediatas de cierre se concentran en:
 
-1. realizar validación con al menos dos especialistas BVQ;
-2. documentar resultados de validación;
-3. completar dockerización de FastAPI;
-4. configurar migraciones Alembic;
-5. implementar DVC;
-6. implementar MLflow;
-7. completar mecanismos de monitoreo;
-8. modularizar progresivamente el frontend donde aporte mantenibilidad;
-9. mejorar la presentación de los valores originales asociados a los factores SHAP;
-10. revisar si la rúbrica exige explícitamente una implementación adicional con TensorFlow/Keras;
-11. preparar el informe final;
-12. preparar la presentación final.
+1. completar la revisión final de documentación;
+2. auditar el repositorio antes de cualquier cambio de visibilidad;
+3. verificar que no existan credenciales, secretos o datasets no autorizados;
+4. realizar el commit final de cierre;
+5. publicar el estado final en GitHub;
+6. crear la etiqueta de versión de defensa;
+7. preparar la presentación final;
+8. preparar respuestas para preguntas de defensa.
 
-La construcción básica del frontend, su integración con FastAPI, la suite automatizada del frontend y las pruebas funcionales finales ya no forman parte de los pendientes.
+Las actividades posteriores orientadas a producción o MLOps incluyen, cuando el producto lo requiera:
+
+- dockerización completa de FastAPI y frontend;
+- migraciones formales con Alembic;
+- integración de DVC;
+- integración de MLflow;
+- monitoreo operacional;
+- autenticación y autorización;
+- gestión segura de secretos;
+- automatización de despliegues;
+- modularización adicional del frontend;
+- ampliación de pruebas automatizadas;
+- enriquecimiento de datos y funcionalidades comerciales.
+
+Estas actividades no son necesarias para considerar cerrado el alcance académico actual.
 
 ---
 
-# 44. Validación con especialistas
+# 44. Validación con especialistas B36
 
-La propuesta contempla validación funcional con al menos:
+La validación formal con especialistas fue ejecutada y cerrada.
 
-`2 especialistas de la BVQ`
+Documento asociado:
 
-Esta validación todavía no se ha ejecutado.
+`docs/v10_specialist_validation.md`
 
-No deberán inventarse resultados ni participantes.
+### Participantes
 
-Cuando se realice deberá registrar:
+Se registraron cuatro participantes, superando el mínimo inicialmente previsto de dos especialistas.
 
-- fecha;
-- participante;
-- función;
-- escenario evaluado;
-- observaciones;
-- problemas encontrados;
-- utilidad percibida;
-- cambios sugeridos;
-- decisión sobre el prototipo.
+| Participante | Cargo | Experiencia | Fecha |
+|---|---|---|---|
+| Gabriela Flores | Jefe de Contabiliad | 1–3 años | 22-oct-2026 |
+| Ivanova Correa | Jefe Comercial | 7–10 años | 23-oct-2026 |
+| Anahir Salazar | Analista Comercial | Menos de 1 año | 23-oct-2026 |
+| Gerardo Cepeda | Gerente Financiero | Más de 10 años | 27-oct-2026 |
+
+### Instrumento
+
+Se evaluaron 25 afirmaciones principales en escala de 1 a 5.
+
+### Resultado global
+
+Promedio general:
+
+`4,82 / 5`
+
+Promedio por participante:
+
+- E1: `4,56`;
+- E2: `5,00`;
+- E3: `5,00`;
+- E4: `4,72`.
+
+### Resultados por dimensión
+
+| Dimensión | Resultado |
+|---|---:|
+| Claridad y usabilidad | 4,75 / 5 |
+| Priorización y contexto | 4,75 / 5 |
+| Análisis de negocio y explicabilidad | 4,84 / 5 |
+| Utilidad comercial | 4,92 / 5 |
+
+Experiencia general:
+
+`5,00 / 5`
+
+Utilidad para prospección:
+
+`4,75 / 5`
+
+### Resultados cualitativos
+
+- 100 % consideró que la herramienta entrega información suficiente para decidir si una empresa merece una revisión comercial más profunda;
+- 100 % indicó que revisaría con mayor detalle una empresa ubicada en los primeros lugares del ranking;
+- 100 % recomendaría utilizar la herramienta, con dos respuestas directas de recomendación y dos de recomendación con ajustes.
+
+### Recomendaciones recibidas
+
+Se identificaron oportunidades de evolución como:
+
+- indicador de liquidez;
+- datos de contacto;
+- notas y seguimiento tipo CRM;
+- fecha y tipo de la última emisión;
+- balances ajustados o simulación antes/después de una emisión;
+- presentación de ratios como porcentajes;
+- segmentación por tamaño de empresa;
+- segmentación por actividad económica;
+- tipo y valor del instrumento de emisores comparables;
+- información de incumplimientos;
+- calificaciones de emisiones comparables.
+
+Estas recomendaciones se registran como evolución del producto.
+
+No modifican retrospectivamente:
+
+- el dataset;
+- el target;
+- las 25 variables;
+- el modelo;
+- los hiperparámetros;
+- el split;
+- TEST;
+- los resultados ya reportados.
+
+### Decisión
+
+Cerrar:
+
+`B36 — Validación con especialistas`
+
+Estado:
+
+**COMPLETADA**
 
 ---
 
@@ -3032,8 +3251,7 @@ La bitácora se encuentra actualizada hasta:
 - catálogos;
 - SHAP operacional;
 - optimización de SHAP;
-- pruebas automáticas;
-- actualización de dependencias;
+- pruebas automáticas API;
 - React;
 - TypeScript;
 - Vite;
@@ -3047,10 +3265,15 @@ La bitácora se encuentra actualizada hasta:
 - build del frontend;
 - lint del frontend;
 - pruebas automatizadas del frontend;
-- versionamiento del frontend;
-- precalentamiento de SHAP verificado durante el arranque de FastAPI;
-- matriz de pruebas funcionales finales;
-- 10 de 10 pruebas funcionales aprobadas.
+- precalentamiento de SHAP;
+- pruebas funcionales B37;
+- pruebas finales P01–P06;
+- validación con especialistas B36;
+- actualización del diccionario de datos;
+- actualización del inventario de fuentes;
+- actualización del entorno técnico;
+- actualización de arquitectura, diseño operacional y explicabilidad;
+- cierre documental de los principales artefactos v10.
 
 Modelo final:
 
@@ -3084,21 +3307,39 @@ Pruebas frontend:
 
 `4 passed`
 
-Pruebas funcionales finales:
+Pruebas funcionales B37:
 
 `10 de 10 aprobadas`
 
-Commit frontend principal:
+Pruebas P01–P06:
 
-`20fb2e4`
+**EJECUTADAS Y DOCUMENTADAS**
 
-Commit pruebas automatizadas frontend:
+Validación con especialistas B36:
 
-`7a50bf6`
+**COMPLETADA**
 
-Pendientes principales:
+Participantes:
 
-**validación con especialistas, MLOps y cierre documental.**
+`4`
+
+Promedio global:
+
+`4,82 / 5`
+
+Estado del Capstone:
+
+**IMPLEMENTADO, PROBADO Y VALIDADO PARA EL ALCANCE ACADÉMICO DEFINIDO**
+
+Pendientes inmediatos de cierre:
+
+- revisión final del backlog;
+- auditoría de GitHub antes de publicación o cambio de visibilidad;
+- commit y tag final;
+- presentación de defensa;
+- preparación de preguntas y respuestas.
+
+Las actividades MLOps y de despliegue productivo quedan como evolución posterior.
 
 ---
 

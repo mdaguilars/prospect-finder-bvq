@@ -41,7 +41,7 @@ No realiza decisiones automáticas de:
 - evaluación crediticia;
 - incorporación de una empresa al mercado de valores.
 
-La decisión final permanece bajo responsabilidad del especialista de la Bolsa de Valores Quito.
+La decisión final permanece bajo responsabilidad del especialista de la Bolsa de Valores de Quito.
 
 ---
 
@@ -119,7 +119,7 @@ Entre la información utilizada se encuentra:
 
 La información utilizada corresponde a fuentes públicas o institucionales autorizadas para el proyecto.
 
-El prototipo permanece desacoplado de los sistemas transaccionales de la Bolsa de Valores Quito.
+El prototipo permanece desacoplado de los sistemas transaccionales de la Bolsa de Valores de Quito.
 
 ---
 
@@ -941,7 +941,7 @@ La primera versión funcional presenta:
 | Calidad | Disponibilidad de información del prospecto |
 | Modelo | Versión y configuración utilizadas |
 
-El monitoreo podrá incorporarse como módulo adicional durante el cierre de MLOps.
+El monitoreo podrá incorporarse como módulo adicional en una evolución posterior orientada a producción y MLOps.
 
 React Router DOM y Recharts están instalados para evolución posterior, pero la primera vista funcional no depende todavía de navegación compleja ni de gráficos construidos con Recharts.
 
@@ -1004,7 +1004,7 @@ Se validan:
 
 Ejecución:
 
-`python -m pytest "testspi" -q`
+`python -m pytest "tests/api" -q`
 
 Resultado actual:
 
@@ -1047,7 +1047,15 @@ También se verificó manualmente desde navegador:
 - factores positivos;
 - factores negativos.
 
-Las pruebas automatizadas específicas del frontend permanecen pendientes.
+La suite automatizada específica del frontend registra:
+
+`4 passed`
+
+Adicionalmente, las pruebas funcionales finales documentadas en `docs/v10_functional_test_matrix.md` registran:
+
+`10 de 10 pruebas funcionales aprobadas`
+
+Estas validaciones complementan el build, el lint y las pruebas automáticas de la API.
 
 ---
 
@@ -1229,6 +1237,17 @@ Debe utilizarse para:
 - auditoría;
 - análisis de distribución.
 
+Como evidencia complementaria, la prueba P06 de explicabilidad y riesgo evaluó casos de empresas de distinto tamaño y evidenció una influencia relevante de variables asociadas a escala empresarial.
+
+Este resultado no constituye por sí mismo evidencia de discriminación o sesgo injusto, pero justifica mantener:
+
+- monitoreo por segmentos de tamaño;
+- revisión periódica de la distribución del ranking;
+- supervisión humana;
+- seguimiento de cambios en la importancia de variables de escala.
+
+La prueba P06 no fue utilizada para modificar retrospectivamente el modelo v10.
+
 ---
 
 ## 44. MLOps
@@ -1267,13 +1286,16 @@ Actualmente están implementados parcialmente los componentes de reproducibilida
 - documentación;
 - metadatos.
 
-Continúan pendientes:
+Como evolución futura hacia un entorno productivo y un esquema MLOps más completo se mantienen:
 
 - DVC;
 - MLflow;
 - dockerización de FastAPI;
+- contenerización del frontend;
 - migraciones Alembic;
 - formalización de monitoreo operacional.
+
+Estos componentes no son requisito para demostrar el funcionamiento del prototipo Capstone actualmente implementado y validado.
 
 ---
 
@@ -1320,12 +1342,13 @@ Continúan pendientes:
 | SHAP web | Implementado |
 | Build frontend | Implementado |
 | Lint frontend | Implementado |
-| Pruebas automatizadas frontend | Pendiente |
+| Pruebas funcionales finales | Implementado — B37, 10 de 10 aprobadas |
+| Pruebas automatizadas frontend | Implementado — 4 passed |
 | Docker FastAPI | Pendiente |
 | Alembic operativo | Pendiente |
 | DVC | Pendiente |
 | MLflow | Pendiente |
-| Validación con especialistas | Pendiente |
+| Validación con especialistas | Implementado — B36 completado con 4 participantes |
 
 ---
 
@@ -1457,21 +1480,33 @@ Alembic:
 
 DVC:
 
-`Pendiente`
+`Pendiente — evolución futura`
 
 MLflow:
 
-`Pendiente`
+`Pendiente — evolución futura`
+
+Pruebas automatizadas frontend:
+
+`Implementadas — 4 pruebas aprobadas`
+
+Pruebas funcionales finales:
+
+`Implementadas — B37, 10 de 10 pruebas aprobadas`
 
 Validación con especialistas:
 
-`Pendiente`
+`Completada — B36, 4 participantes`
+
+Resultado de validación con especialistas:
+
+`Promedio global 4,82 / 5`
 
 ---
 
-## 50. Resultado actual y cierre esperado
+## 50. Resultado actual y cierre de arquitectura
 
-La arquitectura ya dispone de un prototipo funcional que integra:
+La arquitectura dispone de un prototipo funcional que integra:
 
 `Datos + IA + Ranking + Similitud + Explicabilidad + PostgreSQL + API + Interfaz React + Supervisión humana`
 
@@ -1479,14 +1514,44 @@ El especialista puede seguir el flujo:
 
 `Explorar → Filtrar → Priorizar → Comprender → Comparar → Analizar → Decidir`
 
-Para cerrar la arquitectura del proyecto permanecen principalmente:
+La solución fue validada técnicamente mediante:
 
-- pruebas automatizadas del frontend;
+- `12 passed` en la suite de API;
+- `4 passed` en las pruebas automatizadas del frontend;
+- build de frontend correcto;
+- lint de frontend con `0 warnings` y `0 errors`;
+- B37 con `10 de 10` pruebas funcionales aprobadas.
+
+La validación con especialistas B36 también fue completada con:
+
+- 4 participantes;
+- promedio global Q04–Q28 de `4,82 / 5`;
+- experiencia general de `5,00 / 5`;
+- utilidad para prospección de `4,75 / 5`;
+- 100 % de participantes indicando que la información permite decidir si una empresa merece revisión comercial adicional;
+- 100 % indicando que revisaría con mayor profundidad una empresa prioritaria;
+- 100 % recomendando utilizar la herramienta, con o sin ajustes.
+
+Por tanto, para efectos del Capstone:
+
+**la arquitectura funcional del prototipo se considera implementada, probada y validada.**
+
+Los siguientes componentes corresponden a una evolución posterior hacia un entorno institucional productivo y no constituyen bloqueantes para el cierre del prototipo:
+
 - dockerización de FastAPI;
+- contenerización del frontend;
 - migraciones Alembic;
 - DVC;
 - MLflow;
-- monitoreo operacional;
-- validación formal con especialistas.
+- monitoreo operacional formal;
+- autenticación y autorización institucional;
+- endurecimiento de seguridad para producción;
+- automatización de despliegues y observabilidad.
+
+Cualquier evolución predictiva deberá respetar el versionamiento del modelo. El modelo v10 permanece congelado y cualquier cambio que altere variables, algoritmo, hiperparámetros, target o metodología de ranking deberá registrarse como una nueva versión experimental, por ejemplo `v11`.
 
 Prospect Finder BVQ permanece como una herramienta de apoyo analítico y comercial, no como un sistema automatizado de decisión.
+
+El principio de cierre es:
+
+`Modelo → Priorización → Explicación → Especialista → Decisión`

@@ -95,8 +95,8 @@ const prospectsMock: ProspectListResponse = {
   items: [
     {
       expediente_key: 1001,
-      ruc: '1792903890001',
-      nombre: 'CUYABENOPETRO S.A.',
+      ruc: '0000000000000',
+      nombre: 'EMPRESA PRUEBA A S.A.',
       anio: 2023,
       fecha_decision: '2024-05-01',
       tipo_compania: 'ANÓNIMA',
@@ -121,8 +121,8 @@ const prospectsMock: ProspectListResponse = {
 const detailMock: ProspectDetailResponse = {
   empresa: {
     expediente_key: 1001,
-    ruc: '1792903890001',
-    nombre: 'CUYABENOPETRO S.A.',
+    ruc: '0000000000000',
+    nombre: 'EMPRESA PRUEBA A S.A.',
     anio: 2023,
     fecha_decision: '2024-05-01',
     tipo_compania: 'ANÓNIMA',
@@ -194,8 +194,8 @@ const explanationMock:
   ProspectExplanationResponse = {
     empresa: {
       expediente_key: 1001,
-      ruc: '1792903890001',
-      nombre: 'CUYABENOPETRO S.A.',
+      ruc: '0000000000000',
+      nombre: 'EMPRESA PRUEBA A S.A.',
       anio: 2023,
     },
     score: {
@@ -292,16 +292,16 @@ describe('Prospect Finder BVQ', () => {
 
     expect(
       await screen.findByText(
-        'CUYABENOPETRO S.A.',
+        'EMPRESA PRUEBA A S.A.',
       ),
     ).toBeInTheDocument()
 
     expect(
-      screen.getByText('Prioridad de prospectos'),
+      screen.getByText('Empresas ordenadas por prioridad'),
     ).toBeInTheDocument()
 
     expect(
-      screen.getByText('137.156'),
+      screen.getAllByText('137.156')[0],
     ).toBeInTheDocument()
 
     expect(
@@ -330,7 +330,7 @@ describe('Prospect Finder BVQ', () => {
     render(<App />)
 
     await screen.findByText(
-      'CUYABENOPETRO S.A.',
+      'EMPRESA PRUEBA A S.A.',
     )
 
     const input = screen.getByPlaceholderText(
@@ -366,14 +366,14 @@ describe('Prospect Finder BVQ', () => {
 
     const company =
       await screen.findByText(
-        'CUYABENOPETRO S.A.',
+        'EMPRESA PRUEBA A S.A.',
       )
 
     await user.click(company)
 
     expect(
       await screen.findByText(
-        'Perfil financiero',
+        'Tamaño financiero',
       ),
     ).toBeInTheDocument()
 
@@ -383,7 +383,7 @@ describe('Prospect Finder BVQ', () => {
 
     expect(
       screen.getByText(
-        'Índice de Afinidad Bursátil',
+        'Prioridad comercial',
       ),
     ).toBeInTheDocument()
 
@@ -399,14 +399,14 @@ describe('Prospect Finder BVQ', () => {
 
     const company =
       await screen.findByText(
-        'CUYABENOPETRO S.A.',
+        'EMPRESA PRUEBA A S.A.',
       )
 
     await user.click(company)
 
     const analyzeButton =
       await screen.findByRole('button', {
-        name: 'Analizar factores',
+        name: 'Ver razones',
       })
 
     await user.click(analyzeButton)
@@ -421,23 +421,11 @@ describe('Prospect Finder BVQ', () => {
     })
 
     expect(
-      await screen.findByText(
-        'Aumenta afinidad',
-      ),
+      await screen.findByText(/Muy favorable/),
     ).toBeInTheDocument()
 
     expect(
-      screen.getByText(
-        'Reduce afinidad',
-      ),
-    ).toBeInTheDocument()
-
-    expect(
-      screen.getByText('+0.4194'),
-    ).toBeInTheDocument()
-
-    expect(
-      screen.getByText('-0.0392'),
+      screen.getByText(/Levemente desfavorable/),
     ).toBeInTheDocument()
   })
 })

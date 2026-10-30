@@ -1,7 +1,7 @@
 {
   "experimento": "Evaluacion final TEST Prospect Finder BVQ v10",
   "estado": "FINAL_TEST_EVALUATED",
-  "fecha_ejecucion_utc": "2026-10-03T16:54:08.383493+00:00",
+  "fecha_ejecucion_utc": "2026-10-22T03:17:35.185943+00:00",
   "dataset": "data/processed/v10_features_financial_2012_2023.csv.gz",
   "documentos_previos": [
     "docs/v10_final_candidate_freeze.md",
@@ -238,7 +238,7 @@
   "regla_post_test": "Los resultados de TEST no deben utilizarse para modificar retrospectivamente el modelo v10. Cualquier nuevo desarrollo debe realizarse como una nueva version.",
   "entorno": {
     "python": "3.13.7",
-    "platform": "Windows-11-10.0.26200-SP0",
+    "platform": "Windows-11-10.0.26300-SP0",
     "pandas": "3.0.5",
     "numpy": "2.5.3",
     "scikit_learn": "1.9.1"

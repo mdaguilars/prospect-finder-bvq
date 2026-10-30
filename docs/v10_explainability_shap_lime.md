@@ -69,9 +69,13 @@ y no como:
 
 **probabilidad calibrada de convertirse en emisor**.
 
-En el producto este resultado se presenta comercialmente como:
+En el producto este score puede presentarse comercialmente como:
 
-**Índice de Afinidad Bursátil**.
+**Índice de Afinidad Bursátil**
+
+entendido exclusivamente como una denominación de negocio para el score relativo de priorización generado por el modelo.
+
+No constituye una probabilidad calibrada ni un indicador independiente del score producido por `v10_hgb_financial_c3`.
 
 ---
 
@@ -1056,6 +1060,19 @@ se encuentran documentados separadamente.
 
 La provincia no forma parte del modelo v10.
 
+Como evidencia complementaria posterior, la prueba funcional P06 evaluó explicaciones locales en empresas de distinto tamaño.
+
+El análisis evidenció una influencia relevante de variables asociadas a escala empresarial.
+
+Este resultado no constituye por sí mismo evidencia de discriminación o sesgo injusto, pero justifica mantener:
+
+- análisis segmentado por tamaño empresarial;
+- monitoreo periódico;
+- revisión humana de resultados;
+- seguimiento de posibles cambios en la influencia de variables de escala.
+
+La prueba P06 no fue utilizada para modificar retrospectivamente el modelo v10.
+
 ---
 
 # 39. Pruebas técnicas y validación en interfaz
@@ -1135,12 +1152,18 @@ La validación metodológica verifica:
 - referencia de TRAIN;
 - consistencia de variables.
 
-La validación con especialistas de la BVQ verificará posteriormente:
+La validación con especialistas de la BVQ fue ejecutada posteriormente mediante la actividad B36.
+
+La evidencia obtenida verificó:
 
 - comprensión;
 - utilidad;
 - claridad;
-- aplicabilidad comercial.
+- aplicabilidad comercial;
+- intención de uso;
+- capacidad de apoyar la priorización de empresas.
+
+La validación contó con cuatro participantes y obtuvo un promedio global de 4,82 / 5 en las 25 afirmaciones principales del formulario.
 
 Estos niveles de prueba son complementarios y responden a objetivos distintos.
 
@@ -1254,7 +1277,8 @@ El análisis completo permite concluir que:
 13. la importancia global permanece disponible mediante API y podrá incorporarse posteriormente como vista independiente;
 14. el modelo permanece congelado;
 15. la explicabilidad no modifica ranking ni predicciones;
-16. la decisión comercial permanece bajo supervisión humana.
+16. la validación con especialistas fue completada mediante B36 y confirmó comprensión y utilidad comercial del prototipo;
+17. la decisión comercial permanece bajo supervisión humana.
 
 ---
 
@@ -1282,7 +1306,7 @@ El análisis completo permite concluir que:
 | SHAP global como vista web independiente | Pendiente / opcional |
 | Valor original junto al factor SHAP | Pendiente de mejora visual |
 | Pruebas automatizadas frontend | Pendientes |
-| Validación con especialistas | Pendiente |
+| Validación con especialistas | Completada — B36 |
 
 ---
 
