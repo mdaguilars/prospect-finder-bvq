@@ -309,6 +309,29 @@ El resultado evidencia una buena capacidad de ordenamiento global, pero una **li
 
 No se modificó v10 después de observar TEST. Cualquier mejora posterior deberá evaluarse como una nueva versión, por ejemplo **v11**.
 
+### 12.3 Escenarios operativos de revisión comercial
+
+Para complementar la evaluación Top-K temprana, se analizaron escenarios de capacidad de revisión comercial sobre el mismo TEST congelado, sin reentrenar ni modificar el modelo.
+
+Los resultados reproducibles se encuentran en:
+
+`reports/results/v10/final_test_v10_operational_k.csv`
+
+| Año | Escenario | Empresas a revisar | Empresas/mes aprox. | Positivos recuperados | Precision@K | Recall@K |
+|---:|---|---:|---:|---:|---:|---:|
+| 2022 | K=2.000 | 2.000 | 166,7 | 20 de 32 | 1,00 % | 62,50 % |
+| 2023 | K=2.000 | 2.000 | 166,7 | 11 de 22 | 0,55 % | 50,00 % |
+| 2022 | K=5.000 | 5.000 | 416,7 | 26 de 32 | 0,52 % | 81,25 % |
+| 2023 | K=5.000 | 5.000 | 416,7 | 17 de 22 | 0,34 % | 77,27 % |
+
+**K=2.000 se plantea como escenario operativo de referencia**, equivalente a aproximadamente 167 empresas por mes. No constituye todavía un umbral formalmente aprobado por la BVQ y deberá contrastarse con la capacidad real del equipo comercial.
+
+**K=5.000 se presenta como escenario ampliado de cobertura**, con una recuperación sustancialmente mayor, pero con una carga aproximada de 417 empresas por mes.
+
+En cada corte anual del TEST, el número de RUC únicos coincide con el número de observaciones evaluadas; por tanto, para este análisis anual los valores de K corresponden también a empresas únicas.
+
+Estos escenarios permiten traducir el desempeño estadístico del ranking a una capacidad de revisión comercial concreta, manteniendo intacto el TEST y evitando cualquier ajuste retrospectivo del modelo.
+
 ---
 
 ## 13. Ranking operativo
