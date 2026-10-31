@@ -731,7 +731,7 @@ Resultado:
 |---|---|---|
 | Al menos 2 especialistas | 4 participantes | Cumplido |
 | Evaluación del prototipo | Formulario de validación comercial | Cumplido |
-| Respuestas cuantitativas | 4 respuestas completas Q04–Q34 | Cumplido |
+| Respuestas cuantitativas | 4 respuestas completas Q04–Q28 | Cumplido |
 | Evidencia cualitativa | Respuestas abiertas de E1, E2 y E4; E3 sin respuestas abiertas | Cumplido con observación |
 | Recomendaciones documentadas | R01–R10 | Cumplido |
 | Tratamiento de recomendaciones | Backlog de evolución, sin modificar v10 | Cumplido |

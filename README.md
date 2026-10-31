@@ -13,6 +13,16 @@
 
 ---
 
+## Evidencia final v10
+
+Para facilitar la revisión académica y técnica de la versión final, se consolidó un índice único de evidencias:
+
+`docs/v10_evidence_index.md`
+
+Este índice enlaza la selección del modelo, comparación LR/HGB/MLP, TEST congelado, evaluación Top-K, pruebas P01–P06, pruebas funcionales, validación con especialistas y demo reproducible para evaluadores.
+
+---
+
 ## 1. Descripción del proyecto
 
 **Prospect Finder BVQ** es una solución de inteligencia artificial orientada a apoyar el proceso de prospección de potenciales emisores para la **Bolsa de Valores de Quito (BVQ)**.
