@@ -1,0 +1,5 @@
+expediente_key,orden_comparable,similitud,distancia_percentiles,emisor_expediente_key,emisor_ruc,emisor_nombre,emisor_anio_perfil,emisor_fecha_decision_perfil,emisor_fecha_primera_inscripcion,emisor_tipo_compania,emisor_provincia,mismo_tipo_compania
+900001,1,0.94,0.06,990001,EMISOR-DEMO-01,EMISOR HISTORICO DEMO ALFA S.A.,2020,2021-05-01,2022-03-15,ANONIMA,PICHINCHA,True
+900001,2,0.89,0.11,990002,EMISOR-DEMO-02,EMISOR HISTORICO DEMO BETA S.A.,2019,2020-05-01,2021-08-20,ANONIMA,GUAYAS,True
+900002,1,0.91,0.09,990003,EMISOR-DEMO-03,EMISOR HISTORICO DEMO GAMMA S.A.,2021,2022-05-01,2023-01-10,ANONIMA,GUAYAS,True
+900003,1,0.86,0.14,990004,EMISOR-DEMO-04,EMISOR HISTORICO DEMO DELTA CIA. LTDA.,2018,2019-05-01,2020-11-05,RESPONSABILIDAD LIMITADA,AZUAY,True

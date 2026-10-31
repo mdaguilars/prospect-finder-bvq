@@ -6,9 +6,9 @@ Este router expone:
 - explicación SHAP local por empresa;
 - importancia global SHAP del modelo.
 
-La explicación local se calcula bajo demanda utilizando
-el modelo congelado v10 y un background construido
-exclusivamente desde TRAIN.
+En modo normal utiliza el modelo congelado v10 y las evidencias SHAP
+reales. En modo evaluador puede devolver una explicación sintética local
+para demostrar el flujo funcional sin requerir artefactos privados.
 """
 
 from __future__ import annotations
@@ -22,8 +22,13 @@ from fastapi import status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from src.api.core.config import settings
 from src.api.core.database import get_db
 from src.api.models.prospect import OperationalProspect
+from src.api.services.demo_explainability import (
+    get_demo_global_importance,
+    get_demo_prospect_explanation,
+)
 from src.api.services.explainability import (
     ExplainabilityError,
 )
@@ -56,9 +61,25 @@ def get_global_shap(
     ),
 ) -> dict:
     """
-    Devuelve la importancia global SHAP
-    ya calculada durante el análisis post-test.
+    Devuelve la importancia global SHAP.
+
+    En modo normal se utiliza la evidencia SHAP real ya calculada.
+    En modo evaluador se conserva la ruta compatible con el frontend.
     """
+
+    if settings.evaluator_demo_mode:
+        try:
+            return get_global_importance(
+                limit=limit
+            )
+        except (
+            FileNotFoundError,
+            ExplainabilityError,
+            ValueError,
+        ):
+            return get_demo_global_importance(
+                limit=limit
+            )
 
     try:
         return get_global_importance(
@@ -100,8 +121,10 @@ def get_prospect_explanation(
     ),
 ) -> dict:
     """
-    Genera una explicación SHAP local para
-    una empresa del ranking operativo.
+    Genera una explicación local para una empresa del ranking.
+
+    En modo normal utiliza SHAP real. En modo evaluador utiliza
+    una explicación sintética claramente identificada.
     """
 
     prospect = db.execute(
@@ -122,6 +145,12 @@ def get_prospect_explanation(
                 "No se encontró una empresa "
                 "con el expediente solicitado."
             ),
+        )
+
+    if settings.evaluator_demo_mode:
+        return get_demo_prospect_explanation(
+            prospect=prospect,
+            top_n=top_n,
         )
 
     try:

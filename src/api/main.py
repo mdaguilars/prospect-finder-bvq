@@ -54,6 +54,13 @@ async def lifespan(
     por SHAP quedan preparados para las siguientes consultas.
     """
 
+    if settings.evaluator_demo_mode:
+        print()
+        print("Modo demo para evaluador: SHAP privado no se inicializa.")
+        print()
+        yield
+        return
+
     print()
     print(
         "Inicializando explicabilidad SHAP..."

@@ -137,6 +137,11 @@ class Settings:
         False,
     )
 
+    evaluator_demo_mode: bool = get_bool(
+        "EVALUATOR_DEMO_MODE",
+        False,
+    )
+
     # --------------------------------------------------------
     # BASE DE DATOS
     # --------------------------------------------------------
@@ -167,8 +172,10 @@ class Settings:
             [
                 "http://localhost:3000",
                 "http://localhost:5173",
+                "http://localhost:5174",
                 "http://127.0.0.1:3000",
                 "http://127.0.0.1:5173",
+                "http://127.0.0.1:5174",
             ],
         )
     )
